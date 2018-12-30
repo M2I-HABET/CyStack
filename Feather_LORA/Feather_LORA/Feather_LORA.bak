@@ -257,13 +257,8 @@ Wire Wire Line
 	8350 4900 8350 4250
 Wire Wire Line
 	8350 4250 8450 4250
-Connection ~ 6500 4900
-Wire Wire Line
-	6500 4900 8350 4900
 Wire Wire Line
 	8450 5050 8450 4350
-Wire Wire Line
-	6650 5050 8450 5050
 $Comp
 L Connector:Conn_01x02_Male J2
 U 1 1 5C299331
@@ -382,10 +377,90 @@ F 3 "" H 8700 6000 50  0001 C CNN
 $EndComp
 Connection ~ 8700 6000
 Wire Wire Line
-	4200 4750 8300 4750
+	4200 4750 4200 4500
 Wire Wire Line
-	4200 4900 6500 4900
+	4200 4500 7600 4500
 Wire Wire Line
-	4200 5050 6650 5050
-Connection ~ 6650 5050
+	7600 4500 7600 4750
+Wire Wire Line
+	7600 4750 8300 4750
+Wire Wire Line
+	8350 4900 7000 4900
+Wire Wire Line
+	7000 4900 7000 4650
+Wire Wire Line
+	7000 4650 3750 4650
+Wire Wire Line
+	3750 4650 3750 4900
+Wire Wire Line
+	3750 4900 4200 4900
+Wire Wire Line
+	6800 5050 6800 5100
+Wire Wire Line
+	6800 5050 8450 5050
+Wire Wire Line
+	6800 5100 4200 5100
+Wire Wire Line
+	4200 5100 4200 5050
+Wire Wire Line
+	6650 5050 5800 5050
+Wire Wire Line
+	6500 4900 5800 4900
+$Comp
+L Device:Antenna_Shield AE?
+U 1 1 5C291743
+P 6950 2300
+F 0 "AE?" V 6934 2529 50  0000 L CNN
+F 1 "Antenna_Shield" V 7025 2529 50  0000 L CNN
+F 2 "Connector_Coaxial:SMA_Amphenol_132289_EdgeMount" H 6950 2400 50  0001 C CNN
+F 3 "~" H 6950 2400 50  0001 C CNN
+	1    6950 2300
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	5250 2500 6400 2500
+Wire Wire Line
+	6400 2500 6400 2300
+Wire Wire Line
+	6400 2300 6500 2300
+$Comp
+L power:GND #PWR?
+U 1 1 5C29321B
+P 6750 2400
+F 0 "#PWR?" H 6750 2150 50  0001 C CNN
+F 1 "GND" H 6755 2227 50  0000 C CNN
+F 2 "" H 6750 2400 50  0001 C CNN
+F 3 "" H 6750 2400 50  0001 C CNN
+	1    6750 2400
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:Antenna_Shield AE?
+U 1 1 5C29327E
+P 7050 1900
+F 0 "AE?" V 7034 2129 50  0000 L CNN
+F 1 "Antenna_Shield" V 7125 2129 50  0000 L CNN
+F 2 "Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical" H 7050 2000 50  0001 C CNN
+F 3 "~" H 7050 2000 50  0001 C CNN
+	1    7050 1900
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	6500 1900 6850 1900
+$Comp
+L power:GND #PWR?
+U 1 1 5C293286
+P 6850 2000
+F 0 "#PWR?" H 6850 1750 50  0001 C CNN
+F 1 "GND" H 6855 1827 50  0000 C CNN
+F 2 "" H 6850 2000 50  0001 C CNN
+F 3 "" H 6850 2000 50  0001 C CNN
+	1    6850 2000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6500 1900 6500 2300
+Connection ~ 6500 2300
+Wire Wire Line
+	6500 2300 6750 2300
 $EndSCHEMATC
