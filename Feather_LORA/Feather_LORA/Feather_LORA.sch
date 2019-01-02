@@ -226,7 +226,7 @@ U 1 1 5C296A2F
 P 8650 4150
 F 0 "J3" H 8623 4030 50  0000 R CNN
 F 1 "Conn_01x06_Male" H 8623 4121 50  0000 R CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical" H 8650 4150 50  0001 C CNN
+F 2 "TerminalBlock_TE-Connectivity:TerminalBlock_TE_282834-6_1x06_P2.54mm_Horizontal" H 8650 4150 50  0001 C CNN
 F 3 "~" H 8650 4150 50  0001 C CNN
 	1    8650 4150
 	-1   0    0    1   
@@ -282,7 +282,7 @@ U 1 1 5C29A8F7
 P 9050 5150
 F 0 "J4" H 9023 5030 50  0000 R CNN
 F 1 "Conn_01x06_Male" H 9023 5121 50  0000 R CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical" H 9050 5150 50  0001 C CNN
+F 2 "TerminalBlock_TE-Connectivity:TerminalBlock_TE_282834-6_1x06_P2.54mm_Horizontal" H 9050 5150 50  0001 C CNN
 F 3 "~" H 9050 5150 50  0001 C CNN
 	1    9050 5150
 	-1   0    0    1   
@@ -293,7 +293,7 @@ U 1 1 5C29B2F1
 P 9050 5800
 F 0 "J5" H 9023 5680 50  0000 R CNN
 F 1 "Conn_01x06_Male" H 9023 5771 50  0000 R CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical" H 9050 5800 50  0001 C CNN
+F 2 "TerminalBlock_TE-Connectivity:TerminalBlock_TE_282834-6_1x06_P2.54mm_Horizontal" H 9050 5800 50  0001 C CNN
 F 3 "~" H 9050 5800 50  0001 C CNN
 	1    9050 5800
 	-1   0    0    1   
