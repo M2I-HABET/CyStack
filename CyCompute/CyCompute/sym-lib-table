@@ -1,0 +1,4 @@
+(sym_lib_table
+  (lib (name RPi-modules)(type Legacy)(uri C:/Users/matth/Desktop/githubrepos/CyStack/CyCompute/CyCompute/RPi-modules.lib)(options "")(descr ""))
+  (lib (name pcie)(type Legacy)(uri C:/Users/matth/Desktop/githubrepos/CyStack/CyCompute/CyCompute/pcie.lib)(options "")(descr ""))
+)
