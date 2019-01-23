@@ -66,58 +66,11 @@ float RADIO::get_radio_timestamp(char buf[], int selector)
 
 
 /**
- * Parses and returns the radio transmission's anchor variable.
- * 0.0 -> pause
- * 1.0 -> running
- */
-float RADIO::get_radio_craft_anchor(char buf[])
-{
-    return (Data.Parse(buf,6));
-}
-
-
-/**
- * Parses and returns the radio transmission's target throttle variable.
- */
-float RADIO::get_radio_target_throttle(char buf[])
-{
-    return (Data.Parse(buf,7));
-}
-
-
-/**
- * Parses and returns the radio Target Latitude.
- */
-float RADIO::get_radio_target_latitude(char buf[])
-{
-    return (Data.Parse(buf,8)) / 10000.0;
-}
-
-
-/**
- * Parses and returns the radio Target Longitude.
- */
-float RADIO::get_radio_target_longitude(char buf[])
-{
-    return (Data.Parse(buf,9)) / 10000.0;
-}
-
-
-/**
  * Parses and returns the radio transmission's Craft ID.
  */
 float RADIO::get_radio_craft_id(char buf[])
 {
     return (Data.Parse(buf,10));
-}
-
-
-/**
- * Parses and returns the radio transmission's manual direction command.
- */
-float RADIO::get_radio_manual_direction(char buf[])
-{
-    return (Data.Parse(buf,11));
 }
 
 
@@ -240,16 +193,11 @@ void RADIO::radio_receive()
             // Reads in the time stamp for Mission Control's last broadcast.
             float temp_home_ts = Radio.get_radio_timestamp(to_parse, 5);
             // Compares the currently brought in time stamp to the one stored onboad.
-            if(temp_home_ts > Network.home_ts)
+            if(temp_home_ts > Radio.home_ts)
             {
                 // If the incoming signal has more up-to-date versions, we overwrite our saved version with
                 // the new ones.
-                Network.home_ts = temp_home_ts;
-                Network.craft_anchor = Radio.get_radio_craft_anchor(to_parse);
-                Network.target_latitude = Radio.get_radio_target_latitude(to_parse);
-                Network.target_longitude = Radio.get_radio_target_longitude(to_parse);
-                Network.target_throttle = Radio.get_radio_target_throttle(to_parse);
-                Network.manual_direction = Radio.get_radio_manual_direction(to_parse);
+                Radio.home_ts = temp_home_ts;
             }
             // Reads in Craft ID to see where signal came from. 
             received_id = Radio.get_radio_craft_id(to_parse);
@@ -264,7 +212,7 @@ void RADIO::radio_receive()
 void RADIO::roll_call()
 {
 	// Updates the Craft_ID to Eagle Eye's specific ID #.
-	Network.craft_id = 2.0;
+	Radio.craft_id = 2.0;
     Serial.println("RollCall broadcast.");
 	// Sends the transmission via radio.
 	Radio.broadcast();
@@ -282,39 +230,29 @@ void RADIO::roll_call()
 void RADIO::broadcast()
 {
     // Updates the time object to hold the most current operation time.
-    Network.craft_ts = millis()/1000.0;
+    Radio.craft_ts = millis()/1000.0;
     // Updates the Network's struct to reflect the craft's most up-to-date postioning before
-    // it broadcasts the signal on the network.
-    Network.craft_altitude = Data.Local.current_altitude;
-    Network.craft_latitude = Data.Local.current_latitude;
-    Network.craft_longitude = Data.Local.current_longitude;
-    Network.craft_event = Data.Local.current_event;
+    // it broadcasts the signal on the Radio.
+    Radio.craft_altitude = Data.current_altitude;
+    Radio.craft_latitude = Data.current_latitude;
+    Radio.craft_longitude = Data.current_longitude;
+    Radio.craft_event = Data.current_event;
     // Casting all float values to a character array with commas saved in between values
     // allows the character array to be parsed when received by another craft.
     String temp = "";
-    temp += Network.craft_ts;
+    temp += Radio.craft_ts;
     temp += ",";
-    temp += Network.craft_altitude;
+    temp += Radio.craft_altitude;
     temp += ",";
-    temp += Network.craft_latitude * 10000;
+    temp += Radio.craft_latitude * 10000;
     temp += ",";
-    temp += Network.craft_longitude * 10000;
+    temp += Radio.craft_longitude * 10000;
     temp += ",";
-    temp += Network.craft_event;
+    temp += Radio.craft_event;
     temp += ",";
-    temp += Network.home_ts;
+    temp += Radio.home_ts;
     temp += ",";
-    temp += Network.craft_anchor;
-    temp += ",";
-    temp += Network.target_latitude * 10000;
-    temp += ",";
-    temp += Network.target_longitude * 10000;
-    temp += ",";
-    temp += Network.target_throttle;
-    temp += ",";
-    temp += Network.craft_id;
-    temp += ",";
-    temp += Network.manual_direction;
+    temp += Radio.craft_id;
     // Copy contents. 
     radio_output = temp;
     // Converts from String to char array. 

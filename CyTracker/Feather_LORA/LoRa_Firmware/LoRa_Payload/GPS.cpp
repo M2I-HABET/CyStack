@@ -52,7 +52,7 @@ void GPS::manager()
         if(gps.satellites.value() == 0)
         {
             // Updates onboard error detection.
-            Data.Local.current_event = 3;
+            Data.current_event = 3;
         }
         // If no fixation, reverts current values to 
         // that of the previous cycle. This prevents the 
@@ -63,18 +63,18 @@ void GPS::manager()
     else
     {
         // Updates all struct variables with the most current sensor data.
-        sprintf(Data.Local.current_gps_time, "%02d:%02d:%02d ", gps.time.hour(), gps.time.minute(), gps.time.second());
-        Data.Local.current_altitude = gps.altitude.meters();
-        Data.Local.current_latitude = gps.location.lat();
-        Data.Local.current_longitude = gps.location.lng();
-        Data.Local.current_satillite_count = gps.satellites.value();
-        Data.Local.current_speed = gps.speed.mps(); 
-        Data.Local.current_target_distance = calculate_target_distance();
+        sprintf(Data.current_gps_time, "%02d:%02d:%02d ", gps.time.hour(), gps.time.minute(), gps.time.second());
+        Data.current_altitude = gps.altitude.meters();
+        Data.current_latitude = gps.location.lat();
+        Data.current_longitude = gps.location.lng();
+        Data.current_satillite_count = gps.satellites.value();
+        Data.current_speed = gps.speed.mps(); 
+        Data.current_distance = calculate_distance();
         // Replaces the old backup values with the new values.
-        Data.Local.previous_altitude = Data.Local.current_altitude;
-        Data.Local.previous_latitude = Data.Local.current_latitude;
-        Data.Local.previous_longitude = Data.Local.current_longitude;
-        Data.Local.previous_target_distance = Data.Local.current_target_distance;
+        Data.previous_altitude = Data.current_altitude;
+        Data.previous_latitude = Data.current_latitude;
+        Data.previous_longitude = Data.current_longitude;
+        Data.previous_distance = Data.current_distance;
     }
 }
 
@@ -82,13 +82,13 @@ void GPS::manager()
 /**
  * Calculates the distance to the GPS Target in meters.
  */
-float GPS::calculate_target_distance()
+float GPS::calculate_distance()
 {
 
     float distance = (float)TinyGPSPlus::distanceBetween(gps.location.lat(), 
                                                          gps.location.lng(), 
-                                                         Data.Local.current_target_latitude, 
-                                                         Data.Local.current_target_longitude);
+                                                         /* GUI GPS Latitude */, 
+                                                         /* GUI GPS Longitude */);
     return distance;
 }
 
@@ -100,9 +100,9 @@ float GPS::calculate_target_distance()
 void GPS::revert_gps_data()
 {
     // Reverts values to that of the previous cycle.
-    Data.Local.current_altitude = Data.Local.previous_altitude;
-    Data.Local.current_latitude = Data.Local.previous_latitude;
-    Data.Local.current_longitude = Data.Local.previous_longitude;
-    Data.Local.current_speed = 0.0;
-    Data.Local.current_target_distance = Data.Local.previous_target_distance;
+    Data.current_altitude = Data.previous_altitude;
+    Data.current_latitude = Data.previous_latitude;
+    Data.current_longitude = Data.previous_longitude;
+    Data.current_speed = 0.0;
+    Data.current_distance = Data.previous_distance;
 }
