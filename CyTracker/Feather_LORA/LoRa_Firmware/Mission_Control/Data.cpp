@@ -32,6 +32,7 @@ float DATA::Parse(char message[], int objective)
 	//                    LORA                                        MISSION CONTROL                       CRAFT ID
 	// Time(ms),Altitude,Latitude,Longitude,LE, | Time(ms),craft_anchor,new_throttle,TargetLat,TargetLon, | Signal Origin
 	//
+	// The number of commas that the program needs to pass before it started parsing the data.
 
 	// Used to iterate through the passed in character array.
 	int i = 0;
@@ -113,9 +114,9 @@ void DATA::update_gui()
       		temp_packet += ",";
 			temp_packet += Radio.mc_node.node_status;
 			temp_packet += ",";
-			temp_packet += Radio.ee_node.node_status;
+			temp_packet += Radio.payload_node.node_status;
 			temp_packet += ",";
-			temp_packet += Radio.relay_node.node_status;
+			temp_packet += Radio.recovery_node.node_status;
 			temp_packet += ",";
 			temp_packet += "$";
 		}
@@ -159,42 +160,6 @@ void DATA::update_gui()
 			Serial.write(serial_packet);
 		}
 	}
-}
-
-
-/**
- * Parses serial input and returns the authority mode.
- */
-float DATA::get_serial_authority_mode(char buf[])
-{
-    return (Parse(buf,1));
-}
-
-
-/**
- * Parses serial input and returns the user's manual direction.
- */
-float DATA::get_serial_direction(char buf[])
-{
-    return (Parse(buf,2));
-}
-
-
-/**
- * Parses serial input and returns the anchor status.
- */
-float DATA::get_serial_craft_anchor(char buf[])
-{
-    return (Parse(buf,3));
-}
-
-
-/**
- * Parses serial input and returns the target throttle.
- */
-float DATA::get_serial_target_throttle(char buf[])
-{
-    return (Parse(buf,4));
 }
 
 

@@ -20,6 +20,17 @@ RADIO::RADIO()
 
 
 /**
+ * Parses and returns the radio transmission's Time Stamp (ms).
+ *    LoRa  -> 0
+ *    MC    -> 5
+ */
+float RADIO::get_radio_timestamp(char buf[], int selector)
+{
+    return (Data.Parse(buf, selector));
+}
+
+
+/**
  * Parses and returns the radio transmission's altitude.
  */
 float RADIO::get_radio_craft_altitude(char buf[])
@@ -56,60 +67,11 @@ float RADIO::get_radio_craft_event(char buf[])
 
 
 /**
- * Parses and returns the radio transmission's Time Stamp (ms).
- *    LoRa  -> 0
- *    MC    -> 5
- */
-float RADIO::get_radio_timestamp(char buf[], int selector)
-{
-    return (Data.Parse(buf, selector));
-}
-
-
-/**
- * Parses and returns the radio transmission's anchor variable.
- * 0.0 -> pause
- * 1.0 -> running
- */
-float RADIO::get_radio_craft_anchor(char buf[])
-{
-    return (Data.Parse(buf,6));
-}
-
-
-/**
- * Parses and returns the radio transmission's target throttle variable.
- */
-float RADIO::get_radio_target_throttle(char buf[])
-{
-    return (Data.Parse(buf,7));
-}
-
-
-/**
- * Parses and returns the radio Target Latitude.
- */
-float RADIO::get_radio_target_latitude(char buf[])
-{
-    return (Data.Parse(buf,8)) / 10000.0;
-}
-
-
-/**
- * Parses and returns the radio Target Longitude.
- */
-float RADIO::get_radio_target_longitude(char buf[])
-{
-    return (Data.Parse(buf,9)) / 10000.0;
-}
-
-
-/**
  * Parses and returns the radio transmission's Craft ID.
  */
 float RADIO::get_radio_craft_id(char buf[])
 {
-    return (Data.Parse(buf,10));
+    return (Data.Parse(buf,/*   TBD  */));
 }
 
 
@@ -170,19 +132,25 @@ void RADIO::manager()
 	else if(operation_mode == Radio.STANDBY)
     {
         // Updates craft_id to the network start signal.
-        Radio.Network.craft_id = 555.0;
+        Radio.craft_id = 555.0;
 	}
 	// Each of the crafts have # seconds to broadcast. That means each craft will broadcast every # seconds.
-	else if((millis() - broadcast_timer >= 1000) && (operation_mode == Radio.NORMAL))
+	else if((millis() - broadcast_timer >= network_node_delay) && (operation_mode == Radio.NORMAL))
     {
 		// Resets the counter. This disables broadcasting again until 10 seconds has passed.
 		broadcast_timer = millis();
 		// Sends the transmission via radio.
 		Radio.broadcast();
-        // Switch start signal to craft ID. Normal operations have begun. 
-        if(Radio.Network.craft_id == 555.0)
-        {
-            Radio.Network.craft_id = 1.0;
+        // The first time NORMAL operation mode is run, the node id is 555.0.
+        // 555.0 is the network "start" signal. After this start signal is sent,
+        // we want to update this craft's id to its actual ID.
+        if(Radio.craft_id == 555.0)
+        {   
+            // Switch start signal to craft ID. Normal operations have begun.
+            Radio.craft_id = 1.0;
+            // Sets the delay needed to maintain synchronization between the 
+            // different nodes in the network.
+            Radio.network_node_delay = Radio.craft_id * 500.0;
     	}
     }
 }
@@ -194,7 +162,7 @@ void RADIO::manager()
 void RADIO::roll_call()
 {
   // Updates the Craft_ID to the network call in signal "999.0".
-  Network.craft_id = 999.0;
+  Radio.craft_id = 999.0;
     // Timer of 5 seconds.
     if(millis() - rc_broadcast >= 2000)
     {
@@ -212,33 +180,23 @@ void RADIO::roll_call()
 void RADIO::broadcast()
 {  
     // Updates the time object to hold the most current operation time.
-    Network.home_ts = millis()/1000.0;
+    Radio.home_ts = millis()/1000.0;
     // Casting all float values to a character array with commas saved in between values
     // so the character array can be parsed when received by another craft.
     String temp = "";
-    temp += Network.craft_ts;
+    temp += Radio.craft_ts;
     temp += ",";
-    temp += Network.craft_altitude;
+    temp += Radio.craft_altitude;
     temp += ",";
-    temp += Network.craft_latitude * 10000;
+    temp += Radio.craft_latitude * 10000;
     temp += ",";
-    temp += Network.craft_longitude * 10000;
+    temp += Radio.craft_longitude * 10000;
     temp += ",";
-    temp += Network.craft_event;
+    temp += Radio.craft_event;
     temp += ",";
-    temp += Network.home_ts;
+    temp += Radio.home_ts;
     temp += ",";
-    temp += Network.craft_anchor;
-    temp += ",";
-    temp += Network.target_latitude * 10000;
-    temp += ",";
-    temp += Network.target_longitude * 10000;
-    temp += ",";
-    temp += Network.target_throttle;
-    temp += ",";
-    temp += Network.craft_id;
-    temp += ",";
-    temp += Network.manual_direction;
+    temp += Radio.craft_id;
     // Copy contents. 
     radio_output = temp;
     // Converts from String to char array. 
@@ -253,7 +211,7 @@ void RADIO::broadcast()
 
 
 /**
- * Checks for response from node after rollcall broadcast. If not found, adds to network.
+ * Checks for response from node after rollcall broadcast. If not found, adds to Radio.
  */
 void RADIO::node_check_in()
 {
@@ -271,19 +229,19 @@ void RADIO::node_check_in()
             // Node id not found in current list. (New node to check in)
             else if(node_list[i] == 0.0)
             {
-                // Adds the node to the network. (Known node id's list)
+                // Adds the node to the Radio. (Known node id's list)
                 node_list[i] = received_id;
                 // Checks for craft's node id.
                 if(1.9 < received_id && received_id < 2.1)
                 {
-                    // Sets Eagle Eye's network status as connected. (Used by GUI.)
-                    Radio.ee_node.node_status = 1.0;
+                    // Sets the LoRa on the HABET payload network status as connected. (Used by GUI.)
+                    Radio.payload_node.node_status = 1.0;
                 }
                 // Checks for relay's node id. (Technically anything 3.0 and above but not implemented yet)
                 else if (received_id == 3.0)
                 {
                     // Sets the relay's network status as connected. (Used by GUI.)
-                    Radio.relay_node.node_status = 1.0;
+                    Radio.recovery_node.node_status = 1.0;
                 }
                 // Breaks FOR loop.
                 break;
@@ -326,15 +284,15 @@ void RADIO::radio_receive()
             // Reads in the time stamp for Mission Control's last broadcast.
             float temp_LoRa = Radio.get_radio_timestamp(to_parse, 0);
             // Compares the currently brought in time stamp to the one stored onboad.
-            if(temp_LoRa > Radio.Network.craft_ts)
+            if(temp_LoRa > Radio.craft_ts)
             {
                 // If the incoming signal has more up-to-date versions, we overwrite our saved version with
                 // the new ones.
-                Network.craft_ts = temp_LoRa;
-                Network.craft_altitude = Radio.get_radio_craft_altitude(to_parse);
-                Network.craft_latitude = Radio.get_radio_craft_latitude(to_parse);
-                Network.craft_longitude = Radio.get_radio_craft_longitude(to_parse);
-                Network.craft_event = Radio.get_radio_craft_event(to_parse);
+                Radio.craft_ts = temp_LoRa;
+                Radio.craft_altitude = Radio.get_radio_craft_altitude(to_parse);
+                Radio.craft_latitude = Radio.get_radio_craft_latitude(to_parse);
+                Radio.craft_longitude = Radio.get_radio_craft_longitude(to_parse);
+                Radio.craft_event = Radio.get_radio_craft_event(to_parse);
             }
             // Reads in Craft ID to see where signal came from. 
             received_id = Radio.get_radio_craft_id(to_parse);

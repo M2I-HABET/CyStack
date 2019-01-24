@@ -46,8 +46,6 @@ class RADIO
 	const byte RFM95_INT = 7;
 	// Reset pin onboard the radio.
 	const byte RFM95_RST = 4;
-	// Craft ID (Used to set start times)
-	const byte NODE_ID = 2;
     // Pins used to blink an LED to signal a radio packet has been received.
     const byte LED = 13;
 	// Radio frequency used throught the Eagle Eye Program. CHECK WITH HABET BEFORE EACH FLIGHT!!!!!
@@ -86,11 +84,20 @@ class RADIO
 	/**
 	 * This varaible is updated by each craft right before the array is broadcasted.
 	 */
+    
 	// Craft_ID is used to tell which craft is currently broadcasting the signal. This allows
 	// for Mission Control to have a sense of if information is being relayed through nodes,
 	// or if we have a direct line of communication with each node.
 	float craft_id = 0.0;
 
+	// Craft ID (SPECIFIC TO THE PAYLOAD LORA ONBOARD HABET)
+	float NODE_ID = 2.0;
+	// Holds the delay amount needed to synchronize the network when NORMAL operations
+	// mode is started. Configured in Radio.rollcall().
+	float network_sync_delay = 0.0;
+	// Holds the delay amount between this nodes broadcast window.
+	// Configured in Radio.rollcall().
+	float network_node_delay = 0.0;
     // Used in the computation of the radio system. 
     unsigned long broadcast_timer = 0;
   

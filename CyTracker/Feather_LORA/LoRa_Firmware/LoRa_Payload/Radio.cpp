@@ -19,6 +19,17 @@ RADIO::RADIO()
 
 
 /**
+ * Parses and returns the radio transmission's Time Stamp (ms).
+ *    LoRa  -> 0
+ *    MC    -> 5
+ */
+float RADIO::get_radio_timestamp(char buf[], int selector)
+{
+    return (Data.Parse(buf, selector));
+}
+
+
+/**
  * Parses and returns the radio transmission's altitude.
  */
 float RADIO::get_radio_craft_altitude(char buf[])
@@ -55,22 +66,11 @@ float RADIO::get_radio_craft_event(char buf[])
 
 
 /**
- * Parses and returns the radio transmission's Time Stamp (ms).
- *    LoRa  -> 0
- *    MC    -> 5
- */
-float RADIO::get_radio_timestamp(char buf[], int selector)
-{
-    return (Data.Parse(buf, selector));
-}
-
-
-/**
  * Parses and returns the radio transmission's Craft ID.
  */
 float RADIO::get_radio_craft_id(char buf[])
 {
-    return (Data.Parse(buf,10));
+    return (Data.Parse(buf,/*   TBD  */));
 }
 
 
@@ -133,22 +133,19 @@ void RADIO::manager()
 	}
  
 	// After Roll Call is complete, Mission Control will broadcast the start signal. Appropriate delays are
-	// distributed below to initally sync the network to a 5 second split. This makes for a 10 second revolution.
-	//   
-	// MS - starts instantly
-	// EE - delays 5 seconds
+	// distributed below to initally sync the network.
 	else if(operation_mode == Radio.STANDBY)
     {
         if(554.0 < received_id && received_id < 556.0)
         {
             // Delays # seconds to offset this node from the main mission_control node.
-            delay(500);
+            delay(Radio.network_sync_delay);
             // Updates network state.
             operation_mode = Radio.NORMAL;
         }
 	}
 	// Each of the crafts have # seconds to broadcast.
-	else if((millis() - broadcast_timer > 1000) && (operation_mode == NORMAL))
+	else if((millis() - broadcast_timer > network_node_delay) && (operation_mode == NORMAL))
     {
 		// Resets the counter. This disables broadcasting again until 10 seconds has passed.
         broadcast_timer = millis();
@@ -174,7 +171,7 @@ void RADIO::radio_receive()
         if(rf95.recv(buf, &len))
         {
             // Conversion from uint8_t to string. The purpose of this is to be able to convert to an 
-            // unsigned char array for parsing. 
+            // unsigned char array for parsing.
             String str = (char*)buf;
             char to_parse[str.length()];
             str.toCharArray(to_parse,str.length());
@@ -211,11 +208,21 @@ void RADIO::radio_receive()
  */
 void RADIO::roll_call()
 {
-	// Updates the Craft_ID to Eagle Eye's specific ID #.
-	Radio.craft_id = 2.0;
+	// Updates the Craft_ID to HABET's specific ID #.
+	Radio.craft_id = NODE_ID;
+    // To synchronize the network when the start signal is given,
+    // we use the nodes id as an offset to multiply a base node 
+    // broadcast window (500 milliseconds) to ensure the nodes 
+    // don't broadcast at the same times. 
+    Radio.network_sync_delay = (Radio.craft_id - 1.0) * 500.0;
+    // Sets the delay needed to maintain synchronization between the 
+    // different nodes in the network.
+    Radio.network_node_delay = Radio.craft_id * 500.0;
+    // Debug message.
     Serial.println("RollCall broadcast.");
 	// Sends the transmission via radio.
 	Radio.broadcast();
+    // Debug message.
     Serial.println("Broadcasted.");
 	// Updates the node's network status.
 	checked_in = true;

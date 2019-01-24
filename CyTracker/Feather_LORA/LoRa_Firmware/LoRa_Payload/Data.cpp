@@ -27,20 +27,14 @@ DATA::DATA()
  */
 float DATA::Parse(char message[], int objective)
 {
-	// Example GPS Transmission. (GGA)
+	// Example GPS Transmission. (GGA).---------------------------------------------------------------
 	//
 	// $GPGGA,123519,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*47
 	//
-	// Example Radio Transmission. 
+	// Example Radio Transmission.--------------------------------------------------------------------
 	//
-	//                    LORA                                        MISSION CONTROL                       CRAFT ID
-	// Time(ms),Altitude,Latitude,Longitude,LE, | Time(ms),Start_Stop,new_throttle,TargetLat,TargetLon, | Signal Origin
-	//
-	// Example I2C Transmission
-	//
-	//                                  CONTROLLER ACCESS NETWORK PROTOCOL PACKET
-	// $,GPSAltitude, Latitude, Longitude, TargetLat, TargetLon, Roll, Pitch, Yaw, Speed, TargetDistance, Time,$
-	//        1           2         3          4           5       6     7     8     9         10          11
+	//                PAYLOAD LORA              MISSION CONTROL    CRAFT ID
+	// Time(ms),Altitude,Latitude,Longitude,LE, | Time(ms), | Signal Origin
 	//
 	// The number of commas that the program needs to pass before it started parsing the data.
   	
