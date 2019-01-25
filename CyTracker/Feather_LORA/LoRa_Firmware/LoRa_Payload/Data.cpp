@@ -7,7 +7,6 @@
 #include "Data.h"
 #include "Radio.h"
 #include "GPS.h"
-#include "I2C.h"
 #include <stdlib.h>
 #include "Globals.h"
 

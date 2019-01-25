@@ -1,6 +1,6 @@
 #############################################################
 #
-#	Property of Eagle Eye. 
+#	Property of HABET.
 #
 #   Authors:
 #           Jared Danner
@@ -16,7 +16,7 @@ import globals as g
 class GUI_Terminal():
 
 	def __init__(self):
-		""" 
+		"""
 		Initialization function for the class.
 
 		@param self - Instance of the class.
@@ -24,10 +24,10 @@ class GUI_Terminal():
 
 		self.gui_window = None
 		self.mc_frame = None
-		self.craft_frame = None
+		self.payload_frame = None
 
 	def configure_gui_terminal(self):
-		""" 
+		"""
 		Configures the main GUI application window to hold
 		the required widgets. Displays upon .mainloop().
 
@@ -35,7 +35,7 @@ class GUI_Terminal():
 		"""
 
 		self.gui_window = Tk()
-		self.gui_window.title("Eagle Eye Serial GUI")
+		self.gui_window.title("HABET Serial GUI")
 		self.gui_window.configure(background='#666666')
 		self.gui_window.attributes('-fullscreen', True)
 		self.gui_window.bind("<Escape>", self.callback_quit_gui)
@@ -74,16 +74,16 @@ class GUI_Terminal():
 		# Creates an inner frame. (Tab)
 		self.mc_frame = Frame(book)
 		# Creates an inner frame. (Tab)
-		self.craft_frame = Frame(book)
+		self.payload_frame = Frame(book)
 		# The layout of each frame works as a grid system. The next two lines define how many
-		# rows and columsn exist on the frames. These row/column numbers are used to 
+		# rows and columsn exist on the frames. These row/column numbers are used to
 		# position buttons and displays around the GUI. Weight of 1 just means no button possess more
-		# "importance" than other buttons. Just don't change the weight. 
+		# "importance" than other buttons. Just don't change the weight.
 		self.mc_frame.columnconfigure((0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19), weight=1)
 		self.mc_frame.rowconfigure((0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22), weight=1)
-		# Adds these frames to the GUI terminal. 
+		# Adds these frames to the GUI terminal.
 		book.add(self.mc_frame, text="Mission Control")
-		book.add(self.craft_frame, text="     Eagle Eye       ")
+		book.add(self.payload_frame, text="     Payload       ")
 
 
 	def callback_quit_gui(self, *args):
@@ -96,13 +96,9 @@ class GUI_Terminal():
 		"""
 
 		# Checks for the existance of specific timer objects.
-		if g.timer_mc_lora is not None:
-			g.timer_mc_lora.cancel()
-		if g.timer_craft_lora is not None:
-			g.timer_craft_lora.cancel()
-		if g.timer_craft_mega is not None:
-			g.timer_craft_mega.cancel()
-		# if g.timer_xbox_controller is not None:
-		#	g.timer_xbox_controller.cancel()
+		if g.timer_mission_control_lora is not None:
+			g.timer_mission_control_lora.cancel()
+		if g.timer_payload_lora is not None:
+			g.timer_payload_lora.cancel()
 		# Shuts down the Tkinter GUI.
 		self.gui_window.quit()

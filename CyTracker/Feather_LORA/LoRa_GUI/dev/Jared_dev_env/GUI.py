@@ -1,6 +1,6 @@
 #############################################################
 #
-#	Property of Eagle Eye. 
+#	Property of HABET.
 #
 #   Authors:
 #           Jared Danner
@@ -40,7 +40,7 @@ def login():
 
 
 def GUI():
-	""" 
+	"""
 	Main terminal application for interfacing
 	with the craft.
 	"""

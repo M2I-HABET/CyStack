@@ -1,5 +1,5 @@
 /**
- * Radio.ccp holds all functions related the radio port/module infused inside the LoRa FeatherWing 
+ * Radio.ccp holds all functions related the radio port/module infused inside the LoRa FeatherWing
  * development micro controller.
  */
 
@@ -15,7 +15,7 @@
  */
 RADIO::RADIO()
 {
-  
+
 }
 
 
@@ -101,7 +101,7 @@ void RADIO::initialize()
             Radio.blink_led();
         }
 	}
-	// Checks the radio objects tuned frequency. 
+	// Checks the radio objects tuned frequency.
 	if(!rf95.setFrequency(RF95_FREQ))
     {
 		// If invalid connection, the program will stall and pulse the onbaord led.
@@ -122,7 +122,7 @@ void RADIO::manager()
 {
 	// Reads in radio transmission if available.
 	Radio.radio_receive();
-    // Checks to see if its time to run Roll Call. Set via GUI. 
+    // Checks to see if its time to run Roll Call. Set via GUI.
     if(operation_mode == Radio.ROLLCALL)
     {
         // Broadcasts startup packet.
@@ -135,7 +135,7 @@ void RADIO::manager()
         Radio.craft_id = 555.0;
 	}
 	// Each of the crafts have # seconds to broadcast. That means each craft will broadcast every # seconds.
-	else if((millis() - broadcast_timer >= network_node_delay) && (operation_mode == Radio.NORMAL))
+	else if((millis() - broadcast_timer >= Radio.network_node_delay) && (operation_mode == Radio.NORMAL))
     {
 		// Resets the counter. This disables broadcasting again until 10 seconds has passed.
 		broadcast_timer = millis();
@@ -145,10 +145,10 @@ void RADIO::manager()
         // 555.0 is the network "start" signal. After this start signal is sent,
         // we want to update this craft's id to its actual ID.
         if(Radio.craft_id == 555.0)
-        {   
+        {
             // Switch start signal to craft ID. Normal operations have begun.
             Radio.craft_id = 1.0;
-            // Sets the delay needed to maintain synchronization between the 
+            // Sets the delay needed to maintain synchronization between the
             // different nodes in the network.
             Radio.network_node_delay = Radio.craft_id * 500.0;
     	}
@@ -178,7 +178,7 @@ void RADIO::roll_call()
  * Creates an array to be sent out via Radio. Fills that array with correct values and returns it.
  */
 void RADIO::broadcast()
-{  
+{
     // Updates the time object to hold the most current operation time.
     Radio.home_ts = millis()/1000.0;
     // Casting all float values to a character array with commas saved in between values
@@ -197,15 +197,15 @@ void RADIO::broadcast()
     temp += Radio.home_ts;
     temp += ",";
     temp += Radio.craft_id;
-    // Copy contents. 
+    // Copy contents.
     radio_output = temp;
-    // Converts from String to char array. 
+    // Converts from String to char array.
     char transmission[temp.length()];
     temp.toCharArray(transmission, temp.length());
     // Sends message passed in as paramter via antenna.
     rf95.send(transmission, sizeof(transmission));
     // Pauses all operations until the micro controll has guaranteed the transmission of the
-    // signal. 
+    // signal.
     rf95.waitPacketSent();
 }
 
@@ -260,7 +260,7 @@ void RADIO::radio_receive()
     if (rf95.available())
     {
         // Serial.println("Incoming packet...");
-        // Creates a temporary varaible to read in the incoming transmission. 
+        // Creates a temporary varaible to read in the incoming transmission.
         uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
         // Gets the length of the above temporary varaible.
         uint8_t len = sizeof(buf);
@@ -270,8 +270,8 @@ void RADIO::radio_receive()
             // Used to display the received data in the GUI.
             radio_input = buf;
             blink_led();
-            // Conversion from uint8_t to string. The purpose of this is to be able to convert to an 
-            // unsigned char array for parsing. 
+            // Conversion from uint8_t to string. The purpose of this is to be able to convert to an
+            // unsigned char array for parsing.
             String str = (char*)buf;
             char to_parse[str.length()];
             str.toCharArray(to_parse,str.length());
@@ -280,7 +280,7 @@ void RADIO::radio_receive()
             // to that of the newly received signal. Updates the LoRa's owned variables and copies
             // down the other nodes' varaibles. If the time LoRa currently holds the most updated values
             // for another node (LoRa's time stamp is higher than the new signal's), it replaces those vars.
-          
+
             // Reads in the time stamp for Mission Control's last broadcast.
             float temp_LoRa = Radio.get_radio_timestamp(to_parse, 0);
             // Compares the currently brought in time stamp to the one stored onboad.
@@ -294,9 +294,9 @@ void RADIO::radio_receive()
                 Radio.craft_longitude = Radio.get_radio_craft_longitude(to_parse);
                 Radio.craft_event = Radio.get_radio_craft_event(to_parse);
             }
-            // Reads in Craft ID to see where signal came from. 
+            // Reads in Craft ID to see where signal came from.
             received_id = Radio.get_radio_craft_id(to_parse);
-            // Compares the transmission's craftID to see if its a brand new craft. If so, it logs it. 
+            // Compares the transmission's craftID to see if its a brand new craft. If so, it logs it.
             Radio.node_check_in();
         }
     }

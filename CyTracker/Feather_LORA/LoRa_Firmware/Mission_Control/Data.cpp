@@ -13,12 +13,12 @@
  */
 DATA::DATA()
 {
-  
+
 }
 
 
 /**
- * Returns a parsed section of the read in parameter. The parameter 'objective' represents 
+ * Returns a parsed section of the read in parameter. The parameter 'objective' represents
  * the comma's position from the beginning of the character array.
  */
 float DATA::Parse(char message[], int objective)
@@ -46,13 +46,13 @@ float DATA::Parse(char message[], int objective)
   	// Iterators over the entire array.
   	for(i=0; i<120; i++)
   	{
-    	// Checks to see if the current iterator's position is a comma. 
+    	// Checks to see if the current iterator's position is a comma.
     	if(message[i] == ',')
     	{
     		// If so, it iterators the comma counter by 1.
       		comma_counter++;
     	}
-    	// Checks to see if the desired amount of commas has been passed. 
+    	// Checks to see if the desired amount of commas has been passed.
 	    else if(comma_counter == objective)
 	    {
 		    // Checks to see if the iterator's position is a comma, used to cause a stop in parsing.
@@ -99,7 +99,7 @@ void DATA::update_gui()
 		// Resets / starts timer.
 	    Data.serial_timer = millis();
 	    // Starts or updates mission control microsecond timer. (Converts to seconds w/ 2 decimal places for easy of use)
-	    Radio.Network.home_ts = millis()/1000.0;
+	    Radio.home_ts = millis()/1000.0;
     	// Holds outgoing message.
 		String temp_packet = "";
     	// Gets set true if a packet (TO BE SENT) has been created.
@@ -121,8 +121,8 @@ void DATA::update_gui()
 			temp_packet += "$";
 		}
 		// Normal GUI <-> mission_control Config.
-		else if((Radio.operation_mode == Radio.NORMAL) 
-				 || (Radio.operation_mode == Radio.STANDBY) 
+		else if((Radio.operation_mode == Radio.NORMAL)
+				 || (Radio.operation_mode == Radio.STANDBY)
 				 || (Radio.operation_mode == Radio.NONE))
 		{
 			confirmed_packet = true;
@@ -130,19 +130,19 @@ void DATA::update_gui()
 			temp_packet += ",";
 			temp_packet += "N";
 			temp_packet += ",";
-      		temp_packet += Radio.Network.craft_ts;
+      		temp_packet += Radio.craft_ts;
 			temp_packet += ",";
-			temp_packet += Radio.Network.craft_altitude;
+			temp_packet += Radio.craft_altitude;
 			temp_packet += ",";
-			temp_packet += Radio.Network.craft_latitude;
+			temp_packet += Radio.craft_latitude;
 			temp_packet += ",";
-			temp_packet += Radio.Network.craft_longitude;
+			temp_packet += Radio.craft_longitude;
 			temp_packet += ",";
-			temp_packet += Radio.Network.craft_event;
+			temp_packet += Radio.craft_event;
 		    temp_packet += ",";
-		    temp_packet += Radio.Network.craft_id;
+		    temp_packet += Radio.craft_id;
 		    temp_packet += ",";
-		    temp_packet += Radio.Network.home_ts;
+		    temp_packet += Radio.home_ts;
 			temp_packet += "]";
 			temp_packet += Radio.radio_input;
 			temp_packet += "/";
@@ -154,7 +154,7 @@ void DATA::update_gui()
 		if(confirmed_packet){
 			// Defines a char array with the length needed to hold the received packet.
 			char serial_packet[temp_packet.length()];
-			// Converts from String to char array. 
+			// Converts from String to char array.
 			temp_packet.toCharArray(serial_packet, temp_packet.length());
 			// Sends packet via serial to python GUI.
 			Serial.write(serial_packet);
@@ -167,7 +167,7 @@ void DATA::update_gui()
  * Parses serial input and returns the operational mode.
  */
 void DATA::get_serial_op_mode(char buf[])
-{	
+{
 	// Parses out operation_mode representated as integer.
     int temp_mode = (Parse(buf,5));
     // Converts integer representation to the appropriate state.
@@ -179,11 +179,11 @@ void DATA::get_serial_op_mode(char buf[])
     }
     // Checks if the rollcall command has been given.
     else if(temp_mode == 1.0)
-    {	
+    {
     	// Update the mode to begin the rollcall sequence.
     	Radio.operation_mode = Radio.ROLLCALL;
     	// Setting the node status of the mission control node to
-    	// 1.0 signifies that this node is working optimally in 
+    	// 1.0 signifies that this node is working optimally in
     	// the network.
       	Radio.mc_node.node_status = 1.0;
     }

@@ -1,16 +1,15 @@
 /****LIBRARIES****/
-
-//NON EAGLE EYE
+//NON HABET
 #include <RH_RF95.h>
 #include <Time.h>
 
-//EAGLE EYE'S
+//HABET MADE
 #include "Globals.h"
 #include "Data.h"
 #include "Radio.h"
 
 
-/*****CONSTRUCTORS*****/ //(Objects that can reference their respective functions & variables)
+/*****CONSTRUCTORS*****/ 
 DATA Data;
 RADIO Radio;
 
@@ -23,8 +22,8 @@ RH_RF95 rf95(8,7);
  */
 void setup(){
     
-    // Creates a serial communication line between the arduino and the serial port 
-    // found under 'Tools' -> 'Serial Monitor'
+    // Creates a serial communication line between the arduino 
+    // and the serial port found under 'Tools' -> 'Serial Monitor'
     Serial.begin(115200);
     // Initializes the Radio.
     Radio.initialize();
@@ -67,8 +66,8 @@ void serial_input()
         char toParse[new_input.length()];
         // Converts said string to character array.
         new_input.toCharArray(toParse, new_input.length());
-        // Checks for the python gui starting up and attemping to establish serial connection
-        // to this microcontroller.
+        // Checks for the python gui starting up and attemping to 
+        // establish serial connection to this microcontroller.
         if(toParse[0] == 'P' && Data.gui_connection == false)
         {
             // Responds to the gui with the microcontroller ID tag.
@@ -81,21 +80,8 @@ void serial_input()
         // Checks for correct data format and prior connection status to the gui.
         else if(toParse[0] == '$' && Data.gui_connection == true)
         {
-            // '0' at index 3 signifies manual control. 
-            if(toParse[2]=='0')
-            {
-                Radio.Network.authority_mode = Data.get_serial_authority_mode(toParse);
-                Radio.Network.manual_direction = Data.get_serial_direction(toParse);
-                Radio.Network.craft_anchor = Data.get_serial_craft_anchor(toParse);
-                Radio.Network.target_throttle = Data.get_serial_target_throttle(toParse);
-                // Directly sets variables due to operation_mode being an enum state.
-                Data.get_serial_op_mode(toParse);
-            }
-            // '1' at index 3 signifies automatic control. 
-            else if(toParse[2]=='1')
-            {
-                // To be implemented at a later date.
-            }
+            // Directly sets variables due to operation_mode being an enum state.
+            Data.get_serial_op_mode(toParse);
         }
     }
 }

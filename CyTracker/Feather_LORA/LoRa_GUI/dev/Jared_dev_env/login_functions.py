@@ -1,6 +1,6 @@
 #############################################################
 #
-#	Property of Eagle Eye.
+#	Property of HABET.
 #
 #   Authors:
 #           Jared Danner
@@ -93,7 +93,7 @@ class Login_Terminal():
 							  font="Helvetica 10 bold",
 							  command=self.callback_verify_credentials)
 		button_login.pack()
-		# Forces Microsoft Windows to adjust top level
+		# Forces the operating system to adjust top level
 		# focus to this application widget.
 		self.entry_credentials.focus()
 		# Creates a hotkey for the enter button to automate the button press "button_login".

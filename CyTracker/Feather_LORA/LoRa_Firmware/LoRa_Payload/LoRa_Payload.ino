@@ -1,11 +1,13 @@
 /****LIBRARIES****/
+//NON HABET
 #include <RH_RF95.h>
 #include <TinyGPSPlus.h>
 
+//HABET MADE
 #include "Globals.h"
-#include "DATA.h"
+#include "Data.h"
 #include "GPS.h"
-#include "RADIO.h"
+#include "Radio.h"
 
 
 /*****CONSTRUCTORS*****/
@@ -25,7 +27,7 @@ TinyGPSPlus gps;
 void setup()
 {
     // Creates a serial communication line between the arduino 
-    //and the serial port found under 'Tools' -> 'Serial Monitor'
+    // and the serial port found under 'Tools' -> 'Serial Monitor'
     Serial.begin(115200);
     // Initializes the Radio.
     Radio.initialize();

@@ -90,6 +90,7 @@ class RADIO
 	// or if we have a direct line of communication with each node.
 	float craft_id = 0.0;
 
+
 	// Craft ID (SPECIFIC TO THE PAYLOAD LORA ONBOARD HABET)
 	float NODE_ID = 2.0;
 	// Holds the delay amount needed to synchronize the network when NORMAL operations

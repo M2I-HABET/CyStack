@@ -1,6 +1,6 @@
 #############################################################
 #
-#	Property of Eagle Eye. 
+#	Property of Eagle Eye.
 #
 #   Authors:
 #           Jared Danner
@@ -24,11 +24,11 @@ def setup_comms():
 	ports = get_serial_ports()
 	# Validates the current ports to ensure they are Eagle Eye's micro controllers.
 	validate_ports(ports)
-	# Starets timer based tasks to check for incoming serial data. 
+	# Starets timer based tasks to check for incoming serial data.
 	config_scheduler()
-	# Terminal verbose message. 
+	# Terminal verbose message.
 	print("Comms setup complete.----------------------------------\n")
-	
+
 
 def get_serial_ports():
 	""" Detects and returns all active serial ports. """
@@ -64,11 +64,11 @@ def validate_ports(ports):
 		#### USB connection detected. Grabs needed port info. ####
 
 		try:
-			# Splits the port info. 
+			# Splits the port info.
 			com_number, port_description = str(port).split("-")
 			# Trims whitespace.
 			com_number = com_number.strip()
-			# Trims whitespace. 
+			# Trims whitespace.
 			port_description = port_description.strip()
 		# Prints exception handler.
 		except Exception as e:
@@ -78,11 +78,11 @@ def validate_ports(ports):
 			print("Exception: " + str(e))
 			# Terminal verbose message displaying the port that failed.
 			print("Unable to parse: " + str(port))
-		
+
 
 		#### Attempts to recreate serial connection to ensure validity. ####
-		
-		try: 
+
+		try:
 			# If all previous steps have passed, the recreation process coninutes.
 			if passed:
 				# Creates empty serial object.
@@ -103,14 +103,14 @@ def validate_ports(ports):
 			print("Exception: " + str(e))
 			# Terminal verbose message displaying the port that failed.
 			print("Invalid connection to: " + str(port))
-		
+
 
 		#### Pings microcontroller to fetch its system ID. ####
-		
+
 		try:
 			# If all previous steps have passed, the recreation process coninutes.
 			if passed:
-				# Debug info. 
+				# Debug info.
 				print("Pinging: " + port_description)
 				# Contacts the Eagle Eye microcontroller to figure out what type of microcontroller its
 				# connected to.
@@ -118,21 +118,12 @@ def validate_ports(ports):
 				# Pauses program execution for 1/10th a second. To allow time for the microcontroller to
 				# process the request for info and reply.
 				time.sleep(0.1)
-				# Reads incoming serial port data from the passed in serial port object. 
+				# Reads incoming serial port data from the passed in serial port object.
 				response = generic_receive(ser)
-				# Checks if microcontroller response matches that of known Eagle Eye hardware.
-				if response in "CRAFT_LORA":
+				if response in "MC_LORA":
 					# Creates a serial object instance with the temporary serial object.
 					# Class defined at bottom of file.
-					PORT_CRAFT_LORA = serial_object(ser, response, port_description)
-				elif response in "CRAFT_MEGA":
-					# Creates a serial object instance with the temporary serial object.
-					# Class defined at bottom of file.
-					PORT_CRAFT_MEGA = serial_object(ser, response, port_description)
-				elif response in "MC_LORA":
-					# Creates a serial object instance with the temporary serial object.
-					# Class defined at bottom of file.
-					g.PORT_MC_LORA = serial_object(ser, response, port_description)
+					g.PORT_MISSION_CONTROL_LORA = serial_object(ser, response, port_description)
 				# Unknown microcontroller connection.
 				else:
 					# Updates status to reflect parsing failure.
@@ -163,38 +154,29 @@ def validate_ports(ports):
 
 def config_scheduler():
 	"""
-	Sets a thread bound timer object to run a method to capture 
-	serial input every x seconds. 
+	Sets a thread bound timer object to run a method to capture
+	serial input every x seconds.
 	"""
 
 	try:
-		# Checks for valid connection the the mc's Arduino LoRa.
-		if g.PORT_MC_LORA is not None:
+		# Checks for valid connection the the mission_control's Arduino LoRa.
+		if g.PORT_MISSION_CONTROL_LORA is not None:
 			# Terminal verbose message.
 			print("Scheduling task for mc LoRa.\n")
 			# Creates countdown timer that, upon hitting zero runs the associated method.
 			# Units are seconds.
-			g.timer_mc_lora = threading.Timer(0.6, mc_lora_receive)
+			g.timer_mission_control_lora = threading.Timer(0.6, mission_control_lora_receive)
 			# Starts the countdown timer.
-			g.timer_mc_lora.start()
-		# Checks for valid connection the the craft's Arduino MEGA.
-		if g.PORT_CRAFT_LORA is not None:
+			g.timer_mission_control_lora.start()
+		# Checks for valid connection the the payload's Arduino LoRa.
+		if g.PORT_PAYLOAD_LORA is not None:
 			# Terminal verbose message.
 			print("Scheduling task for craft LoRa.\n")
 			# Creates countdown timer that, upon hitting zero runs the associated method.
 			# Units are seconds.
-			g.timer_craft_lora = threading.Timer(0.6, craft_lora_receive)
+			g.timer_payload_lora = threading.Timer(0.6, craft_payload_receive)
 			# Starts the countdown timer.
-			g.timer.start()
-		# Checks for valid connection the the craft's Arduino LoRa.
-		if g.PORT_CRAFT_MEGA is not None:
-			# Terminal verbose message.
-			print("Scheduling task for craft MEGA.\n")
-			# Creates countdown timer that, upon hitting zero runs the associated method.
-			# Units are seconds.
-			g.timer_craft_mega = threading.Timer(0.6, craft_mega_receive)
-			# Starts the countdown timer.
-			g.timer_craft_mega.start()
+			g.timer_payload_lora.start()
 	# Prints exception handler.
 	except Exception as e:
 		# Terminal verbose message.
@@ -230,16 +212,17 @@ def generic_receive(ser):
 		return "No response."
 
 
-def mc_lora_receive():
+def mission_control_lora_receive():
 	""" Responsible for reading in data on the given serial (USB) port. """
 
 	# Creates countdown timer that, upon hitting zero runs the associated method.
-	# Units are seconds.
-	g.timer_mc_lora = threading.Timer(0.6, mc_lora_receive)
+	# Units are seconds. Timer terminates upon hitting zero so we need to
+	# recreat this timer each time.
+	g.timer_mission_control_lora = threading.Timer(0.6, mission_control_lora_receive)
 	# Starts the countdown timer.
-	g.timer_mc_lora.start()
+	g.timer_mission_control_lora.start()
 	# Pulls mission_control's serial port object down to a local instanced variable.
-	ser = g.PORT_MC_LORA.get_port()
+	ser = g.PORT_MISSION_CONTROL_LORA.get_port()
 	try:
 		# Checks for a incoming data.
 		if(ser.in_waiting != 0):
@@ -248,16 +231,16 @@ def mc_lora_receive():
 			# Debug info.
 			print("Received from " + str(ser.port) + ". Input: " + message + "\n")
 			# Return data.
-			g.PORT_MC_LORA.set_input(str(message))
+			g.PORT_MISSION_CONTROL_LORA.set_input(str(message))
 		return
 	# Prints exception handler.
 	except Exception as e:
 		# Terminates the timer object.
-		g.timer_mc_lora.cancel()
+		g.timer_mission_control_lora.cancel()
 		# Terminal verbose message to show the exact error that occurred.
 		print("Exception: " + str(e))
 		# Returns the error state message.
-		g.PORT_MC_LORA.set_input("Serial Error")
+		g.PORT_MISSION_CONTROL_LORA.set_input("Serial Error")
 		return
 
 
@@ -266,11 +249,11 @@ def craft_lora_receive():
 
 	# Creates countdown timer that, upon hitting zero runs the associated method.
 	# Units are seconds.
-	g.timer_craft_lora = threading.Timer(0.6, mc_lora_receive)
+	g.timer_payload_lora = threading.Timer(0.6, mc_lora_receive)
 	# Starts the countdown timer.
-	g.timer_craft_lora.start()
+	g.timer_payload_lora.start()
 	# Pulls the serial data from the craft LoRa port object down to a local instanced variable.
-	ser = g.PORT_CRAFT_LORA.get_port()
+	ser = g.PORT_PAYLOAD_LORA.get_port()
 	try:
 		# Checks for a incoming data.
 		if(ser.in_waiting != 0):
@@ -279,54 +262,23 @@ def craft_lora_receive():
 			# Debug info.
 			print("Received from " + str(ser.port) + ". Input: " + message + "\n")
 			# Return data.
-			g.PORT_CRAFT_LORA.set_input(str(message))
+			g.PORT_PAYLOAD_LORA.set_input(str(message))
 		return
 	# Print exception handler.
 	except Exception as e:
 		# Terminates the timer object.
-		g.timer_craft_lora.cancel()
+		g.timer_payload_lora.cancel()
 		# Terminal verbose message to show the exact error that occurred.
 		print("Exception: " + str(e))
 		# Returns the error state message.
-		g.PORT_CRAFT_LORA.set_input("Serial Error")
-		return
-
-
-def craft_mega_receive():
-	""" Responsible for reading in data on the given serial (USB) port. """
-
-	# Creates countdown timer that, upon hitting zero runs the associated method.
-	# Units are seconds.
-	g.timer_craft_mega = threading.Timer(0.6, mc_lora_receive)
-	# Starts the countdown timer.
-	g.timer_craft_mega.start()
-	# Pulls the serial data from the craft MEGA port object down to a local instanced variable.
-	ser = g.PORT_MEGA_LORA.get_port()
-	try:
-		# Checks for a incoming data.
-		if(ser.in_waiting != 0):
-			# Reads in and decodes incoming serial data.
-			message = ser.readline().decode()
-			# Debug info.
-			print("Received from " + str(ser.port) + ". Input: " + message + "\n")
-			# Return data.
-			g.PORT_MEGA_LORA.set_input(str(message))
-		return
-	# Print exception handler.
-	except Exception as e:
-		# Terminates the timer object.
-		g.timer_craft_mega.cancel()
-		# Terminal verbose message to show the exact error that occurred.
-		print("Exception: " + str(e))
-		# Returns the error state message.
-		g.PORT_MEGA_LORA.set_input("Serial Error")
+		g.PORT_PAYLOAD_LORA.set_input("Serial Error")
 		return
 
 
 def send(ser, message):
-	""" 
+	"""
 	Sends passed in parameter over the bound serial port.
-	
+
 	@param ser     - Developer specificed serial port.
 	@param message - Paramter to be encoded and sent.
 	"""

@@ -10,7 +10,6 @@
 class RADIO
 {
     public:
-
     // Constructor
     RADIO();
     // Returns the transmission's craft's altitude.
@@ -35,14 +34,14 @@ class RADIO
     void roll_call();
     // Sends the desired signal out over the radio antenna.
     void broadcast();
-    // Compares current node against others. Prevents duplicates. 
+    // Compares current node against others. Prevents duplicates.
     void node_check_in();
     // Blinks the LED on the LoRa uC (quick blink).
     void blink_led();
     // Blinks the LED on the LoRa uC (long duration pulse).
     void blink_led_long();
 
-    /*---------------------------------Variables---------------------------------*/ 
+    /*---------------------------------Variables---------------------------------*/
 
     // Chip select pin for the radio.
     const byte RFM95_CS = 8;
@@ -56,16 +55,16 @@ class RADIO
     const byte LED = 13;
     // Radio frequency used throught the Eagle Eye Program. CHECK WITH HABET BEFORE EACH FLIGHT!!!!!
     #define RF95_FREQ 433.0
-    // Holds the ID of the craft that just broadcasted. THIS IS ANOTHER NODE, NOT MISSION CONTROL. 
+    // Holds the ID of the craft that just broadcasted. THIS IS ANOTHER NODE, NOT MISSION CONTROL.
     float received_id = 0.0;
-    // List of nodes currently logged into network. 
+    // List of nodes currently logged into network.
     // MC - 1
     // HABET - 2
     float node_list[3] = {1.0, 0.0, 0.0};  // In future, need to cycle through null list and fill out 0.0.
-    // State of Radio program. 
-    // ROLLCALL - Currently in RollCall process. 
-    // STANDBY  - RollCall completed, waiting for user to send out start signal. 
-    // NORMAL   - Radio is running in its normal operation state. 
+    // State of Radio program.
+    // ROLLCALL - Currently in RollCall process.
+    // STANDBY  - RollCall completed, waiting for user to send out start signal.
+    // NORMAL   - Radio is running in its normal operation state.
     enum RadioStatus {NONE, ROLLCALL, STANDBY, NORMAL};
     enum RadioStatus operation_mode = NONE;
     // Holds the current received radio signal.
@@ -76,18 +75,18 @@ class RADIO
 	/**
 	 * This set of varaibles are accessed and overseen by the HABET Payload.
 	 */
-	
+
 	// Each of these is defined in the Data.h struct. Refer to its documentation as needed.
 	float craft_ts = 0.0;
 	float craft_altitude = 0.0;
 	float craft_latitude = 0.0;
 	float craft_longitude = 0.0;
 	float craft_event = 0.0;
-	
+
 	/**
 	 * These variables are overseen by Mission Control.
 	 */
-	
+
     // Mission Control's ms Time stamp.
     float home_ts = 0.0;
 
@@ -101,13 +100,13 @@ class RADIO
 	float craft_id = 0.0;
 
 
-    // Timer is used to for the 10 second interval that the craft will broadcast when in normal. 
-    // operating mode. This value is in milliseconds.  
+    // Timer is used to for the 10 second interval that the craft will broadcast when in normal.
+    // operating mode. This value is in milliseconds.
     unsigned long broadcast_timer = 0;
-    // Timer is used to for the 10 second interval that the craft will broadcast on for RollCall. 
+    // Timer is used to for the 10 second interval that the craft will broadcast on for RollCall.
     // This value is in milliseconds.
     unsigned long rc_broadcast = 0;
-    // Used to house node objects. 
+    // Used to house node objects.
     struct Network_Node {
 
         // General status of node.
@@ -122,6 +121,9 @@ class RADIO
     struct Network_Node mc_node;
     struct Network_Node payload_node;
     struct Network_Node recovery_node;
+    // Holds the delay amount between this nodes broadcast window.
+    // Configured in Radio.rollcall().
+    float network_node_delay = 0.0;
 };
 
 #endif
