@@ -36,6 +36,8 @@ class MC_Tab():
 		self.node_recovery = None
 		self.radio_received = None
 		self.radio_sent = None
+		self.radio_rssi = None
+		self.system_received_id = None
 
 		# HABET Payload variables.
 		self.payload_time = None
@@ -43,7 +45,6 @@ class MC_Tab():
 		self.payload_latitude = None
 		self.payload_longitude = None
 		self.payload_event = None
-		self.payload_received_id = None
 
 		# Mission Control variables.
 		self.mission_control_time = None
@@ -69,12 +70,13 @@ class MC_Tab():
 		self.node_recovery = StringVar(self.mc_frame)
 		self.radio_received = StringVar(self.mc_frame)
 		self.radio_sent = StringVar(self.mc_frame)
+		self.radio_rssi = StringVar(self.mc_frame)
 		self.payload_time = StringVar(self.mc_frame)
 		self.payload_altitude = StringVar(self.mc_frame)
 		self.payload_latitude = StringVar(self.mc_frame)
 		self.payload_longitude = StringVar(self.mc_frame)
 		self.payload_event = StringVar(self.mc_frame)
-		self.payload_received_id = StringVar(self.mc_frame)
+		self.system_received_id = StringVar(self.mc_frame)
 		self.display_changed_commands = StringVar(self.mc_frame)
 
 		# Configures tracing for all variables. When these variables are written to,
@@ -89,12 +91,13 @@ class MC_Tab():
 		self.roll_call_status.set("NOT STARTED")
 		self.radio_received.set("-------")
 		self.radio_sent.set("-------")
+		self.radio_rssi.set("-------")
 		self.payload_time.set("-------")
 		self.payload_altitude.set("-------")
 		self.payload_latitude.set("-------")
 		self.payload_longitude.set("-------")
 		self.payload_event.set("-------")
-		self.payload_received_id.set("-------")
+		self.system_received_id.set("-------")
 		self.mission_control_time.set("-------")
 		self.display_changed_commands.set("")
 		self.operational_mode.set("NOT STARTED")
@@ -112,12 +115,13 @@ class MC_Tab():
 		self.entry_roll_call_status = Entry(self.mc_frame, state="readonly", textvariable=self.roll_call_status, justify='center')
 		self.entry_radio_received = Entry(self.mc_frame, state="readonly", textvariable=self.radio_received)
 		self.entry_radio_sent = Entry(self.mc_frame, state="readonly", textvariable=self.radio_sent)
+		self.entry_radio_rssi = Entry(self.mc_frame, state="readonly", textvariable=self.radio_rssi)
 		self.entry_payload_time = Entry(self.mc_frame, state="readonly", textvariable=self.payload_time, justify='right')
 		self.entry_payload_altitude = Entry(self.mc_frame, state="readonly", textvariable=self.payload_altitude, justify='right')
 		self.entry_payload_latitude = Entry(self.mc_frame, state="readonly", textvariable=self.payload_latitude, justify='right')
 		self.entry_payload_longitude = Entry(self.mc_frame, state="readonly", textvariable=self.payload_longitude, justify='right')
 		self.entry_payload_event = Entry(self.mc_frame, state="readonly", textvariable=self.payload_event, justify='right')
-		self.entry_payload_received_id = Entry(self.mc_frame, state="readonly", textvariable=self.payload_received_id, justify='center')
+		self.entry_system_received_id = Entry(self.mc_frame, state="readonly", textvariable=self.system_received_id, justify='center')
 		self.entry_mission_control_time = Entry(self.mc_frame, state="readonly", textvariable=self.mission_control_time, justify='right')
 		self.entry_display_changed_commands = Entry(self.mc_frame, state="readonly", justify='right', textvariable=self.display_changed_commands)
 
@@ -174,6 +178,8 @@ class MC_Tab():
 		self.entry_radio_received.grid(row=0, column=6, columnspan=14, sticky='we')
 		self.create_label_east(1, 5, self.mc_frame, "Sent:")
 		self.entry_radio_sent.grid(row=1, column=6, columnspan=14, stick='we')
+		self.create_label_east(2, 5, self.mc_frame, "Last RSSI:")
+		self.entry_radio_rssi.grid(row=2, column=6, columnspan=1, stick='we')
 		self.button_roll_call_start.grid(row=3, column=0, rowspan=2, sticky='nes')
 		self.button_roll_call_stop.grid(row=3, column=1, rowspan=2, sticky='ns')
 		self.button_start_network.grid(row=3, column=2, rowspan=2, sticky='nws')
@@ -255,7 +261,7 @@ class MC_Tab():
 		#self.embed_cmd() # Work in progress for another day.
 
 
-	def embed_cmd(self):
+	# def embed_cmd(self):
 		"""
 		Creates a inner frame object and links it to the os's command line.
 
@@ -265,11 +271,11 @@ class MC_Tab():
 		"""
 
 		# Creation of frame to house the command line / terminal.
-		cmd = Frame(self.mc_frame)
+		# cmd = Frame(self.mc_frame)
 		# Assigns the frames position.
-		cmd.grid(row=5, column=6, columnspan=12, rowspan=6, stick='we')
+		# cmd.grid(row=5, column=6, columnspan=12, rowspan=6, stick='we')
 		# Grabs the system id of the command terminal.
-		wid = cmd.winfo_id()
+		# wid = cmd.winfo_id()
 		# Attempts to bind the terminal into the frame.
 		# os.system('xterm -into %d -geometry 40x20 -sb &' % wid)
 
@@ -357,30 +363,27 @@ class MC_Tab():
 			if "N" in temp_input:
 				serial_data, radio_data = str(temp_input).split("]")
 				# Variables such as '$' and 'N' are thrown out as junk.
-				# t_ stands for temp because the numbers need to be converted to the
-				# corresponding string for the gui to show.
-				junk, junk ,t_craft_ts, t_alt, t_lat, t_lon, t_event, t_craft_id, t_mc_ts = str(serial_data).split(",")
-				t_radio_in, t_radio_out, junk = str(radio_data).split("/")
+				junk, junk , p_ts, p_alt, p_lat, p_lon, p_event, node_id, t_mc_ts = str(serial_data).split(",")
+				radio_in, radio_out, received_rssi, junk = str(radio_data).split("/")
 				# Setting individual variables from the parsed packet.
-				self.mission_control_time.set(t_mc_ts)
-				self.payload_altitude.set(t_alt)
-				self.payload_latitude.set(t_lat)
-				self.payload_longitude.set(t_lon)
-				self.payload_event.set(t_event)
-				self.payload_time.set(t_craft_ts)
-				self.payload_received_id.set(t_craft_id)
-				self.radio_received.set(t_radio_in)
-				self.radio_sent.set(t_radio_out)
+				self.payload_time.set(p_ts)
+				self.payload_altitude.set(p_alt)
+				self.payload_latitude.set(p_lat)
+				self.payload_longitude.set(p_lon)
+				self.payload_event.set(p_event)
+				self.system_received_id.set(node_id)
+				self.mission_control_time.set(mc_ts)
+				self.radio_received.set(radio_in)
+				self.radio_sent.set(radio_out)
+				self.radio_rssi.set(received_rssi)
 			# R signifies the packet being of type Roll Call.
 			elif "R" in temp_input:
 				# Variables such as '$' and 'R' are thrown out as junk.
-				# t_ stands for temp because the numbers need to be converted to the
-				# corresponding string for the gui to show.
 				junk, junk, t_mission_control_node_status, t_payload_node_status, t_recovery_node_status, junk = str(temp_input).split(",")
 				# Setting individual variables from the parsed packet.
-				self.node_mission_control.set(t_mc_node)
-				self.node_payload.set(t_payload_node)
-				self.node_recovery.set(t_recovery_node)
+				self.node_mission_control.set(t_mission_control_node_status)
+				self.node_payload.set(t_payload_node_status)
+				self.node_recovery.set(t_recovery_node_status)
 
 
 	def callback_update_transmission(self, *args):

@@ -13,15 +13,15 @@ class RADIO
     // Constructor
     RADIO();
     // Returns the transmission's craft's altitude.
-    float get_radio_craft_altitude(char buf[]);
+    float get_radio_payload_altitude(char buf[]);
     // Returns the transmission's Latitude.
-    float get_radio_craft_latitude(char buf[]);
+    float get_radio_payload_latitude(char buf[]);
     // Returns the transmission's longitude.
-    float get_radio_craft_longitude(char buf[]);
+    float get_radio_payload_longitude(char buf[]);
     // Returns the transmission's craft event.
-    float get_radio_craft_event(char buf[]);
+    float get_radio_payload_event(char buf[]);
     // Returns the transmission's craft ID.
-    float get_radio_craft_id(char buf[]);
+    float get_radio_node_id(char buf[]);
     // Returns the transmission's time stamp.
     float get_radio_timestamp(char buf[], int selector);
     // Runs initialzation script for the Radio.
@@ -77,27 +77,27 @@ class RADIO
 	 */
 
 	// Each of these is defined in the Data.h struct. Refer to its documentation as needed.
-	float craft_ts = 0.0;
-	float craft_altitude = 0.0;
-	float craft_latitude = 0.0;
-	float craft_longitude = 0.0;
-	float craft_event = 0.0;
+	float payload_ts = 0.0;
+	float payload_altitude = 0.0;
+	float payload_latitude = 0.0;
+	float payload_longitude = 0.0;
+	float payload_event = 0.0;
 
 	/**
 	 * These variables are overseen by Mission Control.
 	 */
 
     // Mission Control's ms Time stamp.
-    float home_ts = 0.0;
+    float mission_control_ts = 0.0;
 
     /**
      * This varaible is updated by each craft right before the array is broadcasted.
      */
 
-	// Craft_ID is used to tell which craft is currently broadcasting the signal. This allows
+	// Node_ID is used to tell which radio node is currently broadcasting the signal. This allows
 	// for Mission Control to have a sense of if information is being relayed through nodes,
 	// or if we have a direct line of communication with each node.
-	float craft_id = 0.0;
+	float node_id = 0.0;
 
 
     // Timer is used to for the 10 second interval that the craft will broadcast when in normal.

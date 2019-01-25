@@ -99,7 +99,7 @@ void DATA::update_gui()
 		// Resets / starts timer.
 	    Data.serial_timer = millis();
 	    // Starts or updates mission control microsecond timer. (Converts to seconds w/ 2 decimal places for easy of use)
-	    Radio.home_ts = millis()/1000.0;
+	    Radio.mission_control_ts = millis()/1000.0;
     	// Holds outgoing message.
 		String temp_packet = "";
     	// Gets set true if a packet (TO BE SENT) has been created.
@@ -130,19 +130,19 @@ void DATA::update_gui()
 			temp_packet += ",";
 			temp_packet += "N";
 			temp_packet += ",";
-      		temp_packet += Radio.craft_ts;
+      		temp_packet += Radio.payload_ts;
 			temp_packet += ",";
-			temp_packet += Radio.craft_altitude;
+			temp_packet += Radio.payload_altitude;
 			temp_packet += ",";
-			temp_packet += Radio.craft_latitude;
+			temp_packet += Radio.payload_latitude;
 			temp_packet += ",";
-			temp_packet += Radio.craft_longitude;
+			temp_packet += Radio.payload_longitude;
 			temp_packet += ",";
-			temp_packet += Radio.craft_event;
+			temp_packet += Radio.payload_event;
 		    temp_packet += ",";
-		    temp_packet += Radio.craft_id;
+		    temp_packet += Radio.node_id;
 		    temp_packet += ",";
-		    temp_packet += Radio.home_ts;
+		    temp_packet += Radio.mission_control_ts;
 			temp_packet += "]";
 			temp_packet += Radio.radio_input;
 			temp_packet += "/";

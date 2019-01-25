@@ -33,7 +33,7 @@ float RADIO::get_radio_timestamp(char buf[], int selector)
 /**
  * Parses and returns the radio transmission's altitude.
  */
-float RADIO::get_radio_craft_altitude(char buf[])
+float RADIO::get_radio_payload_altitude(char buf[])
 {
     return (Data.Parse(buf,1));
 }
@@ -42,7 +42,7 @@ float RADIO::get_radio_craft_altitude(char buf[])
 /**
  * Parses and returns the radio transmission's latitude.
  */
-float RADIO::get_radio_craft_latitude(char buf[])
+float RADIO::get_radio_payload_latitude(char buf[])
 {
     return (Data.Parse(buf,2)) / 10000.0;
 }
@@ -51,7 +51,7 @@ float RADIO::get_radio_craft_latitude(char buf[])
 /**
  * Parses and returns the radio transmission's longitude.
  */
-float RADIO::get_radio_craft_longitude(char buf[])
+float RADIO::get_radio_payload_longitude(char buf[])
 {
     return (Data.Parse(buf,3)) / 10000.0;
 }
@@ -60,7 +60,7 @@ float RADIO::get_radio_craft_longitude(char buf[])
 /**
  * Parses and returns the radio transmission's craft Event.
  */
-float RADIO::get_radio_craft_event(char buf[])
+float RADIO::get_radio_parload_event(char buf[])
 {
     return (Data.Parse(buf,4));
 }
@@ -69,7 +69,7 @@ float RADIO::get_radio_craft_event(char buf[])
 /**
  * Parses and returns the radio transmission's Craft ID.
  */
-float RADIO::get_radio_craft_id(char buf[])
+float RADIO::get_radio_node_id(char buf[])
 {
     return (Data.Parse(buf,/*   TBD  */));
 }
@@ -131,8 +131,8 @@ void RADIO::manager()
 	// After Roll Call is complete, Mission Control will broadcast the start signal.
 	else if(operation_mode == Radio.STANDBY)
     {
-        // Updates craft_id to the network start signal.
-        Radio.craft_id = 555.0;
+        // Updates node_id to the network start signal.
+        Radio.node_id = 555.0;
 	}
 	// Each of the crafts have # seconds to broadcast. That means each craft will broadcast every # seconds.
 	else if((millis() - broadcast_timer >= Radio.network_node_delay) && (operation_mode == Radio.NORMAL))
@@ -144,13 +144,13 @@ void RADIO::manager()
         // The first time NORMAL operation mode is run, the node id is 555.0.
         // 555.0 is the network "start" signal. After this start signal is sent,
         // we want to update this craft's id to its actual ID.
-        if(Radio.craft_id == 555.0)
+        if(Radio.node_id == 555.0)
         {
             // Switch start signal to craft ID. Normal operations have begun.
-            Radio.craft_id = 1.0;
+            Radio.node_id = 1.0;
             // Sets the delay needed to maintain synchronization between the
             // different nodes in the network.
-            Radio.network_node_delay = Radio.craft_id * 500.0;
+            Radio.network_node_delay = Radio.node_id * 500.0;
     	}
     }
 }
@@ -161,8 +161,8 @@ void RADIO::manager()
  */
 void RADIO::roll_call()
 {
-  // Updates the Craft_ID to the network call in signal "999.0".
-  Radio.craft_id = 999.0;
+  // Updates the node_ID to the network call in signal "999.0".
+  Radio.node_id = 999.0;
     // Timer of 5 seconds.
     if(millis() - rc_broadcast >= 2000)
     {
@@ -184,19 +184,19 @@ void RADIO::broadcast()
     // Casting all float values to a character array with commas saved in between values
     // so the character array can be parsed when received by another craft.
     String temp = "";
-    temp += Radio.craft_ts;
+    temp += Radio.payload_ts;
     temp += ",";
-    temp += Radio.craft_altitude;
+    temp += Radio.payload_altitude;
     temp += ",";
-    temp += Radio.craft_latitude * 10000;
+    temp += Radio.payload_latitude * 10000;
     temp += ",";
-    temp += Radio.craft_longitude * 10000;
+    temp += Radio.payload_longitude * 10000;
     temp += ",";
-    temp += Radio.craft_event;
+    temp += Radio.payload_event;
     temp += ",";
     temp += Radio.home_ts;
     temp += ",";
-    temp += Radio.craft_id;
+    temp += Radio.node_id;
     // Copy contents.
     radio_output = temp;
     // Converts from String to char array.
@@ -294,8 +294,10 @@ void RADIO::radio_receive()
                 Radio.craft_longitude = Radio.get_radio_craft_longitude(to_parse);
                 Radio.craft_event = Radio.get_radio_craft_event(to_parse);
             }
+            // Pulls the RSSI from the signal. (Received Signal Strength Indicator)
+            received_rssi = rf95.lastRssi()
             // Reads in Craft ID to see where signal came from.
-            received_id = Radio.get_radio_craft_id(to_parse);
+            received_id = Radio.get_radio_node_id(to_parse);
             // Compares the transmission's craftID to see if its a brand new craft. If so, it logs it.
             Radio.node_check_in();
         }
