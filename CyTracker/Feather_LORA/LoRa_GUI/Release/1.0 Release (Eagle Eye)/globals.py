@@ -1,13 +1,13 @@
 #############################################################
 #
-#	Property of Eagle Eye. 
+#	Property of Eagle Eye.
 #
 #   Authors:
 #           Jared Danner
 #
 #############################################################
 
-# Serial port objects. Object class defined at bottom of communication.py. 
+# Serial port objects. Object class defined at bottom of communication.py.
 PORT_MC_LORA = None
 PORT_CRAFT_LORA = None
 PORT_CRAFT_MEGA = None

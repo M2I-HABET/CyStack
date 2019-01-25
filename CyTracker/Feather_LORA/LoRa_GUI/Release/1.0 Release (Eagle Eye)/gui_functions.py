@@ -1,6 +1,6 @@
 #############################################################
 #
-#	Property of Eagle Eye. 
+#	Property of Eagle Eye.
 #
 #   Authors:
 #           Jared Danner
@@ -16,7 +16,7 @@ import globals as g
 class GUI_Terminal():
 
 	def __init__(self):
-		""" 
+		"""
 		Initialization function for the class.
 
 		@param self - Instance of the class.
@@ -27,7 +27,7 @@ class GUI_Terminal():
 		self.craft_frame = None
 
 	def configure_gui_terminal(self):
-		""" 
+		"""
 		Configures the main GUI application window to hold
 		the required widgets. Displays upon .mainloop().
 
