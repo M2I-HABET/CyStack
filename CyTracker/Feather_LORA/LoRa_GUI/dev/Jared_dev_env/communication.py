@@ -120,7 +120,7 @@ def validate_ports(ports):
 				time.sleep(0.1)
 				# Reads incoming serial port data from the passed in serial port object.
 				response = generic_receive(ser)
-				if response in "MC_LORA":
+				if response in "mission_control":
 					# Creates a serial object instance with the temporary serial object.
 					# Class defined at bottom of file.
 					g.PORT_MISSION_CONTROL_LORA = serial_object(ser, response, port_description)

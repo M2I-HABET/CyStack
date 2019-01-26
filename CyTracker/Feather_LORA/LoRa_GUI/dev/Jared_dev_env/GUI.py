@@ -11,7 +11,7 @@ from gui_functions import *
 from communication import *
 
 # Enables / Disables login window.
-LOGIN_ENABLE = False
+LOGIN_ENABLE = True
 
 
 def main():
@@ -34,9 +34,15 @@ def login():
 	# Creation of class.
 	login = Login_Terminal()
 	# Sets the password.
-	login.set_credentials("test")
+	login.set_credentials("HABET")
 	# Configures and displays the login window.
 	login.configure_login_window()
+	# Checks for potential manual termination of the window.
+	if login.lock_state is True:
+		# Gives verbose error message in cmd / terminal.
+		print("User gave invalid credentials / closed the window.")
+		# Shuts down the application
+		quit()
 
 
 def GUI():

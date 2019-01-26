@@ -21,12 +21,20 @@ RADIO::RADIO()
 
 /**
  * Parses and returns the radio transmission's Time Stamp (ms).
- *    LoRa  -> 0
- *    MC    -> 5
+ *    payload         -> 1
+ *    mission_control -> 6
  */
-float RADIO::get_radio_timestamp(char buf[], int selector)
+float RADIO::get_radio_timestamp(char buf[], String selector)
 {
-    return (Data.Parse(buf, selector));
+    if(selector == "payload")
+    {
+        return (Data.Parse(buf, 1));
+    }
+    else if(selector == "mission_control")
+    {
+        return (Data.Parse(buf, 6));
+    }
+
 }
 
 
@@ -35,7 +43,7 @@ float RADIO::get_radio_timestamp(char buf[], int selector)
  */
 float RADIO::get_radio_payload_altitude(char buf[])
 {
-    return (Data.Parse(buf,1));
+    return (Data.Parse(buf, 2));
 }
 
 
@@ -44,7 +52,7 @@ float RADIO::get_radio_payload_altitude(char buf[])
  */
 float RADIO::get_radio_payload_latitude(char buf[])
 {
-    return (Data.Parse(buf,2)) / 10000.0;
+    return (Data.Parse(buf, 3)) / 10000.0;
 }
 
 
@@ -53,16 +61,16 @@ float RADIO::get_radio_payload_latitude(char buf[])
  */
 float RADIO::get_radio_payload_longitude(char buf[])
 {
-    return (Data.Parse(buf,3)) / 10000.0;
+    return (Data.Parse(buf, 4)) / 10000.0;
 }
 
 
 /**
  * Parses and returns the radio transmission's craft Event.
  */
-float RADIO::get_radio_parload_event(char buf[])
+float RADIO::get_radio_payload_event(char buf[])
 {
-    return (Data.Parse(buf,4));
+    return (Data.Parse(buf, 5));
 }
 
 
@@ -71,7 +79,7 @@ float RADIO::get_radio_parload_event(char buf[])
  */
 float RADIO::get_radio_node_id(char buf[])
 {
-    return (Data.Parse(buf,/*   TBD  */));
+    return (Data.Parse(buf, 7));
 }
 
 
@@ -180,10 +188,12 @@ void RADIO::roll_call()
 void RADIO::broadcast()
 {
     // Updates the time object to hold the most current operation time.
-    Radio.home_ts = millis()/1000.0;
+    Radio.mission_control_ts = millis()/1000.0;
     // Casting all float values to a character array with commas saved in between values
     // so the character array can be parsed when received by another craft.
     String temp = "";
+    temp += "$"
+    temp += ",";
     temp += Radio.payload_ts;
     temp += ",";
     temp += Radio.payload_altitude;
@@ -194,9 +204,11 @@ void RADIO::broadcast()
     temp += ",";
     temp += Radio.payload_event;
     temp += ",";
-    temp += Radio.home_ts;
+    temp += Radio.mission_control_ts;
     temp += ",";
     temp += Radio.node_id;
+    temp += ",";
+    temp += "$"
     // Copy contents.
     radio_output = temp;
     // Converts from String to char array.
@@ -231,16 +243,16 @@ void RADIO::node_check_in()
             {
                 // Adds the node to the Radio. (Known node id's list)
                 node_list[i] = received_id;
-                // Checks for craft's node id.
+                // Checks for payload's node id.
                 if(1.9 < received_id && received_id < 2.1)
                 {
-                    // Sets the LoRa on the HABET payload network status as connected. (Used by GUI.)
+                    // Sets the LoRa on the HABET payload status as connected. (Used by GUI.)
                     Radio.payload_node.node_status = 1.0;
                 }
-                // Checks for relay's node id. (Technically anything 3.0 and above but not implemented yet)
-                else if (received_id == 3.0)
+                // Checks for recovery's node id.
+                else if (2.9 < received_id && received_id < 3.1)
                 {
-                    // Sets the relay's network status as connected. (Used by GUI.)
+                    // Sets the recovery node's status as connected. (Used by GUI.)
                     Radio.recovery_node.node_status = 1.0;
                 }
                 // Breaks FOR loop.
@@ -276,31 +288,60 @@ void RADIO::radio_receive()
             char to_parse[str.length()];
             str.toCharArray(to_parse,str.length());
 
-            // This whole section is comparing the currently held varaibles from the last radio update
-            // to that of the newly received signal. Updates the LoRa's owned variables and copies
-            // down the other nodes' varaibles. If the time LoRa currently holds the most updated values
-            // for another node (LoRa's time stamp is higher than the new signal's), it replaces those vars.
-
-            // Reads in the time stamp for Mission Control's last broadcast.
-            float temp_LoRa = Radio.get_radio_timestamp(to_parse, 0);
-            // Compares the currently brought in time stamp to the one stored onboad.
-            if(temp_LoRa > Radio.craft_ts)
+            // Checks for a valid packet. Only parses contents if valid to prevent
+            // data corruption.
+            if(Radio.validate_checksum())
             {
-                // If the incoming signal has more up-to-date versions, we overwrite our saved version with
-                // the new ones.
-                Radio.craft_ts = temp_LoRa;
-                Radio.craft_altitude = Radio.get_radio_craft_altitude(to_parse);
-                Radio.craft_latitude = Radio.get_radio_craft_latitude(to_parse);
-                Radio.craft_longitude = Radio.get_radio_craft_longitude(to_parse);
-                Radio.craft_event = Radio.get_radio_craft_event(to_parse);
+                // This whole section is comparing the currently held varaibles from the last radio update
+                // to that of the newly received signal. Updates the LoRa's owned variables and copies
+                // down the other nodes' varaibles. If the time LoRa currently holds the most updated values
+                // for another node (LoRa's time stamp is higher than the new signal's), it replaces those vars.
+
+                // Reads in the time stamp for Mission Control's last broadcast.
+                float temp_ts = Radio.get_radio_timestamp(to_parse, "payload");
+                // Compares the currently brought in time stamp to the one stored onboad.
+                if(temp_ts > Radio.payload_ts)
+                {
+                    // If the incoming signal has more up-to-date versions, we overwrite our saved version with
+                    // the new ones.
+                    Radio.payload_ts = temp_ts;
+                    Radio.payload_altitude = Radio.get_radio_payload_altitude(to_parse);
+                    Radio.payload_latitude = Radio.get_radio_payload_latitude(to_parse);
+                    Radio.payload_longitude = Radio.get_radio_payload_longitude(to_parse);
+                    Radio.payload_event = Radio.get_radio_payload_event(to_parse);
+                }
+                // Pulls the RSSI from the signal. (Received Signal Strength Indicator)
+                received_rssi = rf95.lastRssi()
+                // Reads in Craft ID to see where signal came from.
+                received_id = Radio.get_radio_node_id(to_parse);
+                // Compares the transmission's craftID to see if its a brand new craft. If so, it logs it.
+                Radio.node_check_in();
             }
-            // Pulls the RSSI from the signal. (Received Signal Strength Indicator)
-            received_rssi = rf95.lastRssi()
-            // Reads in Craft ID to see where signal came from.
-            received_id = Radio.get_radio_node_id(to_parse);
-            // Compares the transmission's craftID to see if its a brand new craft. If so, it logs it.
-            Radio.node_check_in();
         }
+    }
+}
+
+
+/**
+ * Responsible for ensuring that a full packet has been received
+ * by validating that the packet begins and ends with the correct
+ * symbol '$'.
+ */
+bool RADIO::validate_checksum()
+{
+    // Gets the length of the packet. Non-zero indexed.
+    int str_length = radio_input.length();
+    // Checks for the correct starting and ending symbols.
+    if((radio_input.charAt(0) == '$') && (radio_input.chatAt(str_length-1) == '$'))
+    {
+        // If both are detected, valid packet.
+        return true;
+    }
+    else
+    {
+        // Otherwise, invalid packet. Prevents the system from
+        // attempting to parse its contents.
+        return false;
     }
 }
 

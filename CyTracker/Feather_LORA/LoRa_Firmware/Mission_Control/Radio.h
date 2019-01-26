@@ -12,6 +12,8 @@ class RADIO
     public:
     // Constructor
     RADIO();
+    // Returns the transmission's time stamp.
+    float get_radio_timestamp(char buf[], String selector);
     // Returns the transmission's craft's altitude.
     float get_radio_payload_altitude(char buf[]);
     // Returns the transmission's Latitude.
@@ -22,20 +24,20 @@ class RADIO
     float get_radio_payload_event(char buf[]);
     // Returns the transmission's craft ID.
     float get_radio_node_id(char buf[]);
-    // Returns the transmission's time stamp.
-    float get_radio_timestamp(char buf[], int selector);
     // Runs initialzation script for the Radio.
     void initialize();
     // Passively watches for incoming radio transmissions from Mission Control and other crafts.
     void manager();
-    // Receives incoming transmission.
-    void radio_receive();
     // Responds to the RollCall signal sent from Mission Control.
     void roll_call();
     // Sends the desired signal out over the radio antenna.
     void broadcast();
     // Compares current node against others. Prevents duplicates.
     void node_check_in();
+    // Receives incoming transmission.
+    void radio_receive();
+    // Checks if packet is valid or invalid. Error detection.
+    bool validate_packet();
     // Blinks the LED on the LoRa uC (quick blink).
     void blink_led();
     // Blinks the LED on the LoRa uC (long duration pulse).
@@ -58,25 +60,28 @@ class RADIO
     // Holds the ID of the craft that just broadcasted. THIS IS ANOTHER NODE, NOT MISSION CONTROL.
     float received_id = 0.0;
     // List of nodes currently logged into network.
-    // MC - 1
+    // mission control - 1
     // HABET - 2
+    // Recovery - 3
     float node_list[3] = {1.0, 0.0, 0.0};  // In future, need to cycle through null list and fill out 0.0.
+    // Holds the current received radio signal.
+    String radio_input = "";
+    // Holds the current sent radio signal.
+    String radio_output = "";
+    // Holds the most recent received singal's rssi value.
+    float received_rssi = 0.0;
     // State of Radio program.
     // ROLLCALL - Currently in RollCall process.
     // STANDBY  - RollCall completed, waiting for user to send out start signal.
     // NORMAL   - Radio is running in its normal operation state.
     enum RadioStatus {NONE, ROLLCALL, STANDBY, NORMAL};
     enum RadioStatus operation_mode = NONE;
-    // Holds the current received radio signal.
-    String radio_input = "";
-    // Holds the current sent radio signal.
-    String radio_output = "";
 
 	/**
 	 * This set of varaibles are accessed and overseen by the HABET Payload.
 	 */
 
-	// Each of these is defined in the Data.h struct. Refer to its documentation as needed.
+     // Each of these is defined in the Data.h file. Refer to its documentation as needed.
 	float payload_ts = 0.0;
 	float payload_altitude = 0.0;
 	float payload_latitude = 0.0;
@@ -115,7 +120,7 @@ class RADIO
         // 2 - Error State
         float node_status = 0.0;
         // TBD @ a later date. Heart beat of node.
-        float last_contact = 0.0;
+        unsigned long last_contact = 0.0;
     };
     // Node declarations.
     struct Network_Node mc_node;

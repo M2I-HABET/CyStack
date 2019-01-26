@@ -20,57 +20,65 @@ RADIO::RADIO()
 
 /**
  * Parses and returns the radio transmission's Time Stamp (ms).
- *    LoRa  -> 0
- *    MC    -> 5
+ *    payload         -> 1
+ *    mission_control -> 6
  */
-float RADIO::get_radio_timestamp(char buf[], int selector)
+float RADIO::get_radio_timestamp(char buf[], String selector)
 {
-    return (Data.Parse(buf, selector));
+    if(selector == "payload")
+    {
+        return (Data.Parse(buf, 1));
+    }
+    else if(selector == "mission_control")
+    {
+        return (Data.Parse(buf, 6));
+    }
+
 }
 
 
 /**
  * Parses and returns the radio transmission's altitude.
  */
-float RADIO::get_radio_craft_altitude(char buf[])
+float RADIO::get_radio_payload_altitude(char buf[])
 {
-    return (Data.Parse(buf,1));
+    return (Data.Parse(buf, 2));
 }
 
 
 /**
  * Parses and returns the radio transmission's latitude.
  */
-float RADIO::get_radio_craft_latitude(char buf[])
+float RADIO::get_radio_payload_latitude(char buf[])
 {
-    return (Data.Parse(buf,2)) / 10000.0;
+    return (Data.Parse(buf, 3)) / 10000.0;
 }
 
 
 /**
  * Parses and returns the radio transmission's longitude.
  */
-float RADIO::get_radio_craft_longitude(char buf[])
+float RADIO::get_radio_payload_longitude(char buf[])
 {
-    return (Data.Parse(buf,3)) / 10000.0;
+    return (Data.Parse(buf, 4)) / 10000.0;
 }
 
 
 /**
  * Parses and returns the radio transmission's craft Event.
  */
-float RADIO::get_radio_craft_event(char buf[])
+float RADIO::get_radio_payload_event(char buf[])
 {
-    return (Data.Parse(buf,4));
+    return (Data.Parse(buf, 5));
 }
 
 
 /**
  * Parses and returns the radio transmission's Craft ID.
  */
-float RADIO::get_radio_craft_id(char buf[])
+float RADIO::get_radio_node_id(char buf[])
 {
-    return (Data.Parse(buf,/*   TBD  */));
+    return (Data.Parse(buf, 7));
 }
 
 
@@ -156,6 +164,75 @@ void RADIO::manager()
 
 
 /**
+ * Alters the craft ID of the radio transmission and broadcasts back to Mission Control.
+ */
+void RADIO::roll_call()
+{
+    // Updates the Craft_ID to HABET's specific ID #.
+    Radio.craft_id = NODE_ID;
+    // To synchronize the network when the start signal is given,
+    // we use the nodes id as an offset to multiply a base node
+    // broadcast window (500 milliseconds) to ensure the nodes
+    // don't broadcast at the same times.
+    Radio.network_sync_delay = (Radio.craft_id - 1.0) * 500.0;
+    // Sets the delay needed to maintain synchronization between the
+    // different nodes in the network.
+    Radio.network_node_delay = Radio.craft_id * 500.0;
+    // Debug message.
+    Serial.println("RollCall broadcast.");
+    // Sends the transmission via radio.
+    Radio.broadcast();
+    // Debug message.
+    Serial.println("Broadcasted.");
+    // Updates the node's network status.
+    checked_in = true;
+    // Updates craft states.
+    operation_mode = Radio.STANDBY;
+}
+
+
+
+/**
+ * Responsible for sending out messages via the radio antenna.
+ */
+void RADIO::broadcast()
+{
+    // Updates the time object to hold the most current operation time.
+    Radio.mission_control_ts = millis()/1000.0;
+    // Casting all float values to a character array with commas saved in between values
+    // so the character array can be parsed when received by another craft.
+    String temp = "";
+    temp += "$"
+    temp += ",";
+    temp += Radio.payload_ts;
+    temp += ",";
+    temp += Radio.payload_altitude;
+    temp += ",";
+    temp += Radio.payload_latitude * 10000;
+    temp += ",";
+    temp += Radio.payload_longitude * 10000;
+    temp += ",";
+    temp += Radio.payload_event;
+    temp += ",";
+    temp += Radio.mission_control_ts;
+    temp += ",";
+    temp += Radio.node_id;
+    temp += ",";
+    temp += "$"
+    // Copy contents.
+    radio_output = temp;
+    // Converts from String to char array.
+    char transmission[temp.length()];
+    temp.toCharArray(transmission, temp.length());
+    // Sends message passed in as paramter via antenna.
+    rf95.send(transmission, sizeof(transmission));
+    // Pauses all operations until the micro controll has guaranteed the transmission of the
+    // signal.
+    rf95.waitPacketSent();
+}
+
+
+/**
  * Responsible for reading in signals over the radio antenna.
  */
 void RADIO::radio_receive()
@@ -170,108 +247,67 @@ void RADIO::radio_receive()
         // Reads in the avaiable radio transmission, then checks if it is corrupt or complete.
         if(rf95.recv(buf, &len))
         {
+            // Used to display the received data in the GUI.
+            radio_input = buf;
+            blink_led();
             // Conversion from uint8_t to string. The purpose of this is to be able to convert to an
             // unsigned char array for parsing.
             String str = (char*)buf;
             char to_parse[str.length()];
             str.toCharArray(to_parse,str.length());
-            // Used to display the received data in the GUI.
-            radio_input = buf;
-            blink_led();
+            // Debugging to the Serial Monitor.
             Serial.print("Radio In: ");
             Serial.println(radio_input);
 
-            // This whole section is comparing the currently held varaibles from the last radio update
-            // to that of the newly received signal. Updates the craft's owned variables and copies
-            // down the other nodes varaibles. If the timestamp indicates that this craft currently
-            // holds the most updated values for another node (ie: LoRa's time stamp is higher than the
-            // new signal's), it replaces those variables.
-
-            // Reads in the time stamp for Mission Control's last broadcast.
-            float temp_home_ts = Radio.get_radio_timestamp(to_parse, 5);
-            // Compares the currently brought in time stamp to the one stored onboad.
-            if(temp_home_ts > Radio.home_ts)
+            // Checks for a valid packet. Only parses contents if valid to prevent
+            // data corruption.
+            if(Radio.validate_checksum())
             {
-                // If the incoming signal has more up-to-date versions, we overwrite our saved version with
-                // the new ones.
-                Radio.home_ts = temp_home_ts;
+                // This whole section is comparing the currently held varaibles from the last radio update
+                // to that of the newly received signal. Updates the craft's owned variables and copies
+                // down the other nodes varaibles. If the timestamp indicates that this craft currently
+                // holds the most updated values for another node (ie: LoRa's time stamp is higher than the
+                // new signal's), it replaces those variables.
+
+                // Reads in the time stamp for Mission Control's last broadcast.
+                float temp_ts = Radio.get_radio_timestamp(to_parse, "mission_control");
+                // Compares the currently brought in time stamp to the one stored onboad.
+                if(temp_ts > Radio.mission_control_ts)
+                {
+                    // If the incoming signal has more up-to-date versions, we overwrite our saved version with
+                    // the new ones.
+                    Radio.mission_control_ts = temp_home_ts;
+                }
+                // Reads in Craft ID to see where signal came from.
+                received_id = Radio.get_radio_node_id(to_parse);
             }
-            // Reads in Craft ID to see where signal came from.
-            received_id = Radio.get_radio_craft_id(to_parse);
         }
 	}
 }
 
 
 /**
- * Alters the craft ID of the radio transmission and broadcasts back to Mission Control.
+ * Responsible for ensuring that a full packet has been received
+ * by validating that the packet begins and ends with the correct
+ * symbol '$'.
  */
-void RADIO::roll_call()
+bool RADIO::validate_checksum()
 {
-	// Updates the Craft_ID to HABET's specific ID #.
-	Radio.craft_id = NODE_ID;
-    // To synchronize the network when the start signal is given,
-    // we use the nodes id as an offset to multiply a base node
-    // broadcast window (500 milliseconds) to ensure the nodes
-    // don't broadcast at the same times.
-    Radio.network_sync_delay = (Radio.craft_id - 1.0) * 500.0;
-    // Sets the delay needed to maintain synchronization between the
-    // different nodes in the network.
-    Radio.network_node_delay = Radio.craft_id * 500.0;
-    // Debug message.
-    Serial.println("RollCall broadcast.");
-	// Sends the transmission via radio.
-	Radio.broadcast();
-    // Debug message.
-    Serial.println("Broadcasted.");
-	// Updates the node's network status.
-	checked_in = true;
-    // Updates craft states.
-    operation_mode = Radio.STANDBY;
+    // Gets the length of the packet. Non-zero indexed.
+    int str_length = radio_input.length();
+    // Checks for the correct starting and ending symbols.
+    if((radio_input.charAt(0) == '$') && (radio_input.chatAt(str_length-1) == '$'))
+    {
+        // If both are detected, valid packet.
+        return true;
+    }
+    else
+    {
+        // Otherwise, invalid packet. Prevents the system from
+        // attempting to parse its contents.
+        return false;
+    }
 }
-
-
-/**
- * Responsible for sending out messages via the radio antenna.
- */
-void RADIO::broadcast()
-{
-    // Updates the time object to hold the most current operation time.
-    Radio.craft_ts = millis()/1000.0;
-    // Updates the Network's struct to reflect the craft's most up-to-date postioning before
-    // it broadcasts the signal on the Radio.
-    Radio.craft_altitude = Data.current_altitude;
-    Radio.craft_latitude = Data.current_latitude;
-    Radio.craft_longitude = Data.current_longitude;
-    Radio.craft_event = Data.current_event;
-    // Casting all float values to a character array with commas saved in between values
-    // allows the character array to be parsed when received by another craft.
-    String temp = "";
-    temp += Radio.craft_ts;
-    temp += ",";
-    temp += Radio.craft_altitude;
-    temp += ",";
-    temp += Radio.craft_latitude * 10000;
-    temp += ",";
-    temp += Radio.craft_longitude * 10000;
-    temp += ",";
-    temp += Radio.craft_event;
-    temp += ",";
-    temp += Radio.home_ts;
-    temp += ",";
-    temp += Radio.craft_id;
-    // Copy contents.
-    radio_output = temp;
-    // Converts from String to char array.
-    char transmission[temp.length()];
-    temp.toCharArray(transmission, temp.length());
-    // Sends message passed in as paramter via antenna.
-    rf95.send(transmission, sizeof(transmission));
-    // Pauses all operations until the micro controll has guaranteed the transmission of the
-    // signal.
-    rf95.waitPacketSent();
-}
-
 
 /*
  * Blinks LED.

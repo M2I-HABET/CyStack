@@ -12,7 +12,7 @@ from tkinter import *
 class Login_Terminal():
 
 	def __init__(self):
-		""" 
+		"""
 		Initialization function for the class.
 
 		@param self - Instance of the class.
@@ -22,9 +22,14 @@ class Login_Terminal():
 		self.login_window = None
 		# What the user enters. Will be compared against set password.
 		self.entry_credentials = None
+		# If the user has given the correct password. Seems redundant,
+		# but is used to prevent the user from closing the login
+		# window and bypassing the credentials page.
+		self.lock_state = True
+
 
 	def set_credentials(self, password):
-		""" 
+		"""
 		Sets the developer's desired user and pass.
 
 		@param self     - Instance of the class.
@@ -33,27 +38,31 @@ class Login_Terminal():
 
 		self.password = password
 
+
 	def callback_verify_credentials(self, event=None):
-		""" 
+		"""
 		Checks user's password versus actual password.
 		returns True if match, False otherwise.
 
 		@param self  - Instance of the class.
-		@param event - Triggered by press of the enter button.  
+		@param event - Triggered by press of the enter button.
 		"""
 
 		# Grabs the text of entry and compares against password.
 		if self.entry_credentials.get() == self.password:
 			# If match, prints to cmd and destroys TK window.
 			print("PASSWORD MATCH")
+			# Updates lock state appropriately.
+			self.lock_state = False
 			# Upon deletion, this class will return to its GUI.py method.
 			self.login_window.destroy()
 		else:
 			# If different. Prints to user and aways for next try.
 			print("WRONG PASSWORD")
 
+
 	def configure_login_window(self):
-		""" 
+		"""
 		Configures the login window to hold the appropriate
 		buttons and entries. Displays upon .mainloop().
 
@@ -83,13 +92,13 @@ class Login_Terminal():
 		title_picture.pack()
 		# User entry.
 		self.entry_credentials = Entry(self.login_window,
-								  justify='center', 
+								  justify='center',
 								  font="Helvetica 20 bold")
 
 		self.entry_credentials.pack(padx=150, pady=30, fill='x')
 		# Login button.
 		button_login = Button(self.login_window,
-							  text='Login', 
+							  text='Login',
 							  font="Helvetica 10 bold",
 							  command=self.callback_verify_credentials)
 		button_login.pack()

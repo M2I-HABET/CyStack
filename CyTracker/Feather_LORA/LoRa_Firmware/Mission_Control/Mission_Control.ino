@@ -9,7 +9,7 @@
 #include "Radio.h"
 
 
-/*****CONSTRUCTORS*****/ 
+/*****CONSTRUCTORS*****/
 DATA Data;
 RADIO Radio;
 
@@ -21,8 +21,7 @@ RH_RF95 rf95(8,7);
  * Method initializes the main hardware components.
  */
 void setup(){
-    
-    // Creates a serial communication line between the arduino 
+    // Creates a serial communication line between the arduino
     // and the serial port found under 'Tools' -> 'Serial Monitor'
     Serial.begin(115200);
     // Initializes the Radio.
@@ -41,7 +40,7 @@ void loop(){
     {
         // Updates GUI/user with situational info.
         Data.serial_comms();
-        // Responsible for grabbing all of the craft's current information, 
+        // Responsible for grabbing all of the craft's current information,
         // turning that data into an array that can be sent out via radio.
         // Also reads in incoming messages.
         Radio.manager();
@@ -62,16 +61,16 @@ void serial_input()
             char t = Serial.read();
             new_input += t;
         }
-        // Creates a character array of the length of the serial input. 
+        // Creates a character array of the length of the serial input.
         char toParse[new_input.length()];
         // Converts said string to character array.
         new_input.toCharArray(toParse, new_input.length());
-        // Checks for the python gui starting up and attemping to 
+        // Checks for the python gui starting up and attemping to
         // establish serial connection to this microcontroller.
         if(toParse[0] == 'P' && Data.gui_connection == false)
         {
             // Responds to the gui with the microcontroller ID tag.
-            Serial.write("MC_LORA");
+            Serial.write("mission_control");
             // Updates connection status.
             Data.gui_connection = true;
             // Blinks LED (on the LoRa) to show communication setup was established.

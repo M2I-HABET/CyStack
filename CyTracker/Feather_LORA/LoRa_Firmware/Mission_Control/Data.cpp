@@ -93,8 +93,8 @@ void DATA::serial_comms()
  */
 void DATA::update_gui()
 {
-  // Only sends info to update gui every 2 seconds to relieve traffic.
-	if(!Serial.available() && (millis() - Data.serial_timer >= 2000))
+	// Only sends info to update gui every 1/2 second.
+	if(!Serial.available() && (millis() - Data.serial_timer >= 500))
 	{
 		// Resets / starts timer.
 	    Data.serial_timer = millis();
@@ -147,6 +147,8 @@ void DATA::update_gui()
 			temp_packet += Radio.radio_input;
 			temp_packet += "/";
 			temp_packet += Radio.radio_output;
+			temp_packet += "/";
+			temp_packet += Radio.radio_rssi;
 			temp_packet += "/";
 			temp_packet += "$";
 		}
