@@ -37,6 +37,8 @@ class MC_Tab():
 		self.radio_received = None
 		self.radio_sent = None
 		self.radio_rssi = None
+		self.radio_payload_last_contact = None
+		self.radio_recovery_last_contact = None
 		self.system_received_id = None
 
 		# HABET Payload variables.
@@ -70,7 +72,10 @@ class MC_Tab():
 		self.node_recovery = StringVar(self.mc_frame)
 		self.radio_received = StringVar(self.mc_frame)
 		self.radio_sent = StringVar(self.mc_frame)
-		self.radio_rssi = StringVar(self.mc_frame)
+		self.radio_payload_rssi = StringVar(self.mc_frame)
+		self.radio_recovery_rssi = StringVar(self.mc_frame)
+		self.radio_payload_last_contact = StringVar(self.mc_frame)
+		self.radio_recovery_last_contact = StringVar(self.mc_frame)
 		self.payload_time = StringVar(self.mc_frame)
 		self.payload_altitude = StringVar(self.mc_frame)
 		self.payload_latitude = StringVar(self.mc_frame)
@@ -91,7 +96,10 @@ class MC_Tab():
 		self.roll_call_status.set("NOT STARTED")
 		self.radio_received.set("-------")
 		self.radio_sent.set("-------")
-		self.radio_rssi.set("-------")
+		self.radio_payload_rssi.set("-------")
+		self.radio_recovery_rssi.set("-------")
+		self.radio_payload_last_contact.set("-------")
+		self.radio_recovery_last_contact.set("-------")
 		self.payload_time.set("-------")
 		self.payload_altitude.set("-------")
 		self.payload_latitude.set("-------")
@@ -115,7 +123,10 @@ class MC_Tab():
 		self.entry_roll_call_status = Entry(self.mc_frame, state="readonly", textvariable=self.roll_call_status, justify='center')
 		self.entry_radio_received = Entry(self.mc_frame, state="readonly", textvariable=self.radio_received)
 		self.entry_radio_sent = Entry(self.mc_frame, state="readonly", textvariable=self.radio_sent)
-		self.entry_radio_rssi = Entry(self.mc_frame, state="readonly", textvariable=self.radio_rssi)
+		self.entry_radio_payload_rssi = Entry(self.mc_frame, state="readonly", textvariable=self.radio_payload_rssi)
+		self.entry_radio_recovery_rssi = Entry(self.mc_frame, state="readonly", textvariable=self.radio_recovery_rssi)
+		self.entry_radio_payload_last_contact = Entry(self.mc_frame, state="readonly", textvariable=self.radio_payload_last_contact)
+		self.entry_radio_recovery_last_contact = Entry(self.mc_frame, state="readonly", textvariable=self.radio_recovery_last_contact)
 		self.entry_payload_time = Entry(self.mc_frame, state="readonly", textvariable=self.payload_time, justify='right')
 		self.entry_payload_altitude = Entry(self.mc_frame, state="readonly", textvariable=self.payload_altitude, justify='right')
 		self.entry_payload_latitude = Entry(self.mc_frame, state="readonly", textvariable=self.payload_latitude, justify='right')
@@ -178,8 +189,14 @@ class MC_Tab():
 		self.entry_radio_received.grid(row=0, column=6, columnspan=14, sticky='we')
 		self.create_label_east(1, 5, self.mc_frame, "Sent:")
 		self.entry_radio_sent.grid(row=1, column=6, columnspan=14, stick='we')
-		self.create_label_east(2, 5, self.mc_frame, "Last RSSI:")
-		self.entry_radio_rssi.grid(row=2, column=6, columnspan=1, stick='we')
+		self.create_label_east(2, 5, self.mc_frame, "RSSI Payload:")
+		self.entry_radio_payload_rssi.grid(row=2, column=6, columnspan=1, stick='we')
+		self.create_label_east(2, 7, self.mc_frame, "Last Contact (s):")
+		self.entry_radio_payload_last_contact.grid(row=2, column=8, columnspan=1, stick='we')
+		self.create_label_east(3, 5, self.mc_frame, "RSSI Recovery:")
+		self.entry_radio_recovery_rssi.grid(row=3, column=6, columnspan=1, stick='we')
+		self.create_label_east(3, 7, self.mc_frame, "Last Contact (s):")
+		self.entry_radio_recovery_last_contact.grid(row=3, column=8, columnspan=1, stick='we')
 		self.button_roll_call_start.grid(row=3, column=0, rowspan=2, sticky='nes')
 		self.button_roll_call_stop.grid(row=3, column=1, rowspan=2, sticky='ns')
 		self.button_start_network.grid(row=3, column=2, rowspan=2, sticky='nws')
