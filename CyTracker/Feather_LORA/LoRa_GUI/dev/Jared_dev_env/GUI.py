@@ -11,7 +11,7 @@ from gui_functions import *
 from communication import *
 
 # Enables / Disables login window.
-LOGIN_ENABLE = True
+LOGIN_ENABLE = False
 
 
 def main():

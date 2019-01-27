@@ -37,9 +37,11 @@ class MC_Tab():
 		self.node_recovery = None
 		self.radio_received = None
 		self.radio_sent = None
-		self.radio_rssi = None
+		self.radio_payload_rssi = None
+		self.radio_recovery_rssi = None
 		self.radio_payload_last_contact = None
 		self.radio_recovery_last_contact = None
+		self.radio_last_received_node = None
 		self.system_received_id = None
 
 		# HABET Payload variables.
@@ -77,6 +79,7 @@ class MC_Tab():
 		self.radio_recovery_rssi = StringVar(self.mc_frame)
 		self.radio_payload_last_contact = StringVar(self.mc_frame)
 		self.radio_recovery_last_contact = StringVar(self.mc_frame)
+		self.radio_last_received_node = StringVar(self.mc_frame)
 		self.payload_time = StringVar(self.mc_frame)
 		self.payload_altitude = StringVar(self.mc_frame)
 		self.payload_latitude = StringVar(self.mc_frame)
@@ -101,6 +104,7 @@ class MC_Tab():
 		self.radio_recovery_rssi.set("-------")
 		self.radio_payload_last_contact.set("-------")
 		self.radio_recovery_last_contact.set("-------")
+		self.radio_last_received_node.set("Recovery")
 		self.payload_time.set("-------")
 		self.payload_altitude.set("-------")
 		self.payload_latitude.set("-------")
@@ -136,6 +140,7 @@ class MC_Tab():
 		self.entry_system_received_id = Entry(self.mc_frame, state="readonly", textvariable=self.system_received_id, justify='center')
 		self.entry_mission_control_time = Entry(self.mc_frame, state="readonly", textvariable=self.mission_control_time, justify='right')
 		self.entry_display_changed_commands = Entry(self.mc_frame, state="readonly", justify='right', textvariable=self.display_changed_commands)
+		self.entry_radio_last_received_node = Entry(self.mc_frame, state="readonly", justify='center', textvariable=self.radio_last_received_node, font='Helvetica 18 bold')
 
 
 	def create_button_objects(self):
@@ -161,11 +166,11 @@ class MC_Tab():
 
 		# These objects are banners that are used to give context to each corresponding section
 		# of either buttons, display bars, or other objects on the GUI.
-		self.label_mission_control_node = Label(self.mc_frame, text="GROUND STATION", relief='solid')
+		self.label_mission_control_node = Label(self.mc_frame, text="GROUND STATION", relief='solid', anchor="center")
 		self.label_mission_control_node.configure(background='red')
-		self.label_payload_node = Label(self.mc_frame, text="PAYLOAD", relief='solid')
+		self.label_payload_node = Label(self.mc_frame, text="PAYLOAD", relief='solid', anchor="center")
 		self.label_payload_node.configure(background='red')
-		self.label_recovery_node = Label(self.mc_frame,  text="RECOVERY", relief='solid')
+		self.label_recovery_node = Label(self.mc_frame,  text="RECOVERY", relief='solid', anchor="center")
 		self.label_recovery_node.configure(background='red')
 
 
@@ -201,6 +206,8 @@ class MC_Tab():
 		self.button_roll_call_start.grid(row=3, column=0, rowspan=2, sticky='nes')
 		self.button_roll_call_stop.grid(row=3, column=1, rowspan=2, sticky='ns')
 		self.button_start_network.grid(row=3, column=2, rowspan=2, sticky='nws')
+		self.create_label_center(2, 10, self.mc_frame, "Last Packet Sender")
+		self.entry_radio_last_received_node.grid(row=3, column=10, rowspan=2, sticky='nsew')
 
 		# Terminal divider. KEEP AT THE BOTTOM OF THIS METHOD.
 		# This divider is a golden bar strecthing across the screen to provide
@@ -219,15 +226,15 @@ class MC_Tab():
 
 		# Above divider. (divider at bottom of method)
 		self.create_label_center(6, 1, self.mc_frame, "PAYLOAD")
-		self.create_label_center(7, 0, self.mc_frame, "Payload Up Time (s) ")
+		self.create_label_center(7, 0, self.mc_frame, "Up Time (s): ")
 		self.entry_payload_time.grid(row=7, column=1, sticky='we')
-		self.create_label_center(8, 0, self.mc_frame, "Payload Altitude (m) ")
+		self.create_label_center(8, 0, self.mc_frame, "Altitude (m): ")
 		self.entry_payload_altitude.grid(row=8, column=1, sticky='we')
-		self.create_label_center(9, 0, self.mc_frame, "Payload Latitude       ")
+		self.create_label_center(9, 0, self.mc_frame, "Latitude:       ")
 		self.entry_payload_latitude.grid(row=9, column=1, sticky='we')
-		self.create_label_center(10, 0, self.mc_frame, "Payload Longitude   ")
+		self.create_label_center(10, 0, self.mc_frame, "Longitude:   ")
 		self.entry_payload_longitude.grid(row=10, column=1, sticky='we')
-		self.create_label_center(11, 0, self.mc_frame, "Payload Event            ")
+		self.create_label_center(11, 0, self.mc_frame, "Event:            ")
 		self.entry_payload_event.grid(row=11, column=1, sticky='we')
 
 		# Terminal divider. KEEP AT THE BOTTOM OF THIS METHOD.
@@ -247,7 +254,7 @@ class MC_Tab():
 
 		# Below final divider.
 		self.create_label_center(14, 1, self.mc_frame, "MISSION CONTROL")
-		self.create_label_center(15, 0, self.mc_frame, "Home Up Time (s)   ")
+		self.create_label_center(15, 0, self.mc_frame, "Up Time (s):   ")
 		self.entry_mission_control_time.grid(row=15, column=1, sticky='we')
 		self.create_label_east(22, 1, self.mc_frame, "To Be Sent:")
 		self.entry_display_changed_commands.grid(row=22, column=2, columnspan=6, sticky='we')
