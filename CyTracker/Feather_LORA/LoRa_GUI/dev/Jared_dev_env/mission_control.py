@@ -9,10 +9,11 @@
 
 from tkinter import *
 from tkinter.ttk import *
-# from inputs import get_gamepad
 from communication import *
+import time
+import threading
 import globals as g
-import os
+# import os
 
 
 class MC_Tab():
@@ -392,7 +393,14 @@ class MC_Tab():
 				self.mission_control_time.set(mc_ts)
 				self.radio_received.set(radio_in)
 				self.radio_sent.set(radio_out)
-				self.radio_rssi.set(received_rssi)
+				# Checks if the packet is from the payload.
+				if self.system_received_id is 1:
+					# Updates the appropriate variables.
+					self.update_payload_rssi(received_rssi)
+				# Checks if the packet is from the recovery team.
+				elif self.system_received_id is 2:
+					# Updates the appropriate variables.
+					self.update_recovery_rssi(received_rssi)
 			# R signifies the packet being of type Roll Call.
 			elif "R" in temp_input:
 				# Variables such as '$' and 'R' are thrown out as junk.
@@ -401,6 +409,91 @@ class MC_Tab():
 				self.node_mission_control.set(t_mission_control_node_status)
 				self.node_payload.set(t_payload_node_status)
 				self.node_recovery.set(t_recovery_node_status)
+
+
+
+	def update_payload_rssi(self, received_rssi):
+		"""
+		Updates GUI's variables holding information about the last received
+		payload packet.
+
+		@param self  - Instance of the class.
+		@param *args - The RSSI of the last received packet.
+		"""
+
+		# If so, assign RSSI to the payload variables.
+		self.radio_payload_rssi.set(received_rssi)
+		# Reset the last contact timer.
+		self.radio_payload_last_contact = 0
+		# Checks if timer is already running.
+		if g.timer_payload_contact_timer is not None:
+			# If so, disable it to resync the 1sec timer.
+			g.timer_payload_contact_timer = None
+		# Creates countdown timer that, upon hitting zero runs the associated method.
+		# Units are seconds.
+		g.timer_payload_contact_timer = threading.Timer(1.0, self.timer_increment_payload_last_contact)
+		# Starts the countdown timer.
+		g.timer_payload_contact_timer.start()
+
+
+	def timer_increment_payload_last_contact(self):
+		"""
+		Increments the payload node's last contact variable each second.
+		This timer is resynced each time a packet from the payload
+		is received.
+
+		@param self  - Instance of the class.
+		"""
+
+		# Creates countdown timer that, upon hitting zero runs the associated method.
+		# Units are seconds.
+		g.timer_payload_contact_timer = threading.Timer(1.0, self.timer_increment_payload_last_contact)
+		# Starts the countdown timer.
+		g.timer_payload_contact_timer.start()
+		# Increments the payload last contact timer on a 1 second interval.
+		self.radio_payload_last_contact += 1
+
+
+	def update_recovery_rssi(self, received_rssi):
+		"""
+		Updates GUI's variables holding information about the last received
+		recovery packet.
+
+		@param self  - Instance of the class.
+		@param *args - The RSSI of the last received packet.
+		"""
+
+		# If so, assign RSSI to the recovery variables.
+		self.radio_recovery_rssi.set(received_rssi)
+		# Reset the last contact timer.
+		self.radio_recovery_last_contact = 0
+		# Checks if timer is already running.
+		if g.timer_recovery_contact_timer is not None:
+			# If so, disable it to resync the 1sec timer.
+			g.timer_recovery_contact_timer = None
+		# Creates countdown timer that, upon hitting zero runs the associated method.
+		# Units are seconds.
+		g.timer_recovery_contact_timer = threading.Timer(1.0, self.timer_increment_recovery_last_contact)
+		# Starts the countdown timer.
+		g.timer_recovery_contact_timer.start()
+
+
+	def timer_increment_recovery_last_contact(self):
+		"""
+		Increments the recovery node's last contact variable each second.
+		This timer is resynced each time a packet from the payload
+		is received.
+
+		@param self  - Instance of the class.
+		"""
+
+		# Creates countdown timer that, upon hitting zero runs the associated method.
+		# Units are seconds.
+		g.timer_recovery_contact_timer = threading.Timer(1.0, self.timer_increment_recovery_last_contact)
+		# Starts the countdown timer.
+		g.timer_recovery_contact_timer.start()
+		# Increments the recovery last contact timer on a 1 second interval.
+		self.radio_recovery_last_contact += 1
 
 
 	def callback_update_transmission(self, *args):

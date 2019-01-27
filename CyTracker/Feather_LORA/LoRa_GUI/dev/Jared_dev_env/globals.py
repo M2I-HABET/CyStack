@@ -22,3 +22,5 @@ mc_class_reference = None
 # Threaded timer objects.
 timer_mission_control_lora = None
 timer_payload_lora = None
+timer_payload_contact_timer = None
+timer_recovery_contact_timer = None
