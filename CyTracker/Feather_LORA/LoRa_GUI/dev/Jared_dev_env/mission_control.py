@@ -382,6 +382,7 @@ class MC_Tab():
 		temp_input = ""
 		# Checks for a none null connection to mission_control microcontroller.
 		if g.PORT_MISSION_CONTROL_LORA is not None:
+			print("In update Gui")
 			# If valid connection, get its serial data input.
 			temp_input = g.PORT_MISSION_CONTROL_LORA.input.get()
 			# N signifies the packet being of normal communication type.

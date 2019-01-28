@@ -192,7 +192,7 @@ void RADIO::broadcast()
     // Casting all float values to a character array with commas saved in between values
     // so the character array can be parsed when received by another craft.
     String temp = "";
-    temp += "$"
+    temp += "$";
     temp += ",";
     temp += Radio.payload_ts;
     temp += ",";
@@ -208,7 +208,7 @@ void RADIO::broadcast()
     temp += ",";
     temp += Radio.node_id;
     temp += ",";
-    temp += "$"
+    temp += "$";
     // Copy contents.
     radio_output = temp;
     // Converts from String to char array.
@@ -311,7 +311,7 @@ void RADIO::radio_receive()
                     Radio.payload_event = Radio.get_radio_payload_event(to_parse);
                 }
                 // Pulls the RSSI from the signal. (Received Signal Strength Indicator)
-                received_rssi = rf95.lastRssi()
+                received_rssi = rf95.lastRssi();
                 // Reads in Craft ID to see where signal came from.
                 received_id = Radio.get_radio_node_id(to_parse);
                 // Compares the transmission's craftID to see if its a brand new craft. If so, it logs it.
@@ -332,7 +332,7 @@ bool RADIO::validate_checksum()
     // Gets the length of the packet. Non-zero indexed.
     int str_length = radio_input.length();
     // Checks for the correct starting and ending symbols.
-    if((radio_input.charAt(0) == '$') && (radio_input.chatAt(str_length-1) == '$'))
+    if((radio_input.charAt(0) == '$') && (radio_input.charAt(str_length-1) == '$'))
     {
         // If both are detected, valid packet.
         return true;

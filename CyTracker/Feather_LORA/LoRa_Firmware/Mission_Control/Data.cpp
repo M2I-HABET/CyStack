@@ -94,7 +94,7 @@ void DATA::serial_comms()
 void DATA::update_gui()
 {
 	// Only sends info to update gui every 1/2 second.
-	if(!Serial.available() && (millis() - Data.serial_timer >= 500))
+	if(!Serial.available() && (millis() - Data.serial_timer >= 2000))
 	{
 		// Resets / starts timer.
 	    Data.serial_timer = millis();
@@ -121,9 +121,7 @@ void DATA::update_gui()
 			temp_packet += "$";
 		}
 		// Normal GUI <-> mission_control Config.
-		else if((Radio.operation_mode == Radio.NORMAL)
-				 || (Radio.operation_mode == Radio.STANDBY)
-				 || (Radio.operation_mode == Radio.NONE))
+		else
 		{
 			confirmed_packet = true;
 			temp_packet += "$";
@@ -148,7 +146,7 @@ void DATA::update_gui()
 			temp_packet += "/";
 			temp_packet += Radio.radio_output;
 			temp_packet += "/";
-			temp_packet += Radio.radio_rssi;
+			temp_packet += Radio.received_rssi;
 			temp_packet += "/";
 			temp_packet += "$";
 		}
