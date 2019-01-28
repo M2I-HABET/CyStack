@@ -36,7 +36,7 @@ class RADIO
     // Receives incoming transmission.
     void radio_receive();
     // Checks if packet is valid or invalid. Error detection.
-    bool validate_packet();
+    bool validate_checksum();
     // Blinks the LED on the LoRa uC (quick blink).
     void blink_led();
 

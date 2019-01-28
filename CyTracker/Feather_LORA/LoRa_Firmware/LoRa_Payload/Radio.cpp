@@ -169,15 +169,15 @@ void RADIO::manager()
 void RADIO::roll_call()
 {
     // Updates the Craft_ID to HABET's specific ID #.
-    Radio.craft_id = NODE_ID;
+    Radio.node_id = NODE_ID;
     // To synchronize the network when the start signal is given,
     // we use the nodes id as an offset to multiply a base node
     // broadcast window (500 milliseconds) to ensure the nodes
     // don't broadcast at the same times.
-    Radio.network_sync_delay = (Radio.craft_id - 1.0) * 500.0;
+    Radio.network_sync_delay = (Radio.node_id - 1.0) * 500.0;
     // Sets the delay needed to maintain synchronization between the
     // different nodes in the network.
-    Radio.network_node_delay = Radio.craft_id * 500.0;
+    Radio.network_node_delay = Radio.node_id * 500.0;
     // Debug message.
     Serial.println("RollCall broadcast.");
     // Sends the transmission via radio.
@@ -202,7 +202,7 @@ void RADIO::broadcast()
     // Casting all float values to a character array with commas saved in between values
     // so the character array can be parsed when received by another craft.
     String temp = "";
-    temp += "$"
+    temp += "$";
     temp += ",";
     temp += Radio.payload_ts;
     temp += ",";
@@ -218,7 +218,7 @@ void RADIO::broadcast()
     temp += ",";
     temp += Radio.node_id;
     temp += ",";
-    temp += "$"
+    temp += "$";
     // Copy contents.
     radio_output = temp;
     // Converts from String to char array.
@@ -276,7 +276,7 @@ void RADIO::radio_receive()
                 {
                     // If the incoming signal has more up-to-date versions, we overwrite our saved version with
                     // the new ones.
-                    Radio.mission_control_ts = temp_home_ts;
+                    Radio.mission_control_ts = temp_ts;
                 }
                 // Reads in Craft ID to see where signal came from.
                 received_id = Radio.get_radio_node_id(to_parse);
@@ -296,7 +296,7 @@ bool RADIO::validate_checksum()
     // Gets the length of the packet. Non-zero indexed.
     int str_length = radio_input.length();
     // Checks for the correct starting and ending symbols.
-    if((radio_input.charAt(0) == '$') && (radio_input.chatAt(str_length-1) == '$'))
+    if((radio_input.charAt(0) == '$') && (radio_input.charAt(str_length-1) == '$'))
     {
         // If both are detected, valid packet.
         return true;

@@ -28,7 +28,7 @@ void GPS::manager()
 {
     // Directs the GPS serial port to focus on a specific pair of GPIO's onboard the micro controller.
     // RX = 10      TX = 11
-    SoftwareSerial ss(11,10);
+    SoftwareSerial ss(1, 0);
     // Opens up a serial connection between the micro controller and
     // the GPS breakout board at a certain baudrate.
     ss.begin(9600);
@@ -44,7 +44,7 @@ void GPS::manager()
         }
       // Count down timer for 1 second.
     } while (millis() - gps_read_in_timer < 1000);
-
+    
     // Checks the correctness of the gps data. (Worthless if less than 5)
     if(gps.satellites.value() <  5)
     {
@@ -85,11 +85,11 @@ void GPS::manager()
 float GPS::calculate_distance()
 {
 
-    float distance = (float)TinyGPSPlus::distanceBetween(gps.location.lat(), 
-                                                         gps.location.lng(), 
-                                                         /* GUI GPS Latitude */, 
-                                                         /* GUI GPS Longitude */);
-    return distance;
+    //float distance = (float)TinyGPSPlus::distanceBetween(gps.location.lat(), 
+    //                                                     gps.location.lng(), 
+    //                                                     /* GUI GPS Latitude */, 
+    //                                                     /* GUI GPS Longitude */);
+    //return distance;
 }
 
 
