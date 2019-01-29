@@ -1,7 +1,7 @@
 /**
  * Data.h is responsible for updating the programs main struct to the current most values.
  */
-
+ 
 #ifndef DATA_h
 #define DATA_h
  

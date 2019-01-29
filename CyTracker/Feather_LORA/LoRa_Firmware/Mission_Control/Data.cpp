@@ -121,7 +121,9 @@ void DATA::update_gui()
 			temp_packet += "$";
 		}
 		// Normal GUI <-> mission_control Config.
-		else
+		else if((Radio.operation_mode == Radio.NORMAL) 
+				 || (Radio.operation_mode == Radio.STANDBY) 
+				 || (Radio.operation_mode == Radio.NONE))
 		{
 			confirmed_packet = true;
 			temp_packet += "$";
@@ -169,7 +171,7 @@ void DATA::update_gui()
 void DATA::get_serial_op_mode(char buf[])
 {
 	// Parses out operation_mode representated as integer.
-    int temp_mode = (Parse(buf,5));
+    int temp_mode = (Parse(buf,1));
     // Converts integer representation to the appropriate state.
     // Checks for state of NONE. (Network operations have yet to begin)
     if(temp_mode == 0.0)

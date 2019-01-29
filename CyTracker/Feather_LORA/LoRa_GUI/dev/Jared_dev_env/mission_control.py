@@ -382,14 +382,13 @@ class MC_Tab():
 		temp_input = ""
 		# Checks for a none null connection to mission_control microcontroller.
 		if g.PORT_MISSION_CONTROL_LORA is not None:
-			print("In update Gui")
 			# If valid connection, get its serial data input.
 			temp_input = g.PORT_MISSION_CONTROL_LORA.input.get()
 			# N signifies the packet being of normal communication type.
 			if "N" in temp_input:
 				serial_data, radio_data = str(temp_input).split("]")
 				# Variables such as '$' and 'N' are thrown out as junk.
-				junk, junk , p_ts, p_alt, p_lat, p_lon, p_event, node_id, t_mc_ts = str(serial_data).split(",")
+				junk, junk , p_ts, p_alt, p_lat, p_lon, p_event, node_id, mc_ts = str(serial_data).split(",")
 				radio_in, radio_out, received_rssi, junk = str(radio_data).split("/")
 				# Setting individual variables from the parsed packet.
 				self.payload_time.set(p_ts)
@@ -515,7 +514,6 @@ class MC_Tab():
 		temp_packet = ""
 
 		try:
-
 			temp_packet += "$"
 			temp_packet += ","
 			temp_packet += str(self.operational_mode.get())

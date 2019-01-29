@@ -183,7 +183,7 @@ def config_scheduler():
 		print("Unable to start setup scheduler.")
 		# Terminal verbose message to show the exact error that occurred.
 		print("Exception: " + str(e))
-
+ 
 
 def generic_receive(ser):
 	"""
@@ -215,7 +215,6 @@ def generic_receive(ser):
 def mission_control_lora_receive():
 	""" Responsible for reading in data on the given serial (USB) port. """
 
-	print("in lora receive")
 	# Creates countdown timer that, upon hitting zero runs the associated method.
 	# Units are seconds. Timer terminates upon hitting zero so we need to
 	# recreat this timer each time.
