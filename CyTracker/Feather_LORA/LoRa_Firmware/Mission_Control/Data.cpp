@@ -93,8 +93,8 @@ void DATA::serial_comms()
  */
 void DATA::update_gui()
 {
-	// Only sends info to update gui every 1/2 second.
-	if(!Serial.available() && (millis() - Data.serial_timer >= 2000))
+	// Only sends info to update gui every 1/3 second.
+	if(!Serial.available() && (millis() - Data.serial_timer >= 1500))
 	{
 		// Resets / starts timer.
 	    Data.serial_timer = millis();
@@ -155,9 +155,9 @@ void DATA::update_gui()
 		// Ensures that the packet has been assembled in the above if/else-if statement.
 		if(confirmed_packet){
 			// Defines a char array with the length needed to hold the received packet.
-			char serial_packet[temp_packet.length()];
+			char serial_packet[temp_packet.length()+1];
 			// Converts from String to char array.
-			temp_packet.toCharArray(serial_packet, temp_packet.length());
+			temp_packet.toCharArray(serial_packet, temp_packet.length()+1);
 			// Sends packet via serial to python GUI.
 			Serial.write(serial_packet);
 		}

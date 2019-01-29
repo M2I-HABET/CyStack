@@ -165,7 +165,7 @@ def config_scheduler():
 			print("Scheduling task for mc LoRa.\n")
 			# Creates countdown timer that, upon hitting zero runs the associated method.
 			# Units are seconds.
-			g.timer_mission_control_lora = threading.Timer(0.6, mission_control_lora_receive)
+			g.timer_mission_control_lora = threading.Timer(0.3, mission_control_lora_receive)
 			# Starts the countdown timer.
 			g.timer_mission_control_lora.start()
 		# Checks for valid connection the the payload's Arduino LoRa.
@@ -174,7 +174,7 @@ def config_scheduler():
 			print("Scheduling task for craft LoRa.\n")
 			# Creates countdown timer that, upon hitting zero runs the associated method.
 			# Units are seconds.
-			g.timer_payload_lora = threading.Timer(0.6, craft_payload_receive)
+			g.timer_payload_lora = threading.Timer(0.3, craft_payload_receive)
 			# Starts the countdown timer.
 			g.timer_payload_lora.start()
 	# Prints exception handler.
@@ -218,7 +218,7 @@ def mission_control_lora_receive():
 	# Creates countdown timer that, upon hitting zero runs the associated method.
 	# Units are seconds. Timer terminates upon hitting zero so we need to
 	# recreat this timer each time.
-	g.timer_mission_control_lora = threading.Timer(0.6, mission_control_lora_receive)
+	g.timer_mission_control_lora = threading.Timer(0.3, mission_control_lora_receive)
 	# Starts the countdown timer.
 	g.timer_mission_control_lora.start()
 	# Pulls mission_control's serial port object down to a local instanced variable.
@@ -249,7 +249,7 @@ def craft_lora_receive():
 
 	# Creates countdown timer that, upon hitting zero runs the associated method.
 	# Units are seconds.
-	g.timer_payload_lora = threading.Timer(0.6, mc_lora_receive)
+	g.timer_payload_lora = threading.Timer(0.3, mc_lora_receive)
 	# Starts the countdown timer.
 	g.timer_payload_lora.start()
 	# Pulls the serial data from the craft LoRa port object down to a local instanced variable.
