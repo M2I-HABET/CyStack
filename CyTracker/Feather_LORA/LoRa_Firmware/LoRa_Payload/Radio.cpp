@@ -132,7 +132,7 @@ void RADIO::manager()
 	// Checks for a specific Craft ID. '999.0' signals the start of operation.
 	if((998.0 < received_id && received_id < 999.9) && !Radio.checked_in)
     {
-        Serial.println("Roll Call started.");
+        //Serial.println("Roll Call started.");
         // Updates crafts state.
         operation_mode = Radio.ROLLCALL;
 		// Responds to Mission Control with the correct ID to signal this node is here and listening.
@@ -179,11 +179,11 @@ void RADIO::roll_call()
     // different nodes in the network.
     Radio.network_node_delay = Radio.node_id * 500.0;
     // Debug message.
-    Serial.println("RollCall broadcast.");
+    //Serial.println("RollCall broadcast.");
     // Sends the transmission via radio.
     Radio.broadcast();
     // Debug message.
-    Serial.println("Broadcasted.");
+    //Serial.println("Broadcasted.");
     // Updates the node's network status.
     checked_in = true;
     // Updates craft states.
@@ -198,7 +198,7 @@ void RADIO::roll_call()
 void RADIO::broadcast()
 {
     // Updates the time object to hold the most current operation time.
-    Radio.mission_control_ts = millis()/1000.0;
+    Radio.payload_ts = millis()/1000.0;
     // Casting all float values to a character array with commas saved in between values
     // so the character array can be parsed when received by another craft.
     String temp = "";
@@ -222,8 +222,8 @@ void RADIO::broadcast()
     // Copy contents.
     radio_output = temp;
     // Converts from String to char array.
-    char transmission[temp.length()];
-    temp.toCharArray(transmission, temp.length());
+    char transmission[temp.length()+1];
+    temp.toCharArray(transmission, temp.length()+1);
     // Sends message passed in as paramter via antenna.
     rf95.send(transmission, sizeof(transmission));
     // Pauses all operations until the micro controll has guaranteed the transmission of the
@@ -256,8 +256,8 @@ void RADIO::radio_receive()
             char to_parse[str.length()];
             str.toCharArray(to_parse,str.length());
             // Debugging to the Serial Monitor.
-            Serial.print("Radio In: ");
-            Serial.println(radio_input);
+            //Serial.print("Radio In: ");
+            //Serial.println(radio_input);
 
             // Checks for a valid packet. Only parses contents if valid to prevent
             // data corruption.
@@ -267,7 +267,7 @@ void RADIO::radio_receive()
                 // to that of the newly received signal. Updates the craft's owned variables and copies
                 // down the other nodes varaibles. If the timestamp indicates that this craft currently
                 // holds the most updated values for another node (ie: LoRa's time stamp is higher than the
-                // new signal's), it replaces those variables.
+                // new signal's), it replaces those variables+
 
                 // Reads in the time stamp for Mission Control's last broadcast.
                 float temp_ts = Radio.get_radio_timestamp(to_parse, "mission_control");
@@ -293,6 +293,7 @@ void RADIO::radio_receive()
  */
 bool RADIO::validate_checksum()
 {
+    //blink_led_long();
     // Gets the length of the packet. Non-zero indexed.
     int str_length = radio_input.length();
     // Checks for the correct starting and ending symbols.
@@ -317,6 +318,19 @@ void RADIO::blink_led()
     // ON
     digitalWrite(LED, HIGH);
     delay(50);
+    // OFF
+    digitalWrite(LED, LOW);
+}
+
+
+/*
+ * Blinks LED long duration.
+ */
+void RADIO::blink_led_long()
+{
+    // ON
+    digitalWrite(LED, HIGH);
+    delay(2000);
     // OFF
     digitalWrite(LED, LOW);
 }

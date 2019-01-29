@@ -6,7 +6,7 @@
 #include <Arduino.h>
 #include "GPS.h"
 #include "Data.h"
-#include <SoftwareSerial.h>
+//#include <SoftwareSerial.h>
 #include <TinyGPSPlus.h>
 #include "Globals.h"
 #include <math.h>
@@ -28,19 +28,19 @@ void GPS::manager()
 {
     // Directs the GPS serial port to focus on a specific pair of GPIO's onboard the micro controller.
     // RX = 10      TX = 11
-    SoftwareSerial ss(1, 0);
+    // SoftwareSerial ss(0, 1);
     // Opens up a serial connection between the micro controller and
     // the GPS breakout board at a certain baudrate.
-    ss.begin(9600);
+    // ss.begin(9600);
     // Reads in GPS data via serial port for 1 second.
     unsigned long gps_read_in_timer = millis();
-    do 
+    do
     {
         // Reads in data while it is available.
-        while (ss.available())
+        while (Serial.available())
         {
             // Stores the brought in data to the gps object.
-            gps.encode(ss.read());
+            gps.encode(Serial.read());
         }
       // Count down timer for 1 second.
     } while (millis() - gps_read_in_timer < 1000);

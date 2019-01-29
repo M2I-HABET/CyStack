@@ -212,8 +212,8 @@ void RADIO::broadcast()
     // Copy contents.
     radio_output = temp;
     // Converts from String to char array.
-    char transmission[temp.length()];
-    temp.toCharArray(transmission, temp.length());
+    char transmission[temp.length()+1];
+    temp.toCharArray(transmission, temp.length()+1);
     // Sends message passed in as paramter via antenna.
     rf95.send(transmission, sizeof(transmission));
     // Pauses all operations until the micro controll has guaranteed the transmission of the
@@ -290,8 +290,8 @@ void RADIO::radio_receive()
 
             // Checks for a valid packet. Only parses contents if valid to prevent
             // data corruption.
-            if(Radio.validate_checksum())
-            {
+            //if(Radio.validate_checksum())
+            //{
                 // This whole section is comparing the currently held varaibles from the last radio update
                 // to that of the newly received signal. Updates the LoRa's owned variables and copies
                 // down the other nodes' varaibles. If the time LoRa currently holds the most updated values
@@ -316,7 +316,7 @@ void RADIO::radio_receive()
                 received_id = Radio.get_radio_node_id(to_parse);
                 // Compares the transmission's craftID to see if its a brand new craft. If so, it logs it.
                 Radio.node_check_in();
-            }
+            //}
         }
     }
 }

@@ -401,11 +401,11 @@ class MC_Tab():
 				self.radio_received.set(radio_in)
 				self.radio_sent.set(radio_out)
 				# Checks if the packet is from the payload.
-				if self.system_received_id is 1:
+				if self.system_received_id is 2.0:
 					# Updates the appropriate variables.
 					self.update_payload_rssi(received_rssi)
 				# Checks if the packet is from the recovery team.
-				elif self.system_received_id is 2:
+				elif self.system_received_id is 3.0:
 					# Updates the appropriate variables.
 					self.update_recovery_rssi(received_rssi)
 			# R signifies the packet being of type Roll Call.
@@ -415,6 +415,7 @@ class MC_Tab():
 				# Setting individual variables from the parsed packet.
 				self.node_mission_control.set(t_mission_control_node_status)
 				self.node_payload.set(t_payload_node_status)
+				print("Recovery Node Status: " + str(t_recovery_node_status))
 				self.node_recovery.set(t_recovery_node_status)
 
 

@@ -39,6 +39,8 @@ class RADIO
     bool validate_checksum();
     // Blinks the LED on the LoRa uC (quick blink).
     void blink_led();
+    // Blinks the LED on the LoRa uC (long duration pulse).
+    void blink_led_long();
 
 
   	/*---------------------------------Variables---------------------------------*/
