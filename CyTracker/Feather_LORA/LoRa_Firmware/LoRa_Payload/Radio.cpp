@@ -29,7 +29,7 @@ float RADIO::get_radio_timestamp(char buf[], String selector)
     {
         return (Data.Parse(buf, 1));
     }
-    else if(selector == "mission_control")
+    else if(selector == "mc")
     {
         return (Data.Parse(buf, 6));
     }
@@ -177,7 +177,7 @@ void RADIO::roll_call()
     Radio.network_sync_delay = (Radio.node_id - 1.0) * 500.0;
     // Sets the delay needed to maintain synchronization between the
     // different nodes in the network.
-    Radio.network_node_delay = Radio.node_id * 500.0;
+    Radio.network_node_delay = 500.0;
     // Debug message.
     //Serial.println("RollCall broadcast.");
     // Sends the transmission via radio.
@@ -270,7 +270,7 @@ void RADIO::radio_receive()
                 // new signal's), it replaces those variables+
 
                 // Reads in the time stamp for Mission Control's last broadcast.
-                float temp_ts = Radio.get_radio_timestamp(to_parse, "mission_control");
+                float temp_ts = Radio.get_radio_timestamp(to_parse, "mc");
                 // Compares the currently brought in time stamp to the one stored onboad.
                 if(temp_ts > Radio.mission_control_ts)
                 {
