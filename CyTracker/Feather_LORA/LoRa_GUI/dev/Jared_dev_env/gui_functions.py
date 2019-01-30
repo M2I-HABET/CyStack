@@ -100,5 +100,9 @@ class GUI_Terminal():
 			g.timer_mission_control_lora.cancel()
 		if g.timer_payload_lora is not None:
 			g.timer_payload_lora.cancel()
+		if g.timer_payload_contact_timer is not None:
+			g.timer_payload_contact_timer.cancel()
+		if g.timer_recovery_contact_timer is not None:
+			g.timer_recovery_contact_timer.cancel()
 		# Shuts down the Tkinter GUI.
 		self.gui_window.quit()

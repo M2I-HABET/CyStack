@@ -42,7 +42,7 @@ class MC_Tab():
 		self.radio_payload_last_contact = None
 		self.radio_recovery_last_contact = None
 		self.radio_last_received_node = None
-		self.system_received_id = None
+		self.radio_received_node_id = None
 
 		# HABET Payload variables.
 		self.payload_time = None
@@ -53,6 +53,7 @@ class MC_Tab():
 
 		# Mission Control variables.
 		self.mission_control_time = None
+		self.payload_time_previous = ""
 
 		# GUI variables.
 		self.display_changed_commands = None
@@ -85,7 +86,7 @@ class MC_Tab():
 		self.payload_latitude = StringVar(self.mc_frame)
 		self.payload_longitude = StringVar(self.mc_frame)
 		self.payload_event = StringVar(self.mc_frame)
-		self.system_received_id = StringVar(self.mc_frame)
+		self.radio_received_node_id = StringVar(self.mc_frame)
 		self.display_changed_commands = StringVar(self.mc_frame)
 
 		# Configures tracing for all variables. When these variables are written to,
@@ -110,7 +111,7 @@ class MC_Tab():
 		self.payload_latitude.set("-------")
 		self.payload_longitude.set("-------")
 		self.payload_event.set("-------")
-		self.system_received_id.set("-------")
+		self.radio_received_node_id.set("-------")
 		self.mission_control_time.set("-------")
 		self.display_changed_commands.set("")
 		self.operational_mode.set("NOT STARTED")
@@ -137,7 +138,7 @@ class MC_Tab():
 		self.entry_payload_latitude = Entry(self.mc_frame, state="readonly", textvariable=self.payload_latitude, justify='right')
 		self.entry_payload_longitude = Entry(self.mc_frame, state="readonly", textvariable=self.payload_longitude, justify='right')
 		self.entry_payload_event = Entry(self.mc_frame, state="readonly", textvariable=self.payload_event, justify='right')
-		self.entry_system_received_id = Entry(self.mc_frame, state="readonly", textvariable=self.system_received_id, justify='center')
+		self.entry_radio_received_node_id = Entry(self.mc_frame, state="readonly", textvariable=self.radio_received_node_id, justify='center')
 		self.entry_mission_control_time = Entry(self.mc_frame, state="readonly", textvariable=self.mission_control_time, justify='right')
 		self.entry_display_changed_commands = Entry(self.mc_frame, state="readonly", justify='right', textvariable=self.display_changed_commands)
 		self.entry_radio_last_received_node = Entry(self.mc_frame, state="readonly", justify='center', textvariable=self.radio_last_received_node, font='Helvetica 18 bold')
@@ -206,7 +207,7 @@ class MC_Tab():
 		self.button_roll_call_start.grid(row=3, column=0, rowspan=2, sticky='nes')
 		self.button_roll_call_stop.grid(row=3, column=1, rowspan=2, sticky='ns')
 		self.button_start_network.grid(row=3, column=2, rowspan=2, sticky='nws')
-		self.create_label_center(2, 10, self.mc_frame, "Last Packet Sender")
+		self.create_label_center(2, 10, self.mc_frame, "Last Packet Received Was From")
 		self.entry_radio_last_received_node.grid(row=3, column=10, rowspan=2, sticky='nsew')
 
 		# Terminal divider. KEEP AT THE BOTTOM OF THIS METHOD.
@@ -388,7 +389,7 @@ class MC_Tab():
 			if "N" in temp_input:
 				serial_data, radio_data = str(temp_input).split("]")
 				# Variables such as '$' and 'N' are thrown out as junk.
-				junk, junk , p_ts, p_alt, p_lat, p_lon, p_event, node_id, mc_ts = str(serial_data).split(",")
+				junk, junk, p_ts, p_alt, p_lat, p_lon, p_event, node_id, mc_ts = str(serial_data).split(",")
 				radio_in, radio_out, received_rssi, junk = str(radio_data).split("/")
 				# Setting individual variables from the parsed packet.
 				self.payload_time.set(p_ts)
@@ -396,18 +397,40 @@ class MC_Tab():
 				self.payload_latitude.set(p_lat)
 				self.payload_longitude.set(p_lon)
 				self.payload_event.set(p_event)
-				self.system_received_id.set(node_id)
 				self.mission_control_time.set(mc_ts)
 				self.radio_received.set(radio_in)
 				self.radio_sent.set(radio_out)
+				# To retrieve the RSSI value of the last received packet, we need to parse out the radio_in
+				# variable to see the node id.
+				junk, junk, junk, junk, junk, junk, junk, self.radio_received_node_id, junk = str(radio_in).split(",")
 				# Checks if the packet is from the payload.
-				if self.system_received_id is 2.0:
-					# Updates the appropriate variables.
-					self.update_payload_rssi(received_rssi)
+				if "2.00" in self.radio_received_node_id:
+					# Say you don't receive the a packet in a while. The mission control
+					# LoRa still sends you its last known packet each time it tries to
+					# update the gui (roughly 1.5 seconds). To prevent the gui from thinking
+					# each "gui update" is brand new information, we compare a previous
+					# variable value to the proclaimed to be new value. If they are the same, its most
+					# likely the same packet we already saw. If they are different, its 100% 
+					# new.
+					if self.payload_time_previous != str(self.payload_time.get()):
+						# Updates the appropriate variables.
+						self.payload_time_previous = str(self.payload_time.get())
+						self.radio_last_received_node.set("Payload")
+						self.update_payload_rssi(received_rssi)
 				# Checks if the packet is from the recovery team.
-				elif self.system_received_id is 3.0:
-					# Updates the appropriate variables.
-					self.update_recovery_rssi(received_rssi)
+				elif "3.00" in self.radio_received_node_id:
+					# Say you don't receive the a packet in a while. The mission control
+					# LoRa still sends you its last known packet each time it tries to
+					# update the gui (roughly 1.5 seconds). To prevent the gui from thinking
+					# each "gui update" is brand new information, we compare a previous
+					# variable value to the proclaimed to be new value. If they are the same, its most
+					# likely the same packet we already saw. If they are different, its 100% 
+					# new.
+					if self.payload_time_previous != str(self.payload_time.get()):
+						# Updates the appropriate variables.
+						self.payload_time_previous = str(self.payload_time.get())
+						self.radio_last_received_node.set("Recovery")
+						self.update_recovery_rssi(received_rssi)
 			# R signifies the packet being of type Roll Call.
 			elif "R" in temp_input:
 				# Variables such as '$' and 'R' are thrown out as junk.
@@ -415,7 +438,6 @@ class MC_Tab():
 				# Setting individual variables from the parsed packet.
 				self.node_mission_control.set(t_mission_control_node_status)
 				self.node_payload.set(t_payload_node_status)
-				print("Recovery Node Status: " + str(t_recovery_node_status))
 				self.node_recovery.set(t_recovery_node_status)
 
 
@@ -429,14 +451,14 @@ class MC_Tab():
 		@param *args - The RSSI of the last received packet.
 		"""
 
-		# If so, assign RSSI to the payload variables.
-		self.radio_payload_rssi.set(received_rssi)
-		# Reset the last contact timer.
-		self.radio_payload_last_contact = 0
 		# Checks if timer is already running.
 		if g.timer_payload_contact_timer is not None:
 			# If so, disable it to resync the 1sec timer.
-			g.timer_payload_contact_timer = None
+			g.timer_payload_contact_timer.cancel()
+		# If so, assign RSSI to the payload variables.
+		self.radio_payload_rssi.set(received_rssi)
+		# Reset the last contact timer.
+		self.radio_payload_last_contact.set("0")
 		# Creates countdown timer that, upon hitting zero runs the associated method.
 		# Units are seconds.
 		g.timer_payload_contact_timer = threading.Timer(1.0, self.timer_increment_payload_last_contact)
@@ -459,7 +481,7 @@ class MC_Tab():
 		# Starts the countdown timer.
 		g.timer_payload_contact_timer.start()
 		# Increments the payload last contact timer on a 1 second interval.
-		self.radio_payload_last_contact += 1
+		self.radio_payload_last_contact.set(str(int(self.radio_payload_last_contact.get()) + 1))
 
 
 	def update_recovery_rssi(self, received_rssi):
@@ -471,14 +493,14 @@ class MC_Tab():
 		@param *args - The RSSI of the last received packet.
 		"""
 
-		# If so, assign RSSI to the recovery variables.
-		self.radio_recovery_rssi.set(received_rssi)
-		# Reset the last contact timer.
-		self.radio_recovery_last_contact = 0
 		# Checks if timer is already running.
 		if g.timer_recovery_contact_timer is not None:
 			# If so, disable it to resync the 1sec timer.
-			g.timer_recovery_contact_timer = None
+			g.timer_recovery_contact_timer.cancel()
+		# If so, assign RSSI to the recovery variables.
+		self.radio_recovery_rssi.set(received_rssi)
+		# Reset the last contact timer.
+		self.radio_recovery_last_contact.set("0")
 		# Creates countdown timer that, upon hitting zero runs the associated method.
 		# Units are seconds.
 		g.timer_recovery_contact_timer = threading.Timer(1.0, self.timer_increment_recovery_last_contact)
@@ -501,7 +523,7 @@ class MC_Tab():
 		# Starts the countdown timer.
 		g.timer_recovery_contact_timer.start()
 		# Increments the recovery last contact timer on a 1 second interval.
-		self.radio_recovery_last_contact += 1
+		self.radio_recovery_last_contact.set(str(int(self.radio_recovery_last_contact.get()) + 1))
 
 
 	def callback_update_transmission(self, *args):
