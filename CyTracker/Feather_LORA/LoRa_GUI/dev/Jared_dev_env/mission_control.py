@@ -125,22 +125,22 @@ class MC_Tab():
 		"""
 
 		# Creates entry widgets for each variable. (Text windows to be placed in the GUI)
-		self.entry_operational_mode = Entry(self.mc_frame, state="readonly", textvariable=self.operational_mode, justify='center')
-		self.entry_roll_call_status = Entry(self.mc_frame, state="readonly", textvariable=self.roll_call_status, justify='center')
-		self.entry_radio_received = Entry(self.mc_frame, state="readonly", textvariable=self.radio_received)
-		self.entry_radio_sent = Entry(self.mc_frame, state="readonly", textvariable=self.radio_sent)
-		self.entry_radio_payload_rssi = Entry(self.mc_frame, state="readonly", textvariable=self.radio_payload_rssi)
-		self.entry_radio_recovery_rssi = Entry(self.mc_frame, state="readonly", textvariable=self.radio_recovery_rssi)
-		self.entry_radio_payload_last_contact = Entry(self.mc_frame, state="readonly", textvariable=self.radio_payload_last_contact)
-		self.entry_radio_recovery_last_contact = Entry(self.mc_frame, state="readonly", textvariable=self.radio_recovery_last_contact)
-		self.entry_payload_time = Entry(self.mc_frame, state="readonly", textvariable=self.payload_time, justify='right')
-		self.entry_payload_altitude = Entry(self.mc_frame, state="readonly", textvariable=self.payload_altitude, justify='right')
-		self.entry_payload_latitude = Entry(self.mc_frame, state="readonly", textvariable=self.payload_latitude, justify='right')
-		self.entry_payload_longitude = Entry(self.mc_frame, state="readonly", textvariable=self.payload_longitude, justify='right')
-		self.entry_payload_event = Entry(self.mc_frame, state="readonly", textvariable=self.payload_event, justify='right')
-		self.entry_radio_received_node_id = Entry(self.mc_frame, state="readonly", textvariable=self.radio_received_node_id, justify='center')
-		self.entry_mission_control_time = Entry(self.mc_frame, state="readonly", textvariable=self.mission_control_time, justify='right')
-		self.entry_display_changed_commands = Entry(self.mc_frame, state="readonly", justify='right', textvariable=self.display_changed_commands)
+		self.entry_operational_mode = Entry(self.mc_frame, state="readonly", textvariable=self.operational_mode, justify='center', font='Helvtica 11')
+		self.entry_roll_call_status = Entry(self.mc_frame, state="readonly", textvariable=self.roll_call_status, justify='center', font='Helvtica 11')
+		self.entry_radio_received = Entry(self.mc_frame, state="readonly", textvariable=self.radio_received, font='Helvtica 11')
+		self.entry_radio_sent = Entry(self.mc_frame, state="readonly", textvariable=self.radio_sent, font='Helvtica 11')
+		self.entry_radio_payload_rssi = Entry(self.mc_frame, state="readonly", textvariable=self.radio_payload_rssi, font='Helvtica 11')
+		self.entry_radio_recovery_rssi = Entry(self.mc_frame, state="readonly", textvariable=self.radio_recovery_rssi, font='Helvtica 11')
+		self.entry_radio_payload_last_contact = Entry(self.mc_frame, state="readonly", textvariable=self.radio_payload_last_contact, font='Helvtica 11')
+		self.entry_radio_recovery_last_contact = Entry(self.mc_frame, state="readonly", textvariable=self.radio_recovery_last_contact, font='Helvtica 11')
+		self.entry_payload_time = Entry(self.mc_frame, state="readonly", textvariable=self.payload_time, justify='right', font='Helvtica 11')
+		self.entry_payload_altitude = Entry(self.mc_frame, state="readonly", textvariable=self.payload_altitude, justify='right', font='Helvtica 11')
+		self.entry_payload_latitude = Entry(self.mc_frame, state="readonly", textvariable=self.payload_latitude, justify='right', font='Helvtica 11')
+		self.entry_payload_longitude = Entry(self.mc_frame, state="readonly", textvariable=self.payload_longitude, justify='right', font='Helvtica 11')
+		self.entry_payload_event = Entry(self.mc_frame, state="readonly", textvariable=self.payload_event, justify='right', font='Helvtica 11')
+		self.entry_radio_received_node_id = Entry(self.mc_frame, state="readonly", textvariable=self.radio_received_node_id, justify='center', font='Helvtica 11')
+		self.entry_mission_control_time = Entry(self.mc_frame, state="readonly", textvariable=self.mission_control_time, justify='right', font='Helvtica 11')
+		self.entry_display_changed_commands = Entry(self.mc_frame, state="readonly", justify='right', textvariable=self.display_changed_commands, font='Helvtica 11')
 		self.entry_radio_last_received_node = Entry(self.mc_frame, state="readonly", justify='center', textvariable=self.radio_last_received_node, font='Helvetica 18 bold')
 
 
@@ -259,7 +259,7 @@ class MC_Tab():
 		self.entry_mission_control_time.grid(row=15, column=1, sticky='we')
 		self.create_label_east(22, 1, self.mc_frame, "To Be Sent:")
 		self.entry_display_changed_commands.grid(row=22, column=2, columnspan=6, sticky='we')
-		self.button_construct_serial_packet.grid(row=22, column=9)
+		self.button_construct_serial_packet.grid(row=22, column=8)
 
 
 	def main_mc_tab(self):
@@ -389,13 +389,15 @@ class MC_Tab():
 			if "N" in temp_input:
 				serial_data, radio_data = str(temp_input).split("]")
 				# Variables such as '$' and 'N' are thrown out as junk.
-				junk, junk, p_ts, p_alt, p_lat, p_lon, p_event, node_id, mc_ts = str(serial_data).split(",")
+				junk, junk, p_ts, p_alt, p_lat, p_lng, p_event, node_id, mc_ts = str(serial_data).split(",")
 				radio_in, radio_out, received_rssi, junk = str(radio_data).split("/")
 				# Setting individual variables from the parsed packet.
 				self.payload_time.set(p_ts)
 				self.payload_altitude.set(p_alt)
-				self.payload_latitude.set(p_lat)
-				self.payload_longitude.set(p_lon)
+				t_lat = (float(p_lat) / 10000)
+				t_lng = (float(p_lng) / 10000)
+				self.payload_latitude.set(str(t_lat))
+				self.payload_longitude.set(str(t_lng))
 				self.payload_event.set(p_event)
 				self.mission_control_time.set(mc_ts)
 				self.radio_received.set(radio_in)

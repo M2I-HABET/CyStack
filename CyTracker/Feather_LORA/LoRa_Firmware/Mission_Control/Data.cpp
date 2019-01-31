@@ -134,9 +134,9 @@ void DATA::update_gui()
 			temp_packet += ",";
 			temp_packet += Radio.payload_altitude;
 			temp_packet += ",";
-			temp_packet += Radio.payload_latitude;
+			temp_packet += Radio.payload_latitude * 10000;
 			temp_packet += ",";
-			temp_packet += Radio.payload_longitude;
+			temp_packet += Radio.payload_longitude * 10000;
 			temp_packet += ",";
 			temp_packet += Radio.payload_event;
 		    temp_packet += ",";
