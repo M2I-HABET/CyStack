@@ -74,12 +74,8 @@ class RADIO
 	 * This set of varaibles are accessed and overseen by the HABET Payload.
 	 */
 
-	// Each of these is defined in the Data.h file. Refer to its documentation as needed.
+	// Holds the current uptime (measured in seconds) for the payload.
 	float payload_ts = 0.0;
-	float payload_altitude = 0.0;
-	float payload_latitude = 0.0;
-	float payload_longitude = 0.0;
-	float payload_event = 0.0;
 
 	/**
 	 * These variables are overseen by Mission Control.
@@ -106,9 +102,8 @@ class RADIO
 	// Holds the delay amount between this nodes broadcast window.
 	// Configured in Radio.rollcall().
 	float network_node_delay = 0.0;
-    // Used in the computation of the radio system.
-    unsigned long broadcast_timer = 0;
-
+  	// Used in the computation of the radio system.
+  	unsigned long broadcast_timer = 0;
 };
 
 #endif

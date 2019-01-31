@@ -8,6 +8,7 @@
 #include "Data.h"
 #include <RH_RF95.h>
 #include "Globals.h"
+#include "GPS.h"
 
 /**
  * Constructor used to reference all other variables & functions.
@@ -177,7 +178,7 @@ void RADIO::roll_call()
     Radio.network_sync_delay = (Radio.node_id - 1.0) * 500.0;
     // Sets the delay needed to maintain synchronization between the
     // different nodes in the network.
-    Radio.network_node_delay = 500.0;
+    Radio.network_node_delay = 0.0;
     // Debug message.
     //Serial.println("RollCall broadcast.");
     // Sends the transmission via radio.
@@ -189,7 +190,6 @@ void RADIO::roll_call()
     // Updates craft states.
     operation_mode = Radio.STANDBY;
 }
-
 
 
 /**
@@ -206,13 +206,13 @@ void RADIO::broadcast()
     temp += ",";
     temp += Radio.payload_ts;
     temp += ",";
-    temp += Radio.payload_altitude;
+    temp += Gps.payload_altitude;
     temp += ",";
-    temp += Radio.payload_latitude * 10000;
+    temp += Gps.payload_latitude * 10000;
     temp += ",";
-    temp += Radio.payload_longitude * 10000;
+    temp += Gps.payload_longitude * 10000;
     temp += ",";
-    temp += Radio.payload_event;
+    temp += Data.payload_event;
     temp += ",";
     temp += Radio.mission_control_ts;
     temp += ",";
