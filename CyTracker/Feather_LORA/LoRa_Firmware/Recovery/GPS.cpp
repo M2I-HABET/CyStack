@@ -79,8 +79,6 @@ bool GPS::fixation_monitor()
     {
         // GPS fix has been aquired.
         fix_status = true;
-        // Trigger onboard event detection.
-        Data.payload_event = 1.0;
     }
     // Checks the correctness of the gps data. (Worthless if less than 5)
     if(gps.satellites.value() <  5)
@@ -88,8 +86,6 @@ bool GPS::fixation_monitor()
         // If the # of satellites drops to zero. GPS fix has been lost.
         if(gps.satellites.value() == 0)
         {
-            // Triggers onboard event detection.
-            Data.payload_event = 2.0;
             // Updates the fix status.
             fix_status = false;
         }
@@ -105,18 +101,18 @@ bool GPS::fixation_monitor()
 void GPS::store_data()
 {
     // Updates all struct variables with the most current sensor data.
-    sprintf(payload_gps_time, "%02d:%02d:%02d ", gps.time.hour(), gps.time.minute(), gps.time.second());
-    payload_altitude = gps.altitude.meters();
-    payload_latitude = gps.location.lat();
-    payload_longitude = gps.location.lng();
-    payload_satillite_count = gps.satellites.value();
-    payload_speed = gps.speed.mps();
+    sprintf(recovery_gps_time, "%02d:%02d:%02d ", gps.time.hour(), gps.time.minute(), gps.time.second());
+    recovery_altitude = gps.altitude.meters();
+    recovery_latitude = gps.location.lat();
+    recovery_longitude = gps.location.lng();
+    recovery_satillite_count = gps.satellites.value();
+    recovery_speed = gps.speed.mps();
     // Replaces the old backup values with the new values.
-    previous_altitude = payload_altitude;
-    previous_latitude = payload_latitude;
-    previous_longitude = payload_longitude;
-    Serial.print("\n\nLat: "); Serial.println(payload_latitude, 6);
-    Serial.print("Lng: "); Serial.println(payload_longitude, 6);
+    previous_altitude = recovery_altitude;
+    previous_latitude = recovery_latitude;
+    previous_longitude = recovery_longitude;
+    Serial.print("\n\nLat: "); Serial.println(recovery_latitude, 6);
+    Serial.print("Lng: "); Serial.println(recovery_longitude, 6);
 }
 
 
@@ -127,8 +123,8 @@ void GPS::store_data()
 void GPS::revert_gps_data()
 {
     // Reverts values to that of the previous cycle.
-    payload_altitude = previous_altitude;
-    payload_latitude = previous_latitude;
-    payload_longitude = previous_longitude;
-    payload_speed = 0.0;
+    recovery_altitude = previous_altitude;
+    recovery_latitude = previous_latitude;
+    recovery_longitude = previous_longitude;
+    recovery_speed = 0.0;
 }

@@ -1,5 +1,5 @@
 /**
- * RADIO.ccp holds all functions related the radio port/module infused inside the LoRa FeatherWing
+ * Radio.ccp holds all functions related the radio port/module infused inside the LoRa FeatherWing
  * development micro controller.
  */
 
@@ -9,6 +9,7 @@
 #include "GPS.h"
 #include <RH_RF95.h>
 #include "Globals.h"
+
 
 /**
  * Constructor used to reference all other variables & functions.
@@ -110,38 +111,38 @@ float RADIO::get_radio_node_id(char buf[])
  */
 void RADIO::initialize()
 {
-    // Assigns pin 13 to have an output power connection to the LoRa's onboard LED.
-    pinMode(LED, OUTPUT);
-    // Assigns pin 4 to have an output singal connection to the LoRa's radio port.
-    pinMode(RFM95_RST, OUTPUT);
-    // Sends a high signal to the radio port for intialization.
-    digitalWrite(RFM95_RST, HIGH);
-    // Adjust the LED to be insync with radio trasmission.
-    digitalWrite(RFM95_RST, LOW);
-    // 10 millisecond delay to allow for radio setup to complete before next instruction.
-    delay(10);
-    // Turns the radio output high to compelte setup.
-    digitalWrite(RFM95_RST, HIGH);
-    // Checks for the creation of the radio object and its physical connection attribute.
-    if(!rf95.init())
+	// Assigns pin 13 to have an output power connection to the LoRa's onboard LED.
+	pinMode(LED, OUTPUT);
+	// Assigns pin 4 to have an output singal connection to the LoRa's radio port.
+	pinMode(RFM95_RST, OUTPUT);
+	// Sends a high signal to the radio port for intialization.
+	digitalWrite(RFM95_RST, HIGH);
+	// Adjust the LED to be insync with radio trasmission.
+	digitalWrite(RFM95_RST, LOW);
+	// 10 millisecond delay to allow for radio setup to complete before next instruction.
+	delay(10);
+	// Turns the radio output high to compelte setup.
+	digitalWrite(RFM95_RST, HIGH);
+	// Checks for the creation of the radio object and its physical connection attribute.
+	if(!rf95.init())
     {
         // If invalid connection, the program will stall and pulse the onbaord led.
+		while (1)
+        {
+            Radio.blink_led();
+        }
+	}
+	// Checks the radio objects tuned frequency.
+	if(!rf95.setFrequency(RF95_FREQ))
+    {
+		// If invalid connection, the program will stall and pulse the onbaord led.
         while (1)
         {
             Radio.blink_led();
         }
-    }
-    // Checks the radio objects tuned frequency.
-    if(!rf95.setFrequency(RF95_FREQ))
-    {
-        // If invalid connection, the program will stall and pulse the onbaord led.
-        while (1)
-        {
-            Radio.blink_led();
-        }
-    }
-    // Sets the max power to be used to in the amplification of the signal being sent out.
-    rf95.setTxPower(23, false);
+	}
+	// Sets the max power to be used to in the amplification of the signal being sent out.
+	rf95.setTxPower(23, false);
 }
 
 
@@ -150,22 +151,22 @@ void RADIO::initialize()
  */
 void RADIO::manager()
 {
-	// Reads in radio transmission if available.
-	Radio.radio_receive();
-	// Checks for a specific Craft ID. '999.0' signals the start of operation.
-	if((998.0 < received_id && received_id < 999.9) && !Radio.checked_in)
+    // Reads in radio transmission if available.
+    Radio.radio_receive();
+    // Checks for a specific Craft ID. '999.0' signals the start of operation.
+    if((998.0 < received_id && received_id < 999.9) && !Radio.checked_in)
     {
         //Serial.println("Roll Call started.");
         // Updates crafts state.
         operation_mode = Radio.ROLLCALL;
-		// Responds to Mission Control with the correct ID to signal this node is here and listening.
+        // Responds to Mission Control with the correct ID to signal this node is here and listening.
         delay(100);
-		Radio.roll_call();
-	}
+        Radio.roll_call();
+    }
 
-	// After Roll Call is complete, Mission Control will broadcast the start signal. Appropriate delays are
-	// distributed below to initally sync the network.
-	else if(operation_mode == Radio.STANDBY)
+    // After Roll Call is complete, Mission Control will broadcast the start signal. Appropriate delays are
+    // distributed below to initally sync the network.
+    else if(operation_mode == Radio.STANDBY)
     {
         if(554.0 < received_id && received_id < 556.0)
         {
@@ -174,15 +175,15 @@ void RADIO::manager()
             // Updates network state.
             operation_mode = Radio.NORMAL;
         }
-	}
-	// Each of the crafts have # seconds to broadcast.
-	else if((millis() - broadcast_timer > Radio.network_node_delay) && (operation_mode == NORMAL))
+    }
+    // Each of the crafts have # seconds to broadcast.
+    else if((millis() - broadcast_timer > Radio.network_node_delay) && (operation_mode == NORMAL))
     {
-		// Resets the counter. This disables broadcasting again until 10 seconds has passed.
+        // Resets the counter. This disables broadcasting again until 10 seconds has passed.
         broadcast_timer = millis();
-		// Sends the transmission via radio.
-		Radio.broadcast();
-	}
+        // Sends the transmission via radio.
+        Radio.broadcast();
+    }
 }
 
 
@@ -215,12 +216,12 @@ void RADIO::roll_call()
 
 
 /**
- * Responsible for sending out messages via the radio antenna.
+ * Creates an array to be sent out via Radio. Fills that array with correct values and returns it.
  */
 void RADIO::broadcast()
 {
     // Updates the time object to hold the most current operation time.
-    Radio.payload_ts = millis()/1000.0;
+    Radio.mission_control_ts = millis()/1000.0;
     // Casting all float values to a character array with commas saved in between values
     // so the character array can be parsed when received by another craft.
     String temp = "";
@@ -228,13 +229,13 @@ void RADIO::broadcast()
     temp += ",";
     temp += Radio.payload_ts;
     temp += ",";
-    temp += Gps.payload_altitude;
+    temp += Radio.payload_altitude;
     temp += ",";
-    temp += Gps.payload_latitude * 10000;
+    temp += Radio.payload_latitude * 10000;
     temp += ",";
-    temp += Gps.payload_longitude * 10000;
+    temp += Radio.payload_longitude * 10000;
     temp += ",";
-    temp += Data.payload_event;
+    temp += Radio.payload_event;
     temp += ",";
     temp += Radio.mission_control_ts;
     temp += ",";
@@ -268,11 +269,12 @@ void RADIO::radio_receive()
     // Checks if radio message has been received.
     if (rf95.available())
     {
-      	// Creates a temporary varaible to read in the incoming transmission.
-      	uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
-      	// Gets the length of the above temporary varaible.
-      	uint8_t len = sizeof(buf);
-        // Reads in the avaiable radio transmission, then checks if it is corrupt or complete.
+        // Serial.println("Incoming packet...");
+        // Creates a temporary varaible to read in the incoming transmission.
+        uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
+        // Gets the length of the above temporary varaible.
+        uint8_t len = sizeof(buf);
+        // Reads in the avaiable radio transmission.
         if(rf95.recv(buf, &len))
         {
             // Used to display the received data in the GUI.
@@ -283,22 +285,32 @@ void RADIO::radio_receive()
             String str = (char*)buf;
             char to_parse[str.length()];
             str.toCharArray(to_parse,str.length());
-            // Debugging to the Serial Monitor.
-            //Serial.print("Radio In: ");
-            //Serial.println(radio_input);
 
             // Checks for a valid packet. Only parses contents if valid to prevent
             // data corruption.
             if(Radio.validate_checksum())
             {
                 // This whole section is comparing the currently held varaibles from the last radio update
-                // to that of the newly received signal. Updates the craft's owned variables and copies
-                // down the other nodes varaibles. If the timestamp indicates that this craft currently
-                // holds the most updated values for another node (ie: LoRa's time stamp is higher than the
-                // new signal's), it replaces those variables+
+                // to that of the newly received signal. Updates the LoRa's owned variables and copies
+                // down the other nodes' varaibles. If the time LoRa currently holds the most updated values
+                // for another node (LoRa's time stamp is higher than the new signal's), it replaces those vars.
+
+                // Reads in the time stamp for Payload's last broadcast.
+                float temp_ts = Radio.get_radio_timestamp(to_parse, "payload");
+                // Compares the currently brought in time stamp to the one stored onboad.
+                if(temp_ts > Radio.payload_ts)
+                {
+                    // If the incoming signal has more up-to-date versions, we overwrite our saved version with
+                    // the new ones.
+                    Radio.payload_ts = temp_ts;
+                    Radio.payload_altitude = Radio.get_radio_payload_altitude(to_parse);
+                    Radio.payload_latitude = Radio.get_radio_payload_latitude(to_parse);
+                    Radio.payload_longitude = Radio.get_radio_payload_longitude(to_parse);
+                    Radio.payload_event = Radio.get_radio_payload_event(to_parse);
+                }
 
                 // Reads in the time stamp for Mission Control's last broadcast.
-                float temp_ts = Radio.get_radio_timestamp(to_parse, "mc");
+                temp_ts = Radio.get_radio_timestamp(to_parse, "mc");
                 // Compares the currently brought in time stamp to the one stored onboad.
                 if(temp_ts > Radio.mission_control_ts)
                 {
@@ -306,23 +318,15 @@ void RADIO::radio_receive()
                     // the new ones.
                     Radio.mission_control_ts = temp_ts;
                 }
-
-                // Reads in the time stamp for Recovery's last broadcast.
-                float temp_ts = Radio.get_radio_timestamp(to_parse, "recovery");
-                // Compares the currently brought in time stamp to the one stored onboad.
-                if(temp_ts > Radio.recovery_ts)
-                {
-                    // If the incoming signal has more up-to-date versions, we overwrite our saved version with
-                    // the new ones.
-                    Radio.recovery_ts = temp_ts;
-                    Radio.recovery_latitude = get_radio_recovery_latitude(to_parse);
-                    Radio.recovery_longtiude = get_radio_recovery_longitude(to_parse);
-                }
+                // Pulls the RSSI from the signal. (Received Signal Strength Indicator)
+                received_rssi = rf95.lastRssi();
                 // Reads in Craft ID to see where signal came from.
                 received_id = Radio.get_radio_node_id(to_parse);
+                // Compares the transmission's craftID to see if its a brand new craft. If so, it logs it.
+                Radio.node_check_in();
             }
         }
-	}
+    }
 }
 
 
@@ -333,7 +337,6 @@ void RADIO::radio_receive()
  */
 bool RADIO::validate_checksum()
 {
-    //blink_led_long();
     // Gets the length of the packet. Non-zero indexed.
     int str_length = radio_input.length();
     // Checks for the correct starting and ending symbols.
@@ -349,6 +352,7 @@ bool RADIO::validate_checksum()
         return false;
     }
 }
+
 
 /*
  * Blinks LED.

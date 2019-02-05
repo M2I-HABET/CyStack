@@ -26,25 +26,15 @@ class GPS
 
   	/*---------------------------------Variables---------------------------------*/
 
-    // GPS satellite fixation status for the payload.
+    // GPS satellite fixation status for the recovery.
   	bool fix_status = false;
-    // Holds the crafts previous altitude.
-	float previous_altitude = 0.0;
-	// Holds the crafts previous latitude.
+	// Holds the recovery vehicle's previous latitude.
 	float previous_latitude = 0.0;
-	// Holds the crafts previous longitude.
+	// Holds the recovery vehicle's previous longitude.
 	float previous_longitude = 0.0;
-	// Altitude of the craft gathered from GPS.
-	float payload_altitude  = 0.0;
-	// Latitude of the craft gathered from GPS.
-	float payload_latitude = 0.0;
-	// Longitude of the craft gathered from GPS.
-	float payload_longitude = 0.0;
-	// Satellite Count of the craft gathered from the GPS.
-	float payload_satillite_count = 0.0;
-	// Speed in meters per second.
-	float payload_speed = 0.0;
-	// Time of flight. Used for data capture in SD card.
-	char payload_gps_time[10];
+	// Latitude of the recovery vehicle's gathered from GPS.
+	float recovery_latitude = 0.0;
+	// Longitude of the recovery vehicle's gathered from GPS.
+	float recovery_longitude = 0.0;
 };
 #endif

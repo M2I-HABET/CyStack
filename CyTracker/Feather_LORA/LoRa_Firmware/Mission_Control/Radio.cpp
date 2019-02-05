@@ -34,6 +34,10 @@ float RADIO::get_radio_timestamp(char buf[], String selector)
     {
         return (Data.Parse(buf, 6));
     }
+    else if(selector == "recovery")
+    {
+        return (Data.Parse(buf, 7));
+    }
 
 }
 
@@ -75,13 +79,31 @@ float RADIO::get_radio_payload_event(char buf[])
 
 
 /**
+ * Parses and returns the radio transmission's craft Event.
+ */
+float RADIO::get_radio_recovery_latitude(char buf[])
+{
+    return (Data.Parse(buf, 8));
+}
+
+
+/**
+ * Parses and returns the radio transmission's craft Event.
+ */
+float RADIO::get_radio_recovery_longitude(char buf[])
+{
+    return (Data.Parse(buf, 9));
+}
+
+
+
+/**
  * Parses and returns the radio transmission's Craft ID.
  */
 float RADIO::get_radio_node_id(char buf[])
 {
-    return (Data.Parse(buf, 7));
+    return (Data.Parse(buf, 10));
 }
-
 
 /**
  * Assigns correct pins to the radio output port. Tests connections and variables.
@@ -206,6 +228,12 @@ void RADIO::broadcast()
     temp += ",";
     temp += Radio.mission_control_ts;
     temp += ",";
+    temp += Radio.recovery_ts;
+    temp += ",";
+    temp += Radio.recovery_latitude;
+    temp += ",";
+    temp += Radio.recovery_longitude;
+    temp += ",";
     temp += Radio.node_id;
     temp += ",";
     temp += "$";
@@ -309,6 +337,18 @@ void RADIO::radio_receive()
                     Radio.payload_latitude = Radio.get_radio_payload_latitude(to_parse);
                     Radio.payload_longitude = Radio.get_radio_payload_longitude(to_parse);
                     Radio.payload_event = Radio.get_radio_payload_event(to_parse);
+                }
+
+                // Reads in the time stamp for Mission Control's last broadcast.
+                float temp_ts = Radio.get_radio_timestamp(to_parse, "recovery");
+                // Compares the currently brought in time stamp to the one stored onboad.
+                if(temp_ts > Radio.recovery_ts)
+                {
+                    // If the incoming signal has more up-to-date versions, we overwrite our saved version with
+                    // the new ones.
+                    Radio.recovery_ts = temp_ts;
+                    Radio.recovery_altitude = Radio.get_radio_recovery_altitude(to_parse);
+                    Radio.recovery_latitude = Radio.get_radio_recovery_latitude(to_parse);
                 }
                 // Pulls the RSSI from the signal. (Received Signal Strength Indicator)
                 received_rssi = rf95.lastRssi();

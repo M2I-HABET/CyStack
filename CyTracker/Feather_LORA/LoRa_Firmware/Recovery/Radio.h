@@ -20,12 +20,12 @@ class RADIO
     float get_radio_payload_latitude(char buf[]);
     // Returns the transmission's longitude.
     float get_radio_payload_longitude(char buf[]);
+    // Returns the transmission's craft event.
+    float get_radio_payload_event(char buf[]);
     // Returns the transmission's recovery latitude.
     float get_radio_recovery_latitude(char buf[]);
     // Returns the transmission's recovery longitude.
     float get_radio_recovery_longitude(char buf[]);
-    // Returns the transmission's craft event.
-    float get_radio_payload_event(char buf[]);
     // Returns the transmission's craft ID.
     float get_radio_node_id(char buf[]);
     // Runs initialzation script for the Radio.
@@ -59,13 +59,10 @@ class RADIO
     const byte LED = 13;
     // Radio frequency used throught the Eagle Eye Program. CHECK WITH HABET BEFORE EACH FLIGHT!!!!!
     #define RF95_FREQ 433.0
+    // Status of the craft replying to Mission Control with its node #.
+    bool checked_in = false;
     // Holds the ID of the craft that just broadcasted. THIS IS ANOTHER NODE, NOT MISSION CONTROL.
     float received_id = 0.0;
-    // List of nodes currently logged into network.
-    // mission control - 1
-    // HABET - 2
-    // Recovery - 3
-    float node_list[3] = {1.0, 0.0, 0.0};  // In future, need to cycle through null list and fill out 0.0.
     // Holds the current received radio signal.
     String radio_input = "";
     // Holds the current sent radio signal.
@@ -96,8 +93,6 @@ class RADIO
 
     // Recovery's ms Time stamp.
     float recovery_ts = 0.0;
-    float recovery_latitude = 0.0;
-    float recovery_longitude = 0.0;
 
 	/**
 	 * These variables are overseen by Mission Control.
@@ -115,8 +110,9 @@ class RADIO
 	// or if we have a direct line of communication with each node.
 	float node_id = 0.0;
 
+
     // Craft ID (SPECIFIC TO THE Recovery LORA ONBOARD Recovery)
-    float NODE_ID = 1.0;
+    float NODE_ID = 3.0;
     // Holds the delay amount needed to synchronize the network when NORMAL operations
     // mode is started. Configured in Radio.rollcall().
     float network_sync_delay = 0.0;
