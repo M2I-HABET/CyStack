@@ -32,11 +32,11 @@ float RADIO::get_radio_timestamp(char buf[], String selector)
     }
     else if(selector == "mc")
     {
-        return (Data.Parse(buf, 6));
+        return (Data.Parse(buf, 7));
     }
     else if(selector == "recovery")
     {
-        return (Data.Parse(buf, 7));
+        return (Data.Parse(buf, 8));
     }
 
 }
@@ -81,9 +81,18 @@ float RADIO::get_radio_payload_event(char buf[])
 /**
  * Parses and returns the radio transmission's craft Event.
  */
+float RADIO::get_radio_payload_speed(char buf[])
+{
+    return (Data.Parse(buf, 6));
+}
+
+
+/**
+ * Parses and returns the radio transmission's craft Event.
+ */
 float RADIO::get_radio_recovery_latitude(char buf[])
 {
-    return (Data.Parse(buf, 8));
+    return (Data.Parse(buf, 9));
 }
 
 
@@ -92,7 +101,7 @@ float RADIO::get_radio_recovery_latitude(char buf[])
  */
 float RADIO::get_radio_recovery_longitude(char buf[])
 {
-    return (Data.Parse(buf, 9));
+    return (Data.Parse(buf, 10));
 }
 
 
@@ -102,8 +111,9 @@ float RADIO::get_radio_recovery_longitude(char buf[])
  */
 float RADIO::get_radio_node_id(char buf[])
 {
-    return (Data.Parse(buf, 10));
+    return (Data.Parse(buf, 11));
 }
+
 
 /**
  * Assigns correct pins to the radio output port. Tests connections and variables.
@@ -226,6 +236,8 @@ void RADIO::broadcast()
     temp += ",";
     temp += Radio.payload_event;
     temp += ",";
+    temp += Radio.payload_speed;
+    temp += ",";
     temp += Radio.mission_control_ts;
     temp += ",";
     temp += Radio.recovery_ts;
@@ -337,6 +349,7 @@ void RADIO::radio_receive()
                     Radio.payload_latitude = Radio.get_radio_payload_latitude(to_parse);
                     Radio.payload_longitude = Radio.get_radio_payload_longitude(to_parse);
                     Radio.payload_event = Radio.get_radio_payload_event(to_parse);
+                    Radio.payload_speed = Radio.get_radio_payload_speed(to_parse);
                 }
 
                 // Reads in the time stamp for Mission Control's last broadcast.

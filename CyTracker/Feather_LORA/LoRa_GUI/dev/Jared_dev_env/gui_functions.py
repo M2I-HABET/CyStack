@@ -10,6 +10,7 @@
 from tkinter import *
 from tkinter.ttk import *
 from mission_control import *
+from recovery import *
 import globals as g
 
 
@@ -41,10 +42,25 @@ class GUI_Terminal():
 		self.gui_window.bind("<Escape>", self.callback_quit_gui)
 		# Creates and defines the notebook object.
 		self.configure_notebook()
-		# Creates an instance of the mission control oriented class.
-		mc_tab = MC_Tab(self.mc_frame)
-		# Class call to populate the mission control frame with its widgets.
-		mc_tab.main_mc_tab()
+		if g.SYSTEM_USER is "mc":
+			# Creates an instance of the mission control oriented class.
+			mc_tab = MC_Tab(self.mc_frame)
+			# Class call to populate the mission control frame with its widgets.
+			mc_tab.populate_mc_tab()
+		elif g.SYSTEM_USER is "recovery":
+			# Creates an instance of the mission control oriented class.
+			payload_tab = Recovery_Tab(self.payload_frame)
+			# Class call to populate the mission control frame with its widgets.
+			payload_tab.populate_payload_tab()
+		elif g.SYSTEM_USER is "admin" or "dev":
+			# Creates an instance of the mission control oriented class.
+			mc_tab = MC_Tab(self.mc_frame)
+			# Class call to populate the mission control frame with its widgets.
+			mc_tab.populate_mc_tab()
+			# Creates an instance of the mission control oriented class.
+			payload_tab = Recovery_Tab(self.payload_frame)
+			# Class call to populate the mission control frame with its widgets.
+			payload_tab.populate_payload_tab()
 		# Displays window.
 		self.gui_window.mainloop()
 
@@ -81,9 +97,23 @@ class GUI_Terminal():
 		# "importance" than other buttons. Just don't change the weight.
 		self.mc_frame.columnconfigure((0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19), weight=1)
 		self.mc_frame.rowconfigure((0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22), weight=1)
-		# Adds these frames to the GUI terminal.
-		book.add(self.mc_frame, text="Mission Control")
-		book.add(self.payload_frame, text="     Payload       ")
+
+		# The layout of each frame works as a grid system. The next two lines define how many
+		# rows and columsn exist on the frames. These row/column numbers are used to
+		# position buttons and displays around the GUI. Weight of 1 just means no button possess more
+		# "importance" than other buttons. Just don't change the weight.
+		self.payload_frame.columnconfigure((0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19), weight=1)
+		self.payload_frame.rowconfigure((0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22), weight=1)
+		if g.SYSTEM_USER is "mc":
+			# Adds frames to the GUI terminal.
+			book.add(self.mc_frame, text="Mission Control")
+		elif g.SYSTEM_USER is "recovery":
+			# Adds frames to the GUI terminal.
+			book.add(self.payload_frame, text="     Recovery     ")
+		elif g.SYSTEM_USER is "admin" or "dev":
+			# Adds frames to the GUI terminal.
+			book.add(self.mc_frame, text="Mission Control")
+			book.add(self.payload_frame, text="     Recovery     ")
 
 
 	def callback_quit_gui(self, *args):

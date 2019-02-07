@@ -7,6 +7,9 @@
 #
 #############################################################
 
+# System user id.
+SYSTEM_USER = None
+
 # Serial port objects. Object class defined at bottom of communication.py.
 PORT_MISSION_CONTROL_LORA = None
 PORT_PAYLOAD_LORA = None
@@ -18,6 +21,7 @@ NODE_RECOVERY_ID = 2
 
 # Tkinter frame objects.
 mc_class_reference = None
+payload_class_reference = None
 
 # Threaded timer objects.
 timer_mission_control_lora = None

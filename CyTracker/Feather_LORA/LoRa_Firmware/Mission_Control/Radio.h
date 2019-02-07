@@ -14,18 +14,20 @@ class RADIO
     RADIO();
     // Returns the transmission's time stamp.
     float get_radio_timestamp(char buf[], String selector);
-    // Returns the transmission's craft's altitude.
+    // Returns the transmission's payload's altitude.
     float get_radio_payload_altitude(char buf[]);
     // Returns the transmission's Latitude.
     float get_radio_payload_latitude(char buf[]);
     // Returns the transmission's longitude.
     float get_radio_payload_longitude(char buf[]);
+    // Returns the transmission's payload event.
+    float get_radio_payload_event(char buf[]);
+    // Returns the transmission's payload speed.
+    float get_radio_payload_speed(char buf[]);
     // Returns the transmission's recovery latitude.
     float get_radio_recovery_latitude(char buf[]);
     // Returns the transmission's recovery longitude.
     float get_radio_recovery_longitude(char buf[]);
-    // Returns the transmission's craft event.
-    float get_radio_payload_event(char buf[]);
     // Returns the transmission's craft ID.
     float get_radio_node_id(char buf[]);
     // Runs initialzation script for the Radio.
@@ -89,6 +91,7 @@ class RADIO
 	float payload_latitude = 0.0;
 	float payload_longitude = 0.0;
 	float payload_event = 0.0;
+    float payload_speed = 0.0;
 
     /**
      * These variables are overseen by Recovery.

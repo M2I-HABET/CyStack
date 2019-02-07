@@ -121,8 +121,8 @@ void DATA::update_gui()
 			temp_packet += "$";
 		}
 		// Normal GUI <-> mission_control Config.
-		else if((Radio.operation_mode == Radio.NORMAL) 
-				 || (Radio.operation_mode == Radio.STANDBY) 
+		else if((Radio.operation_mode == Radio.NORMAL)
+				 || (Radio.operation_mode == Radio.STANDBY)
 				 || (Radio.operation_mode == Radio.NONE))
 		{
 			confirmed_packet = true;
@@ -139,10 +139,18 @@ void DATA::update_gui()
 			temp_packet += Radio.payload_longitude * 10000;
 			temp_packet += ",";
 			temp_packet += Radio.payload_event;
+			temp_packet += ",";
+			temp_packet += Radio.payload_speed;
 		    temp_packet += ",";
 		    temp_packet += Radio.node_id;
 		    temp_packet += ",";
 		    temp_packet += Radio.mission_control_ts;
+		    temp_packet += ",";
+		    temp_packet += Radio.recovery_ts;
+		    temp_packet += ",";
+		    temp_packet += Radio.recovery_latitude * 10000;
+		    temp_packet += ",";
+		    temp_packet += Radio.recovery_longitude * 10000;
 			temp_packet += "]";
 			temp_packet += Radio.radio_input;
 			temp_packet += "/";

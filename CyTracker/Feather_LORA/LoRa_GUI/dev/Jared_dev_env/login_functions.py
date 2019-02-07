@@ -8,6 +8,7 @@
 #############################################################
 
 from tkinter import *
+import globals as g
 
 class Login_Terminal():
 
@@ -26,6 +27,11 @@ class Login_Terminal():
 		# but is used to prevent the user from closing the login
 		# window and bypassing the credentials page.
 		self.lock_state = True
+		# List of acceptable passwords.
+		self.mission_control_password = "mc"
+		self.recovery_password = "recovery"
+		self.admin_password = "admin"
+		self.dev_password = "dev"
 
 
 	def set_credentials(self, password):
@@ -49,13 +55,33 @@ class Login_Terminal():
 		"""
 
 		# Grabs the text of entry and compares against password.
-		if self.entry_credentials.get() == self.password:
+		if self.entry_credentials.get() in self.mission_control_password:
 			# If match, prints to cmd and destroys TK window.
 			print("PASSWORD MATCH")
 			# Updates lock state appropriately.
 			self.lock_state = False
 			# Upon deletion, this class will return to its GUI.py method.
 			self.login_window.destroy()
+			# Sets up system for admin
+			g.SYSTEM_USER = "mc"
+		elif self.entry_credentials.get() in self.recovery_password:
+			# If match, prints to cmd and destroys TK window.
+			print("PASSWORD MATCH")
+			# Updates lock state appropriately.
+			self.lock_state = False
+			# Upon deletion, this class will return to its GUI.py method.
+			self.login_window.destroy()
+			# Sets up system for admin
+			g.SYSTEM_USER = "recovery"
+		elif self.entry_credentials.get() in self.admin_password or self.dev_password:
+			# If match, prints to cmd and destroys TK window.
+			print("PASSWORD MATCH")
+			# Updates lock state appropriately.
+			self.lock_state = False
+			# Upon deletion, this class will return to its GUI.py method.
+			self.login_window.destroy()
+			# Sets up system for admin
+			g.SYSTEM_USER = "admin"
 		else:
 			# If different. Prints to user and aways for next try.
 			print("WRONG PASSWORD")

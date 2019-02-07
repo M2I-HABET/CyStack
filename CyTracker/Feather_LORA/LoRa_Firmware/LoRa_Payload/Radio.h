@@ -12,17 +12,18 @@ class RADIO
   	public:
 	// Constructor
 	RADIO();
-
     // Returns the transmission's time stamp.
     float get_radio_timestamp(char buf[], String selector);
-	// Returns the transmission's payload altitude.
+    // Returns the transmission's payload's altitude.
     float get_radio_payload_altitude(char buf[]);
-    // Returns the transmission's payload latitude.
+    // Returns the transmission's Latitude.
     float get_radio_payload_latitude(char buf[]);
-    // Returns the transmission's payload longitude.
+    // Returns the transmission's longitude.
     float get_radio_payload_longitude(char buf[]);
     // Returns the transmission's payload event.
     float get_radio_payload_event(char buf[]);
+    // Returns the transmission's payload speed.
+    float get_radio_payload_speed(char buf[]);
     // Returns the transmission's recovery latitude.
     float get_radio_recovery_latitude(char buf[]);
     // Returns the transmission's recovery longitude.

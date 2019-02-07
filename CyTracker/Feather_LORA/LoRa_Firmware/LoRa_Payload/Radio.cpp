@@ -32,12 +32,13 @@ float RADIO::get_radio_timestamp(char buf[], String selector)
     }
     else if(selector == "mc")
     {
-        return (Data.Parse(buf, 6));
+        return (Data.Parse(buf, 7));
     }
     else if(selector == "recovery")
     {
-        return (Data.Parse(buf, 7));
+        return (Data.Parse(buf, 8));
     }
+
 }
 
 
@@ -80,9 +81,18 @@ float RADIO::get_radio_payload_event(char buf[])
 /**
  * Parses and returns the radio transmission's craft Event.
  */
+float RADIO::get_radio_payload_speed(char buf[])
+{
+    return (Data.Parse(buf, 6));
+}
+
+
+/**
+ * Parses and returns the radio transmission's craft Event.
+ */
 float RADIO::get_radio_recovery_latitude(char buf[])
 {
-    return (Data.Parse(buf, 8));
+    return (Data.Parse(buf, 9));
 }
 
 
@@ -91,7 +101,7 @@ float RADIO::get_radio_recovery_latitude(char buf[])
  */
 float RADIO::get_radio_recovery_longitude(char buf[])
 {
-    return (Data.Parse(buf, 9));
+    return (Data.Parse(buf, 10));
 }
 
 
@@ -101,7 +111,7 @@ float RADIO::get_radio_recovery_longitude(char buf[])
  */
 float RADIO::get_radio_node_id(char buf[])
 {
-    return (Data.Parse(buf, 10));
+    return (Data.Parse(buf, 11));
 }
 
 
@@ -236,13 +246,15 @@ void RADIO::broadcast()
     temp += ",";
     temp += Data.payload_event;
     temp += ",";
+    temp += Gps.payload_speed;
+    temp += ",";
     temp += Radio.mission_control_ts;
     temp += ",";
     temp += Radio.recovery_ts;
     temp += ",";
-    temp += Gps.recovery_latitude;
+    temp += Radio.recovery_latitude;
     temp += ",";
-    temp += Gps.recovery_longitude;
+    temp += Radio.recovery_longitude;
     temp += ",";
     temp += Radio.node_id;
     temp += ",";

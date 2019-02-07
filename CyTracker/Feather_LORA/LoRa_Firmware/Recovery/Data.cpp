@@ -116,6 +116,8 @@ void DATA::update_gui()
 		temp_packet += Radio.payload_longitude * 10000;
 		temp_packet += ",";
 		temp_packet += Radio.payload_event;
+		temp_packet += ",";
+		temp_packet += Radio.payload_speed;
 	    temp_packet += ",";
 	    temp_packet += Radio.node_id;
 	    temp_packet += ",";

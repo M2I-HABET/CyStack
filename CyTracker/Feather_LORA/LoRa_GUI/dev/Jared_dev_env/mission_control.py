@@ -50,10 +50,16 @@ class MC_Tab():
 		self.payload_latitude = None
 		self.payload_longitude = None
 		self.payload_event = None
+		self.payload_speed = None
 
 		# Mission Control variables.
 		self.mission_control_time = None
 		self.payload_time_previous = ""
+
+		# Recovery variables.
+		self.recovery_time = None
+		self.recovery_latitude = None
+		self.recovery_longitude = None
 
 		# GUI variables.
 		self.display_changed_commands = None
@@ -69,6 +75,9 @@ class MC_Tab():
 		# StringVar variables are strings that update their text in entries when
 		# their value is changed.
 		self.mission_control_time = StringVar(self.mc_frame)
+		self.recovery_time = StringVar(self.mc_frame)
+		self.recovery_latitude = StringVar(self.mc_frame)
+		self.recovery_longitude = StringVar(self.mc_frame)
 		self.operational_mode = StringVar(self.mc_frame)
 		self.roll_call_status = StringVar(self.mc_frame)
 		self.node_mission_control = StringVar(self.mc_frame)
@@ -86,6 +95,7 @@ class MC_Tab():
 		self.payload_latitude = StringVar(self.mc_frame)
 		self.payload_longitude = StringVar(self.mc_frame)
 		self.payload_event = StringVar(self.mc_frame)
+		self.payload_speed = StringVar(self.mc_frame)
 		self.radio_received_node_id = StringVar(self.mc_frame)
 		self.display_changed_commands = StringVar(self.mc_frame)
 
@@ -111,8 +121,12 @@ class MC_Tab():
 		self.payload_latitude.set("-------")
 		self.payload_longitude.set("-------")
 		self.payload_event.set("-------")
+		self.payload_speed.set("-------")
 		self.radio_received_node_id.set("-------")
 		self.mission_control_time.set("-------")
+		self.recovery_time.set("-------")
+		self.recovery_latitude.set("-------")
+		self.recovery_longitude.set("-------")
 		self.display_changed_commands.set("")
 		self.operational_mode.set("NOT STARTED")
 
@@ -138,8 +152,12 @@ class MC_Tab():
 		self.entry_payload_latitude = Entry(self.mc_frame, state="readonly", textvariable=self.payload_latitude, justify='right', font='Helvtica 11')
 		self.entry_payload_longitude = Entry(self.mc_frame, state="readonly", textvariable=self.payload_longitude, justify='right', font='Helvtica 11')
 		self.entry_payload_event = Entry(self.mc_frame, state="readonly", textvariable=self.payload_event, justify='right', font='Helvtica 11')
+		self.entry_payload_speed = Entry(self.mc_frame, state="readonly", textvariable=self.payload_speed, justify='right', font='Helvtica 11')
 		self.entry_radio_received_node_id = Entry(self.mc_frame, state="readonly", textvariable=self.radio_received_node_id, justify='center', font='Helvtica 11')
 		self.entry_mission_control_time = Entry(self.mc_frame, state="readonly", textvariable=self.mission_control_time, justify='right', font='Helvtica 11')
+		self.entry_recovery_time = Entry(self.mc_frame, state="readonly", textvariable=self.recovery_time, justify='right', font='Helvtica 11')
+		self.entry_recovery_latitude = Entry(self.mc_frame, state="readonly", textvariable=self.recovery_latitude, justify='right', font='Helvtica 11')
+		self.entry_recovery_longitude = Entry(self.mc_frame, state="readonly", textvariable=self.recovery_longitude, justify='right', font='Helvtica 11')
 		self.entry_display_changed_commands = Entry(self.mc_frame, state="readonly", justify='right', textvariable=self.display_changed_commands, font='Helvtica 11')
 		self.entry_radio_last_received_node = Entry(self.mc_frame, state="readonly", justify='center', textvariable=self.radio_last_received_node, font='Helvetica 18 bold')
 
@@ -217,7 +235,7 @@ class MC_Tab():
 		terminal_divider_one.grid(row=5, column=0, columnspan=20, sticky='we')
 
 
-	def layout_payload(self):
+	def layout_nodes(self):
 		"""
 		Binds the sections of widgets related to the payload to the middle
 		portion of the frame.
@@ -238,6 +256,18 @@ class MC_Tab():
 		self.create_label_center(11, 0, self.mc_frame, "Event:            ")
 		self.entry_payload_event.grid(row=11, column=1, sticky='we')
 
+		self.create_label_center(6, 6, self.mc_frame, "RECOVERY")
+		self.create_label_center(7, 5, self.mc_frame, "Up Time (s): ")
+		self.entry_recovery_time.grid(row=7, column=6, sticky='we')
+		self.create_label_center(8, 5, self.mc_frame, "Latitude:       ")
+		self.entry_recovery_latitude.grid(row=8, column=6, sticky='we')
+		self.create_label_center(9, 5, self.mc_frame, "Longitude:   ")
+		self.entry_recovery_longitude.grid(row=9, column=6, sticky='we')
+
+		self.create_label_center(6, 9, self.mc_frame, "MISSION CONTROL")
+		self.create_label_center(7, 8, self.mc_frame, "Up Time (s):   ")
+		self.entry_mission_control_time.grid(row=7, column=9, sticky='we')
+
 		# Terminal divider. KEEP AT THE BOTTOM OF THIS METHOD.
 		# This divider is a golden bar strecthing across the screen to provide
 		# distinction between variable sections.
@@ -245,7 +275,7 @@ class MC_Tab():
 		terminal_divider_two.grid(row=13, column=0, columnspan=20, sticky='we')
 
 
-	def layout_mission_control(self):
+	def layout_updated_commands(self):
 		"""
 		Binds the sections of widgets related to mission_control to the bottom
 		portion of the frame.
@@ -254,15 +284,11 @@ class MC_Tab():
 		"""
 
 		# Below final divider.
-		self.create_label_center(14, 1, self.mc_frame, "MISSION CONTROL")
-		self.create_label_center(15, 0, self.mc_frame, "Up Time (s):   ")
-		self.entry_mission_control_time.grid(row=15, column=1, sticky='we')
-		self.create_label_east(22, 1, self.mc_frame, "To Be Sent:")
 		self.entry_display_changed_commands.grid(row=22, column=2, columnspan=6, sticky='we')
 		self.button_construct_serial_packet.grid(row=22, column=8)
 
 
-	def main_mc_tab(self):
+	def populate_mc_tab(self):
 		"""
 		Fills the frame with widgets needed for the mission control interface.
 
@@ -277,8 +303,8 @@ class MC_Tab():
 		self.create_label_objects()
 		# Aligns the widgets to the frame's grid.
 		self.layout_network()
-		self.layout_payload()
-		self.layout_mission_control()
+		self.layout_nodes()
+		self.layout_updated_commands()
 		# Update class instance stored as global.
 		g.mc_class_reference = self
 		# Configures serial environment.
@@ -389,7 +415,7 @@ class MC_Tab():
 			if "N" in temp_input:
 				serial_data, radio_data = str(temp_input).split("]")
 				# Variables such as '$' and 'N' are thrown out as junk.
-				junk, junk, p_ts, p_alt, p_lat, p_lng, p_event, node_id, mc_ts = str(serial_data).split(",")
+				junk, junk, p_ts, p_alt, p_lat, p_lng, p_event, p_speed, node_id, mc_ts, r_ts, r_lat, r_lng = str(serial_data).split(",")
 				radio_in, radio_out, received_rssi, junk = str(radio_data).split("/")
 				# Setting individual variables from the parsed packet.
 				self.payload_time.set(p_ts)
@@ -399,12 +425,13 @@ class MC_Tab():
 				self.payload_latitude.set(str(t_lat))
 				self.payload_longitude.set(str(t_lng))
 				self.payload_event.set(p_event)
+				self.payload_speed.set(p_speed)
 				self.mission_control_time.set(mc_ts)
 				self.radio_received.set(radio_in)
 				self.radio_sent.set(radio_out)
 				# To retrieve the RSSI value of the last received packet, we need to parse out the radio_in
 				# variable to see the node id.
-				junk, junk, junk, junk, junk, junk, junk, self.radio_received_node_id, junk = str(radio_in).split(",")
+				junk, junk, junk, junk, junk, junk, junk, junk, junk, junk, self.radio_received_node_id, junk = str(radio_in).split(",")
 				# Checks if the packet is from the payload.
 				if "2.00" in self.radio_received_node_id:
 					# Say you don't receive the a packet in a while. The mission control
@@ -412,7 +439,7 @@ class MC_Tab():
 					# update the gui (roughly 1.5 seconds). To prevent the gui from thinking
 					# each "gui update" is brand new information, we compare a previous
 					# variable value to the proclaimed to be new value. If they are the same, its most
-					# likely the same packet we already saw. If they are different, its 100% 
+					# likely the same packet we already saw. If they are different, its 100%
 					# new.
 					if self.payload_time_previous != str(self.payload_time.get()):
 						# Updates the appropriate variables.
@@ -426,7 +453,7 @@ class MC_Tab():
 					# update the gui (roughly 1.5 seconds). To prevent the gui from thinking
 					# each "gui update" is brand new information, we compare a previous
 					# variable value to the proclaimed to be new value. If they are the same, its most
-					# likely the same packet we already saw. If they are different, its 100% 
+					# likely the same packet we already saw. If they are different, its 100%
 					# new.
 					if self.payload_time_previous != str(self.payload_time.get()):
 						# Updates the appropriate variables.
