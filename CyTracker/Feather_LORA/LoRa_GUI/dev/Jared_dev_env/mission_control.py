@@ -307,10 +307,6 @@ class MC_Tab():
 		self.layout_updated_commands()
 		# Update class instance stored as global.
 		g.mc_class_reference = self
-		# Configures serial environment.
-		setup_comms()
-		# Embeds command line into the gui.
-		#self.embed_cmd() # Work in progress for another day.
 
 
 	# def embed_cmd(self):

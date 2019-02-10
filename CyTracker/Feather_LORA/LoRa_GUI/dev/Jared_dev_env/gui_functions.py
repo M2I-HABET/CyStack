@@ -11,6 +11,7 @@ from tkinter import *
 from tkinter.ttk import *
 from mission_control import *
 from recovery import *
+from communication import *
 import globals as g
 
 
@@ -61,6 +62,8 @@ class GUI_Terminal():
 			payload_tab = Recovery_Tab(self.payload_frame)
 			# Class call to populate the mission control frame with its widgets.
 			payload_tab.populate_payload_tab()
+		# Configures serial communication channels.
+		setup_comms()
 		# Displays window.
 		self.gui_window.mainloop()
 
