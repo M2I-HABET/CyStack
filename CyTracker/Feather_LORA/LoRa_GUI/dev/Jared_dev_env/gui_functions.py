@@ -53,7 +53,7 @@ class GUI_Terminal():
 			payload_tab = Recovery_Tab(self.payload_frame)
 			# Class call to populate the mission control frame with its widgets.
 			payload_tab.populate_payload_tab()
-		elif g.SYSTEM_USER is "admin" or "dev":
+		elif g.SYSTEM_USER is "dev":
 			# Creates an instance of the mission control oriented class.
 			mc_tab = MC_Tab(self.mc_frame)
 			# Class call to populate the mission control frame with its widgets.

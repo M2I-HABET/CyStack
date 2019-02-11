@@ -244,25 +244,6 @@ class Recovery_Tab():
 		g.payload_class_reference = self
 
 
-	# def embed_cmd(self):
-		"""
-		Creates a inner frame object and links it to the os's command line.
-
-		DOES NOT CURRENT WORK.
-
-		@param self - Instance of the class.
-		"""
-
-		# Creation of frame to house the command line / terminal.
-		# cmd = Frame(self.payload_frame)
-		# Assigns the frames position.
-		# cmd.grid(row=5, column=6, columnspan=12, rowspan=6, stick='we')
-		# Grabs the system id of the command terminal.
-		# wid = cmd.winfo_id()
-		# Attempts to bind the terminal into the frame.
-		# os.system('xterm -into %d -geometry 40x20 -sb &' % wid)
-
-
 	def callback_update_gui(self, *args):
 		"""
 		Method is run each time the connected microcontrollers send serial data to the gui.
@@ -294,6 +275,11 @@ class Recovery_Tab():
 			self.payload_event.set(p_event)
 			self.payload_speed.set(p_speed)
 			self.mission_control_time.set(mc_ts)
+			self.recovery_time.set(r_ts)
+			t_lat = (float(r_lat) / 10000)
+			t_lng = (float(r_lng) / 10000)
+			self.recovery_latitude.set(t_lat)
+			self.recovery_longitude.set(t_lng)
 			self.radio_received.set(radio_in)
 			self.radio_sent.set(radio_out)
 			# To retrieve the RSSI value of the last received packet, we need to parse out the radio_in

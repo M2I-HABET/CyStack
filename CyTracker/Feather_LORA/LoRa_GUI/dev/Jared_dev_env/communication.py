@@ -159,7 +159,7 @@ def config_scheduler():
 	"""
 
 	try:
-		# Checks for valid connection the the mission_control's Arduino LoRa.
+		# Checks for valid connection to the mission_control's Arduino LoRa.
 		if g.PORT_MISSION_CONTROL_LORA is not None:
 			# Terminal verbose message.
 			print("Scheduling task for mc LoRa.\n")
@@ -168,22 +168,31 @@ def config_scheduler():
 			g.timer_mission_control_lora = threading.Timer(0.3, mission_control_lora_receive)
 			# Starts the countdown timer.
 			g.timer_mission_control_lora.start()
-		# Checks for valid connection the the payload's Arduino LoRa.
+		# Checks for valid connection to the payload's Arduino LoRa.
 		if g.PORT_PAYLOAD_LORA is not None:
 			# Terminal verbose message.
-			print("Scheduling task for craft LoRa.\n")
+			print("Scheduling task for payload LoRa.\n")
 			# Creates countdown timer that, upon hitting zero runs the associated method.
 			# Units are seconds.
-			g.timer_payload_lora = threading.Timer(0.3, craft_payload_receive)
+			g.timer_payload_lora = threading.Timer(0.3, payload_lora_receive)
 			# Starts the countdown timer.
 			g.timer_payload_lora.start()
+		# Checks for valid connection to the recovery vehicle's Arduino LoRa.
+		if g.PORT_RECOVERY_LORA is not None:
+			# Terminal verbose message.
+			print("Scheduling task for recovery LoRa.\n")
+			# Creates countdown timer that, upon hitting zero runs the associated method.
+			# Units are seconds.
+			g.timer_recovery_lora = threading.Timer(0.3, recovery_lora_receive)
+			# Starts the countdown timer.
+			g.timer_recovery_lora.start()
 	# Prints exception handler.
 	except Exception as e:
 		# Terminal verbose message.
 		print("Unable to start setup scheduler.")
 		# Terminal verbose message to show the exact error that occurred.
 		print("Exception: " + str(e))
- 
+
 
 def generic_receive(ser):
 	"""
@@ -244,12 +253,12 @@ def mission_control_lora_receive():
 		return
 
 
-def craft_lora_receive():
+def payload_lora_receive():
 	""" Responsible for reading in data on the given serial (USB) port. """
 
 	# Creates countdown timer that, upon hitting zero runs the associated method.
 	# Units are seconds.
-	g.timer_payload_lora = threading.Timer(0.3, mc_lora_receive)
+	g.timer_payload_lora = threading.Timer(0.3, payload_lora_receive)
 	# Starts the countdown timer.
 	g.timer_payload_lora.start()
 	# Pulls the serial data from the craft LoRa port object down to a local instanced variable.
@@ -273,6 +282,35 @@ def craft_lora_receive():
 		# Returns the error state message.
 		g.PORT_PAYLOAD_LORA.set_input("Serial Error")
 		return
+
+def recovery_lora_receive():
+	""" Responsible for reading in data on the given serial (USB) port. """
+
+	# Creates countdown timer that, upon hitting zero runs the associated method.
+	# Units are seconds.
+	g.timer_recovery_lora = threading.Timer(0.3, recovery_lora_receive)
+	# Starts the countdown timer.
+	g.timer_recovery_lora.start()
+	# Pulls the serial data from the craft LoRa port object down to a local instanced variable.
+	ser = g.PORT_RECOVERY_LORA.get_port()
+	try:
+		# Checks for a incoming data.
+		if(ser.in_waiting != 0):
+			# Reads in and decodes incoming serial data.
+			message = ser.readline().decode()
+			# Debug info.
+			print("Received from " + str(ser.port) + ". Input: " + message + "\n")
+			# Return data.
+			g.PORT_RECOVERY_LORA.set_input(str(message))
+		return
+	# Print exception handler.
+	except Exception as e:
+		# Terminates the timer object.
+		g.timer_recovery_lora.cancel()
+		# Terminal verbose message to show the exact error that occurred.
+		print("Exception: " + str(e))
+		# Returns the error state message.
+		g.PORT_RECOVERY_LORA.set_input("Serial Error")
 
 
 def send(ser, message):

@@ -30,7 +30,6 @@ class Login_Terminal():
 		# List of acceptable passwords.
 		self.mission_control_password = "mc"
 		self.recovery_password = "recovery"
-		self.admin_password = "admin"
 		self.dev_password = "dev"
 
 
@@ -73,7 +72,7 @@ class Login_Terminal():
 			self.login_window.destroy()
 			# Sets up system for admin
 			g.SYSTEM_USER = "recovery"
-		elif self.entry_credentials.get() in self.admin_password or self.dev_password:
+		elif self.entry_credentials.get() in self.dev_password:
 			# If match, prints to cmd and destroys TK window.
 			print("PASSWORD MATCH")
 			# Updates lock state appropriately.
@@ -81,7 +80,7 @@ class Login_Terminal():
 			# Upon deletion, this class will return to its GUI.py method.
 			self.login_window.destroy()
 			# Sets up system for admin
-			g.SYSTEM_USER = "admin"
+			g.SYSTEM_USER = "dev"
 		else:
 			# If different. Prints to user and aways for next try.
 			print("WRONG PASSWORD")
