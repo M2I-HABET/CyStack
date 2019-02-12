@@ -320,7 +320,7 @@ void RADIO::radio_receive()
                 }
 
                 // Reads in the time stamp for Recovery's last broadcast.
-                float temp_ts = Radio.get_radio_timestamp(to_parse, "recovery");
+                temp_ts = Radio.get_radio_timestamp(to_parse, "recovery");
                 // Compares the currently brought in time stamp to the one stored onboad.
                 if(temp_ts > Radio.recovery_ts)
                 {
@@ -328,7 +328,7 @@ void RADIO::radio_receive()
                     // the new ones.
                     Radio.recovery_ts = temp_ts;
                     Radio.recovery_latitude = get_radio_recovery_latitude(to_parse);
-                    Radio.recovery_longtiude = get_radio_recovery_longitude(to_parse);
+                    Radio.recovery_longitude = get_radio_recovery_longitude(to_parse);
                 }
                 // Reads in Craft ID to see where signal came from.
                 received_id = Radio.get_radio_node_id(to_parse);

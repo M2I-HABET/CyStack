@@ -353,15 +353,15 @@ void RADIO::radio_receive()
                 }
 
                 // Reads in the time stamp for Mission Control's last broadcast.
-                float temp_ts = Radio.get_radio_timestamp(to_parse, "recovery");
+                temp_ts = Radio.get_radio_timestamp(to_parse, "recovery");
                 // Compares the currently brought in time stamp to the one stored onboad.
                 if(temp_ts > Radio.recovery_ts)
                 {
                     // If the incoming signal has more up-to-date versions, we overwrite our saved version with
                     // the new ones.
                     Radio.recovery_ts = temp_ts;
-                    Radio.recovery_altitude = Radio.get_radio_recovery_altitude(to_parse);
                     Radio.recovery_latitude = Radio.get_radio_recovery_latitude(to_parse);
+                    Radio.recovery_longitude = Radio.get_radio_recovery_longitude(to_parse);
                 }
                 // Pulls the RSSI from the signal. (Received Signal Strength Indicator)
                 received_rssi = rf95.lastRssi();

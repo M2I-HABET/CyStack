@@ -88,7 +88,7 @@ class RADIO
     // Recovery's ms Time stamp.
     float recovery_ts = 0.0;
     float recovery_latitude = 0.0;
-    float recovery_longtiude = 0.0;
+    float recovery_longitude = 0.0;
 
 	/**
 	 * These variables are overseen by Mission Control.
