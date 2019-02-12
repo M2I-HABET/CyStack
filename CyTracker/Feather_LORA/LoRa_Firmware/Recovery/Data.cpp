@@ -5,6 +5,7 @@
 #include <Arduino.h>
 #include "Data.h"
 #include "Radio.h"
+#include "GPS.h"
 #include <stdlib.h>
 #include "Globals.h"
 
@@ -125,9 +126,9 @@ void DATA::update_gui()
 	    temp_packet += ",";
 	    temp_packet += Radio.recovery_ts;
 	    temp_packet += ",";
-	    temp_packet += Radio.recovery_latitude * 10000;
+	    temp_packet += Gps.recovery_latitude * 10000;
 	    temp_packet += ",";
-	    temp_packet += Radio.recovery_longitude * 10000;
+	    temp_packet += Gps.recovery_longitude * 10000;
 		temp_packet += "]";
 		temp_packet += Radio.radio_input;
 		temp_packet += "/";

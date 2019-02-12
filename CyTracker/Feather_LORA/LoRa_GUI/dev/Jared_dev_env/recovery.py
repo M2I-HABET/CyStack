@@ -91,7 +91,6 @@ class Recovery_Tab():
 		self.radio_received_node_id = StringVar(self.payload_frame)
 
 		# Initialization of varaible values on GUI startup.
-		self.roll_call_status.set("NOT STARTED")
 		self.radio_received.set("-------")
 		self.radio_sent.set("-------")
 		self.radio_payload_rssi.set("-------")

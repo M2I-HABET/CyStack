@@ -124,6 +124,10 @@ def validate_ports(ports):
 					# Creates a serial object instance with the temporary serial object.
 					# Class defined at bottom of file.
 					g.PORT_MISSION_CONTROL_LORA = serial_object(ser, response, port_description)
+				if response in "recovery":
+					# Creates a serial object instance with the temporary serial object.
+					# Class defined at bottom of file.
+					g.PORT_RECOVERY_LORA = serial_object(ser, response, port_description)
 				# Unknown microcontroller connection.
 				else:
 					# Updates status to reflect parsing failure.

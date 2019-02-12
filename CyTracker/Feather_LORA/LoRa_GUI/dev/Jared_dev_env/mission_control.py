@@ -13,7 +13,6 @@ from communication import *
 import time
 import threading
 import globals as g
-# import os
 
 
 class MC_Tab():

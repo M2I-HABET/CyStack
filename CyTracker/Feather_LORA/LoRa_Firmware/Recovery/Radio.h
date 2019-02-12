@@ -38,8 +38,6 @@ class RADIO
     void roll_call();
     // Sends the desired signal out over the radio antenna.
     void broadcast();
-    // Compares current node against others. Prevents duplicates.
-    void node_check_in();
     // Receives incoming transmission.
     void radio_receive();
     // Checks if packet is valid or invalid. Error detection.

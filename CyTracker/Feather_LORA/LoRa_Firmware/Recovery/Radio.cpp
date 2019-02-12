@@ -335,8 +335,6 @@ void RADIO::radio_receive()
                 received_rssi = rf95.lastRssi();
                 // Reads in Craft ID to see where signal came from.
                 received_id = Radio.get_radio_node_id(to_parse);
-                // Compares the transmission's craftID to see if its a brand new craft. If so, it logs it.
-                Radio.node_check_in();
             }
         }
     }

@@ -42,6 +42,7 @@ void GPS::manager()
         // and 0m in Altitude (which is bad).
         revert_gps_data();
     }
+    Serial.println("GPS");
 }
 
 
@@ -101,14 +102,9 @@ bool GPS::fixation_monitor()
 void GPS::store_data()
 {
     // Updates all struct variables with the most current sensor data.
-    sprintf(recovery_gps_time, "%02d:%02d:%02d ", gps.time.hour(), gps.time.minute(), gps.time.second());
-    recovery_altitude = gps.altitude.meters();
     recovery_latitude = gps.location.lat();
     recovery_longitude = gps.location.lng();
-    recovery_satillite_count = gps.satellites.value();
-    recovery_speed = gps.speed.mps();
     // Replaces the old backup values with the new values.
-    previous_altitude = recovery_altitude;
     previous_latitude = recovery_latitude;
     previous_longitude = recovery_longitude;
     Serial.print("\n\nLat: "); Serial.println(recovery_latitude, 6);
@@ -123,8 +119,6 @@ void GPS::store_data()
 void GPS::revert_gps_data()
 {
     // Reverts values to that of the previous cycle.
-    recovery_altitude = previous_altitude;
     recovery_latitude = previous_latitude;
     recovery_longitude = previous_longitude;
-    recovery_speed = 0.0;
 }
