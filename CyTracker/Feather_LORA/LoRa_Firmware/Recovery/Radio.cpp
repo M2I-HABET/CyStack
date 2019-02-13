@@ -231,7 +231,7 @@ void RADIO::roll_call()
 void RADIO::broadcast()
 {
     // Updates the time object to hold the most current operation time.
-    Radio.mission_control_ts = millis()/1000.0;
+    Radio.recovery_ts = millis()/1000.0;
     // Casting all float values to a character array with commas saved in between values
     // so the character array can be parsed when received by another craft.
     String temp = "";
