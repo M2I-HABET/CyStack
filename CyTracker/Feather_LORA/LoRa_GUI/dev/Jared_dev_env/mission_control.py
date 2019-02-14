@@ -412,7 +412,8 @@ class MC_Tab():
 				self.radio_sent.set(radio_out)
 				# To retrieve the RSSI value of the last received packet, we need to parse out the radio_in
 				# variable to see the node id.
-				junk, junk, junk, junk, junk, junk, junk, junk, junk, junk, self.radio_received_node_id, junk = str(radio_in).split(",")
+				# $   p_ts  p_alt p_lat p_lng p_ev  p_sp  mc_ts r_ts  r_lat r_lng      node id                  $
+				junk, junk, junk, junk, junk, junk, junk, junk, junk, junk, junk, self.radio_received_node_id, junk = str(radio_in).split(",")
 				# Checks if the packet is from the payload.
 				if "2.00" in self.radio_received_node_id:
 					# Say you don't receive the a packet in a while. The mission control
