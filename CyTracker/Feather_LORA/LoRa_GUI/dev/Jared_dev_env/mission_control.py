@@ -242,7 +242,7 @@ class MC_Tab():
 		@param self - Instance of the class.
 		"""
 
-		# Above divider. (divider at bottom of method)
+		# PAYLOAD
 		self.create_label_center(6, 1, self.mc_frame, "PAYLOAD")
 		self.create_label_center(7, 0, self.mc_frame, "Up Time (s): ")
 		self.entry_payload_time.grid(row=7, column=1, sticky='we')
@@ -254,7 +254,9 @@ class MC_Tab():
 		self.entry_payload_longitude.grid(row=10, column=1, sticky='we')
 		self.create_label_center(11, 0, self.mc_frame, "Event:            ")
 		self.entry_payload_event.grid(row=11, column=1, sticky='we')
-
+		self.create_label_center(12, 0, self.mc_frame, "Speed:            ")
+		self.entry_payload_speed.grid(row=12, column=1, sticky='we')
+		# RECOVERY
 		self.create_label_center(6, 6, self.mc_frame, "RECOVERY")
 		self.create_label_center(7, 5, self.mc_frame, "Up Time (s): ")
 		self.entry_recovery_time.grid(row=7, column=6, sticky='we')
@@ -262,7 +264,7 @@ class MC_Tab():
 		self.entry_recovery_latitude.grid(row=8, column=6, sticky='we')
 		self.create_label_center(9, 5, self.mc_frame, "Longitude:   ")
 		self.entry_recovery_longitude.grid(row=9, column=6, sticky='we')
-
+		# MISSION CONTROL
 		self.create_label_center(6, 9, self.mc_frame, "MISSION CONTROL")
 		self.create_label_center(7, 8, self.mc_frame, "Up Time (s):   ")
 		self.entry_mission_control_time.grid(row=7, column=9, sticky='we')
@@ -415,7 +417,7 @@ class MC_Tab():
 				# $   p_ts  p_alt p_lat p_lng p_ev  p_sp  mc_ts r_ts  r_lat r_lng      node id                  $
 				junk, junk, junk, junk, junk, junk, junk, junk, junk, junk, junk, self.radio_received_node_id, junk = str(radio_in).split(",")
 				# Checks if the packet is from the payload.
-				if "2.00" in self.radio_received_node_id:
+				if "2" in self.radio_received_node_id:
 					# Say you don't receive the a packet in a while. The mission control
 					# LoRa still sends you its last known packet each time it tries to
 					# update the gui (roughly 1.5 seconds). To prevent the gui from thinking
@@ -429,7 +431,7 @@ class MC_Tab():
 						self.radio_last_received_node.set("Payload")
 						self.update_payload_rssi(received_rssi)
 				# Checks if the packet is from the recovery team.
-				elif "3.00" in self.radio_received_node_id:
+				if "3" in self.radio_received_node_id:
 					# Say you don't receive the a packet in a while. The mission control
 					# LoRa still sends you its last known packet each time it tries to
 					# update the gui (roughly 1.5 seconds). To prevent the gui from thinking

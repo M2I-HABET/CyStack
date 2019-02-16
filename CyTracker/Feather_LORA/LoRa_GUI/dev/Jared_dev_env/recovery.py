@@ -179,7 +179,7 @@ class Recovery_Tab():
 		@param self - Instance of the class.
 		"""
 
-		# Above divider. (divider at bottom of method)
+		# PAYLOAD
 		self.create_label_center(6, 1, self.payload_frame, "PAYLOAD")
 		self.create_label_center(7, 0, self.payload_frame, "Up Time (s): ")
 		self.entry_payload_time.grid(row=7, column=1, sticky='we')
@@ -193,7 +193,7 @@ class Recovery_Tab():
 		self.entry_payload_event.grid(row=11, column=1, sticky='we')
 		self.create_label_center(12, 0, self.payload_frame, "Speed (m):       ")
 		self.entry_payload_speed.grid(row=12, column=1, sticky='we')
-
+		# RECOVERY
 		self.create_label_center(6, 6, self.payload_frame, "RECOVERY")
 		self.create_label_center(7, 5, self.payload_frame, "Up Time (s): ")
 		self.entry_recovery_time.grid(row=7, column=6, sticky='we')
@@ -201,7 +201,7 @@ class Recovery_Tab():
 		self.entry_recovery_latitude.grid(row=8, column=6, sticky='we')
 		self.create_label_center(9, 5, self.payload_frame, "Longitude:   ")
 		self.entry_recovery_longitude.grid(row=9, column=6, sticky='we')
-
+		# MISSION CONTROL
 		self.create_label_center(6, 9, self.payload_frame, "MISSION CONTROL")
 		self.create_label_center(7, 8, self.payload_frame, "Up Time (s):   ")
 		self.entry_mission_control_time.grid(row=7, column=9, sticky='we')
