@@ -118,8 +118,6 @@ void DATA::update_gui()
 		temp_packet += ",";
 		temp_packet += Radio.payload_speed;
 		temp_packet += ",";
-		temp_packet += Radio.node_id;
-		temp_packet += ",";
 		temp_packet += Radio.mission_control_ts;
 		temp_packet += ",";
 		temp_packet += Radio.recovery_ts;

@@ -29,8 +29,6 @@ class MC_Tab():
 		self.mc_frame = mc_frame
 
 		# Network variables.
-		self.operational_mode = None
-		self.roll_call_status = None
 		self.node_mission_control = None
 		self.node_payload = None
 		self.node_recovery = None
@@ -77,8 +75,6 @@ class MC_Tab():
 		self.recovery_time = StringVar(self.mc_frame)
 		self.recovery_latitude = StringVar(self.mc_frame)
 		self.recovery_longitude = StringVar(self.mc_frame)
-		self.operational_mode = StringVar(self.mc_frame)
-		self.roll_call_status = StringVar(self.mc_frame)
 		self.node_mission_control = StringVar(self.mc_frame)
 		self.node_payload = StringVar(self.mc_frame)
 		self.node_recovery = StringVar(self.mc_frame)
@@ -89,13 +85,13 @@ class MC_Tab():
 		self.radio_payload_last_contact = StringVar(self.mc_frame)
 		self.radio_recovery_last_contact = StringVar(self.mc_frame)
 		self.radio_last_received_node = StringVar(self.mc_frame)
+		self.radio_received_node_id = StringVar(self.mc_frame)
 		self.payload_time = StringVar(self.mc_frame)
 		self.payload_altitude = StringVar(self.mc_frame)
 		self.payload_latitude = StringVar(self.mc_frame)
 		self.payload_longitude = StringVar(self.mc_frame)
 		self.payload_event = StringVar(self.mc_frame)
 		self.payload_speed = StringVar(self.mc_frame)
-		self.radio_received_node_id = StringVar(self.mc_frame)
 		self.display_changed_commands = StringVar(self.mc_frame)
 
 		# Configures tracing for all variables. When these variables are written to,
@@ -103,11 +99,8 @@ class MC_Tab():
 		self.node_mission_control.trace("w", self.callback_update_mission_control_node_status)
 		self.node_payload.trace("w", self.callback_update_payload_node_status)
 		self.node_recovery.trace("w", self.callback_update_recovery_node_status)
-		self.operational_mode.trace("w", self.callback_update_transmission)
-		self.roll_call_status.trace("w", self.callback_update_transmission)
 
 		# Initialization of varaible values on GUI startup.
-		self.roll_call_status.set("NOT STARTED")
 		self.radio_received.set("-------")
 		self.radio_sent.set("-------")
 		self.radio_payload_rssi.set("-------")
@@ -127,7 +120,6 @@ class MC_Tab():
 		self.recovery_latitude.set("-------")
 		self.recovery_longitude.set("-------")
 		self.display_changed_commands.set("")
-		self.operational_mode.set("NOT STARTED")
 
 
 	def create_entry_objects(self):
@@ -138,8 +130,6 @@ class MC_Tab():
 		"""
 
 		# Creates entry widgets for each variable. (Text windows to be placed in the GUI)
-		self.entry_operational_mode = Entry(self.mc_frame, state="readonly", textvariable=self.operational_mode, justify='center', font='Helvtica 11')
-		self.entry_roll_call_status = Entry(self.mc_frame, state="readonly", textvariable=self.roll_call_status, justify='center', font='Helvtica 11')
 		self.entry_radio_received = Entry(self.mc_frame, state="readonly", textvariable=self.radio_received, font='Helvtica 11')
 		self.entry_radio_sent = Entry(self.mc_frame, state="readonly", textvariable=self.radio_sent, font='Helvtica 11')
 		self.entry_radio_payload_rssi = Entry(self.mc_frame, state="readonly", textvariable=self.radio_payload_rssi, font='Helvtica 11')
@@ -169,9 +159,6 @@ class MC_Tab():
 		"""
 
 		# Creates button widgets. (Triggers specified callback method.)
-		self.button_roll_call_start = Button(self.mc_frame, text="RC Start", command=self.callback_roll_call_start)
-		self.button_roll_call_stop = Button(self.mc_frame, text="RC Stop", command=self.callback_roll_call_stop)
-		self.button_start_network = Button(self.mc_frame, text="Network Start", command=self.callback_network_start)
 		self.button_construct_serial_packet = Button(self.mc_frame, text="Send", command=self.callback_construct_serial_packet)
 
 
@@ -201,10 +188,6 @@ class MC_Tab():
 		"""
 
 		# Above divider one. (divider at bottom of method)
-		self.create_label_east(0, 0, self.mc_frame, "Network Status:")
-		self.entry_operational_mode.grid(row=0, column=1, sticky='w')
-		self.create_label_east(1, 0, self.mc_frame, "Roll Call Status:")
-		self.entry_roll_call_status.grid(row=1, column=1, sticky='w')
 		self.create_label_east(0, 2, self.mc_frame, "Node Status:")
 		self.label_mission_control_node.grid(row=0, column=3, sticky='nswe')
 		self.label_payload_node.grid(row=1, column=3, sticky='nswe')
@@ -221,9 +204,6 @@ class MC_Tab():
 		self.entry_radio_recovery_rssi.grid(row=3, column=6, columnspan=1, stick='we')
 		self.create_label_east(3, 7, self.mc_frame, "Last Contact (s):")
 		self.entry_radio_recovery_last_contact.grid(row=3, column=8, columnspan=1, stick='we')
-		self.button_roll_call_start.grid(row=3, column=0, rowspan=2, sticky='nes')
-		self.button_roll_call_stop.grid(row=3, column=1, rowspan=2, sticky='ns')
-		self.button_start_network.grid(row=3, column=2, rowspan=2, sticky='nws')
 		self.create_label_center(2, 10, self.mc_frame, "Last Packet Received Was From")
 		self.entry_radio_last_received_node.grid(row=3, column=10, rowspan=2, sticky='nsew')
 
@@ -389,70 +369,60 @@ class MC_Tab():
 		if g.PORT_MISSION_CONTROL_LORA is not None:
 			# If valid connection, get its serial data input.
 			temp_input = g.PORT_MISSION_CONTROL_LORA.input.get()
-			# N signifies the packet being of normal communication type.
-			if "N" in temp_input:
-				serial_data, radio_data = str(temp_input).split("]")
-				# Variables such as '$' and 'N' are thrown out as junk.
-				junk, junk, p_ts, p_alt, p_lat, p_lng, p_event, p_speed, node_id, mc_ts, r_ts, r_lat, r_lng = str(serial_data).split(",")
-				radio_in, radio_out, received_rssi, junk = str(radio_data).split("/")
-				# Setting individual variables from the parsed packet.
-				self.payload_time.set(p_ts)
-				self.payload_altitude.set(p_alt)
-				t_lat = (float(p_lat) / 10000)
-				t_lng = (float(p_lng) / 10000)
-				self.payload_latitude.set(str(t_lat))
-				self.payload_longitude.set(str(t_lng))
-				self.payload_event.set(p_event)
-				self.payload_speed.set(p_speed)
-				self.mission_control_time.set(mc_ts)
-				self.recovery_time.set(r_ts)
-				t_lat = (float(r_lat) / 10000)
-				t_lng = (float(r_lng) / 10000)
-				self.recovery_latitude.set(t_lat)
-				self.recovery_longitude.set(t_lng)
-				self.radio_received.set(radio_in)
-				self.radio_sent.set(radio_out)
-				# To retrieve the RSSI value of the last received packet, we need to parse out the radio_in
-				# variable to see the node id.
-				# $   p_ts  p_alt p_lat p_lng p_ev  p_sp  mc_ts r_ts  r_lat r_lng      node id                  $
-				junk, junk, junk, junk, junk, junk, junk, junk, junk, junk, junk, self.radio_received_node_id, junk = str(radio_in).split(",")
-				# Checks if the packet is from the payload.
-				if "2" in self.radio_received_node_id:
-					# Say you don't receive the a packet in a while. The mission control
-					# LoRa still sends you its last known packet each time it tries to
-					# update the gui (roughly 1.5 seconds). To prevent the gui from thinking
-					# each "gui update" is brand new information, we compare a previous
-					# variable value to the proclaimed to be new value. If they are the same, its most
-					# likely the same packet we already saw. If they are different, its 100%
-					# new.
-					if self.payload_time_previous != str(self.payload_time.get()):
-						# Updates the appropriate variables.
-						self.payload_time_previous = str(self.payload_time.get())
-						self.radio_last_received_node.set("Payload")
-						self.update_payload_rssi(received_rssi)
-				# Checks if the packet is from the recovery team.
-				if "3" in self.radio_received_node_id:
-					# Say you don't receive the a packet in a while. The mission control
-					# LoRa still sends you its last known packet each time it tries to
-					# update the gui (roughly 1.5 seconds). To prevent the gui from thinking
-					# each "gui update" is brand new information, we compare a previous
-					# variable value to the proclaimed to be new value. If they are the same, its most
-					# likely the same packet we already saw. If they are different, its 100%
-					# new.
-					if self.payload_time_previous != str(self.payload_time.get()):
-						# Updates the appropriate variables.
-						self.payload_time_previous = str(self.payload_time.get())
-						self.radio_last_received_node.set("Recovery")
-						self.update_recovery_rssi(received_rssi)
-			# R signifies the packet being of type Roll Call.
-			elif "R" in temp_input:
-				# Variables such as '$' and 'R' are thrown out as junk.
-				junk, junk, t_mission_control_node_status, t_payload_node_status, t_recovery_node_status, junk = str(temp_input).split(",")
-				# Setting individual variables from the parsed packet.
-				self.node_mission_control.set(t_mission_control_node_status)
-				self.node_payload.set(t_payload_node_status)
-				self.node_recovery.set(t_recovery_node_status)
-
+			# Splits the received serial data into two respective parts.
+			serial_data, radio_data = str(temp_input).split("]")
+			# Variables such as '$' and 'N' are thrown out as junk.
+			junk, p_ts, p_alt, p_lat, p_lng, p_event, p_speed, mc_ts, r_ts, r_lat, r_lng = str(serial_data).split(",")
+			radio_in, radio_out, received_rssi, junk = str(radio_data).split("/")
+			# Setting individual variables from the parsed packet.
+			self.payload_time.set(p_ts)
+			self.payload_altitude.set(p_alt)
+			t_lat = (float(p_lat) / 10000)
+			t_lng = (float(p_lng) / 10000)
+			self.payload_latitude.set(str(t_lat))
+			self.payload_longitude.set(str(t_lng))
+			self.payload_event.set(p_event)
+			self.payload_speed.set(p_speed)
+			self.mission_control_time.set(mc_ts)
+			self.recovery_time.set(r_ts)
+			t_lat = (float(r_lat) / 10000)
+			t_lng = (float(r_lng) / 10000)
+			self.recovery_latitude.set(t_lat)
+			self.recovery_longitude.set(t_lng)
+			self.radio_received.set(radio_in)
+			self.radio_sent.set(radio_out)
+			# To retrieve the RSSI value of the last received packet, we need to parse out the radio_in
+			# variable to see the node id.
+			# $   p_ts  p_alt p_lat p_lng p_ev  p_sp  mc_ts r_ts  r_lat r_lng      node id                  $
+			junk, junk, junk, junk, junk, junk, junk, junk, junk, junk, junk, self.radio_received_node_id, junk = str(radio_in).split(",")
+			# Checks if the packet is from the payload.
+			if "2" in self.radio_received_node_id:
+				# Say you don't receive the a packet in a while. The mission control
+				# LoRa still sends you its last known packet each time it tries to
+				# update the gui (roughly 1.5 seconds). To prevent the gui from thinking
+				# each "gui update" is brand new information, we compare a previous
+				# variable value to the proclaimed to be new value. If they are the same, its most
+				# likely the same packet we already saw. If they are different, its 100%
+				# new.
+				if self.payload_time_previous != str(self.payload_time.get()):
+					# Updates the appropriate variables.
+					self.payload_time_previous = str(self.payload_time.get())
+					self.radio_last_received_node.set("Payload")
+					self.update_payload_rssi(received_rssi)
+			# Checks if the packet is from the recovery team.
+			if "3" in self.radio_received_node_id:
+				# Say you don't receive the a packet in a while. The mission control
+				# LoRa still sends you its last known packet each time it tries to
+				# update the gui (roughly 1.5 seconds). To prevent the gui from thinking
+				# each "gui update" is brand new information, we compare a previous
+				# variable value to the proclaimed to be new value. If they are the same, its most
+				# likely the same packet we already saw. If they are different, its 100%
+				# new.
+				if self.payload_time_previous != str(self.payload_time.get()):
+					# Updates the appropriate variables.
+					self.payload_time_previous = str(self.payload_time.get())
+					self.radio_last_received_node.set("Recovery")
+					self.update_recovery_rssi(received_rssi)
 
 
 	def update_payload_rssi(self, received_rssi):
@@ -552,7 +522,7 @@ class MC_Tab():
 		try:
 			temp_packet += "$"
 			temp_packet += ","
-			temp_packet += str(self.operational_mode.get())
+			# temp_packet += // Release payload flag.
 			temp_packet += ","
 			temp_packet += "$"
 
@@ -566,38 +536,6 @@ class MC_Tab():
 			print("Unable to change packet type.")
 			# Prints actual error.
 			print("Exception: " + str(e))
-
-
-	def callback_roll_call_start(self):
-		"""
-		Triggered by the press of "button_roll_call_start".
-
-		@param self - Instance of the class.
-		"""
-
-		self.roll_call_status.set("RUNNING")
-		self.operational_mode.set("ROLLCALL")
-
-
-	def callback_roll_call_stop(self):
-		"""
-		Triggered by the press of "button_roll_call_stop".
-
-		@param self - Instance of the class.
-		"""
-
-		self.roll_call_status.set("FINISHED")
-		self.operational_mode.set("STANDBY")
-
-
-	def callback_network_start(self):
-		"""
-		Triggered by the press of "button_network_start".
-
-		@param self - Instance of the class.
-		"""
-
-		self.operational_mode.set("NORMAL")
 
 
 	def callback_construct_serial_packet(self):
@@ -634,7 +572,7 @@ class MC_Tab():
 		try:
 			new_packet += "$"
 			new_packet += ","
-			new_packet += str(self.convert_op_mode())
+			# temp_packet += // Release payload flag.
 			new_packet += ","
 			new_packet += "$"
 			# Returns new packet.
@@ -645,23 +583,6 @@ class MC_Tab():
 			# Prints general error statement. (Used to tell which method errored out)
 			print("Unable to convert commands.")
 			print("Exception: " + str(e))
-
-
-	def convert_op_mode(self):
-		"""
-		Converts to correct integer value.
-
-		@param self - Instance of the class.
-		"""
-
-		if self.operational_mode.get() == "NOT STARTED":
-			return "0.00"
-		elif self.operational_mode.get() == "ROLLCALL":
-			return "1.00"
-		elif self.operational_mode.get() == "STANDBY":
-			return "2.00"
-		elif self.operational_mode.get() == "NORMAL":
-			return "3.00"
 
 
 	def create_label_east(self, r, c, frame, title):
