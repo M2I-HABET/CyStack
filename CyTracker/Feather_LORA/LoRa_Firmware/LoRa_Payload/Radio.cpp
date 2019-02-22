@@ -162,65 +162,14 @@ void RADIO::manager()
 {
 	// Reads in radio transmission if available.
 	Radio.radio_receive();
-	// Checks for a specific Craft ID. '999.0' signals the start of operation.
-	if((998.0 < received_id && received_id < 999.9) && !Radio.checked_in)
-    {
-        //Serial.println("Roll Call started.");
-        // Updates crafts state.
-        operation_mode = Radio.ROLLCALL;
-		// Responds to Mission Control with the correct ID to signal this node is here and listening.
-        delay(100);
-		Radio.roll_call();
-	}
-
-	// After Roll Call is complete, Mission Control will broadcast the start signal. Appropriate delays are
-	// distributed below to initally sync the network.
-	else if(operation_mode == Radio.STANDBY)
-    {
-        if(554.0 < received_id && received_id < 556.0)
-        {
-            // Delays # seconds to offset this node from the main mission_control node.
-            delay(Radio.network_sync_delay);
-            // Updates network state.
-            operation_mode = Radio.NORMAL;
-        }
-	}
 	// Each of the crafts have # seconds to broadcast.
-	else if((millis() - broadcast_timer > Radio.network_node_delay) && (operation_mode == NORMAL))
+	else if(millis() - broadcast_timer > Radio.network_node_delay)
     {
 		// Resets the counter. This disables broadcasting again until 10 seconds has passed.
         broadcast_timer = millis();
 		// Sends the transmission via radio.
 		Radio.broadcast();
 	}
-}
-
-
-/**
- * Alters the craft ID of the radio transmission and broadcasts back to Mission Control.
- */
-void RADIO::roll_call()
-{
-    // Updates the Craft_ID to HABET's specific ID #.
-    Radio.node_id = NODE_ID;
-    // To synchronize the network when the start signal is given,
-    // we use the nodes id as an offset to multiply a base node
-    // broadcast window (500 milliseconds) to ensure the nodes
-    // don't broadcast at the same times.
-    Radio.network_sync_delay = (Radio.node_id - 1.0) * 500.0;
-    // Sets the delay needed to maintain synchronization between the
-    // different nodes in the network.
-    Radio.network_node_delay = 0.0;
-    // Debug message.
-    //Serial.println("RollCall broadcast.");
-    // Sends the transmission via radio.
-    Radio.broadcast();
-    // Debug message.
-    //Serial.println("Broadcasted.");
-    // Updates the node's network status.
-    checked_in = true;
-    // Updates craft states.
-    operation_mode = Radio.STANDBY;
 }
 
 
@@ -256,11 +205,9 @@ void RADIO::broadcast()
     temp += ",";
     temp += Radio.recovery_longitude;
     temp += ",";
-    temp += Radio.node_id;
+    temp += Radio.NODE_ID;
     temp += ",";
     temp += "$";
-    // Copy contents.
-    radio_output = temp;
     // Converts from String to char array.
     char transmission[temp.length()+1];
     temp.toCharArray(transmission, temp.length()+1);

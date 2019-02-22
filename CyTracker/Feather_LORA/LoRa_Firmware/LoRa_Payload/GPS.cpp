@@ -115,8 +115,6 @@ void GPS::store_data()
     previous_altitude = payload_altitude;
     previous_latitude = payload_latitude;
     previous_longitude = payload_longitude;
-    Serial.print("\n\nLat: "); Serial.println(payload_latitude, 6);
-    Serial.print("Lng: "); Serial.println(payload_longitude, 6);
 }
 
 

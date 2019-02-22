@@ -42,7 +42,6 @@ void GPS::manager()
         // and 0m in Altitude (which is bad).
         revert_gps_data();
     }
-    Serial.println("GPS");
 }
 
 
@@ -107,8 +106,6 @@ void GPS::store_data()
     // Replaces the old backup values with the new values.
     previous_latitude = recovery_latitude;
     previous_longitude = recovery_longitude;
-    Serial.print("\n\nLat: "); Serial.println(recovery_latitude, 6);
-    Serial.print("Lng: "); Serial.println(recovery_longitude, 6);
 }
 
 

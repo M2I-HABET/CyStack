@@ -24,11 +24,11 @@ class GPS
 	// Updates the current struct with the previous cycles values. (Prevents 0's due to gps fix loss)
 	void revert_gps_data();
 
-  	/*---------------------------------Variables---------------------------------*/
+	/*---------------------------------Variables---------------------------------*/
 
-    // GPS satellite fixation status for the payload.
-  	bool fix_status = false;
-    // Holds the crafts previous altitude.
+	// GPS satellite fixation status for the payload.
+	bool fix_status = false;
+	// Holds the crafts previous altitude.
 	float previous_altitude = 0.0;
 	// Holds the crafts previous latitude.
 	float previous_latitude = 0.0;

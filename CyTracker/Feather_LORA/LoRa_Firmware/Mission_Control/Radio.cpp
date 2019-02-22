@@ -162,54 +162,13 @@ void RADIO::manager()
 {
 	// Reads in radio transmission if available.
 	Radio.radio_receive();
-    // Checks to see if its time to run Roll Call. Set via GUI.
-    if(operation_mode == Radio.ROLLCALL)
-    {
-        // Broadcasts startup packet.
-        Radio.roll_call();
-    }
-	// After Roll Call is complete, Mission Control will broadcast the start signal.
-	else if(operation_mode == Radio.STANDBY)
-    {
-        // Updates node_id to the network start signal.
-        Radio.node_id = 555.0;
-	}
 	// Each of the crafts have # seconds to broadcast. That means each craft will broadcast every # seconds.
-	else if((millis() - broadcast_timer >= Radio.network_node_delay) && (operation_mode == Radio.NORMAL))
+	else if(millis() - broadcast_timer >= Radio.network_node_delay)
     {
 		// Resets the counter. This disables broadcasting again until 10 seconds has passed.
 		broadcast_timer = millis();
 		// Sends the transmission via radio.
 		Radio.broadcast();
-        // The first time NORMAL operation mode is run, the node id is 555.0.
-        // 555.0 is the network "start" signal. After this start signal is sent,
-        // we want to update this craft's id to its actual ID.
-        if(Radio.node_id == 555.0)
-        {
-            // Switch start signal to craft ID. Normal operations have begun.
-            Radio.node_id = 1.0;
-            // Sets the delay needed to maintain synchronization between the
-            // different nodes in the network.
-            Radio.network_node_delay = 500.0;
-    	}
-    }
-}
-
-
-/**
- * Alters the craft ID of the radio transmission and broadcasts back to Mission Control.
- */
-void RADIO::roll_call()
-{
-  // Updates the node_ID to the network call in signal "999.0".
-  Radio.node_id = 999.0;
-    // Timer of 5 seconds.
-    if(millis() - rc_broadcast >= 2000)
-    {
-        // Resets the counter. This disabled rollcall broadcasting again until 5 seconds has passed.
-        rc_broadcast = millis();
-        // Sends the transmission via radio.
-        Radio.broadcast();
     }
 }
 
@@ -246,7 +205,7 @@ void RADIO::broadcast()
     temp += ",";
     temp += Radio.recovery_longitude;
     temp += ",";
-    temp += Radio.node_id;
+    temp += Radio.NODE_ID;
     temp += ",";
     temp += "$";
     // Copy contents.
@@ -259,47 +218,6 @@ void RADIO::broadcast()
     // Pauses all operations until the micro controll has guaranteed the transmission of the
     // signal.
     rf95.waitPacketSent();
-}
-
-
-/**
- * Checks for response from node after rollcall broadcast. If not found, adds to Radio.
- */
-void RADIO::node_check_in()
-{
-    // Checks for response from node after rollcall broadcast.
-    if(received_id != 0.0)
-    {
-        // Cycles through nodes that have already checked in.
-        for(int i=0;i<3;i++) //Update w/ dynamic constanst.
-        {
-            // Checks to see if node has already checked in. Prevents duplicates.
-            if(node_list[i] == received_id)
-            {   // If already found, discard repeated node.
-                break;
-            }
-            // Node id not found in current list. (New node to check in)
-            else if(node_list[i] == 0.0)
-            {
-                // Adds the node to the Radio. (Known node id's list)
-                node_list[i] = received_id;
-                // Checks for payload's node id.
-                if(1.9 < received_id && received_id < 2.1)
-                {
-                    // Sets the LoRa on the HABET payload status as connected. (Used by GUI.)
-                    Radio.payload_node.node_status = 1.0;
-                }
-                // Checks for recovery's node id.
-                else if (2.9 < received_id && received_id < 3.1)
-                {
-                    // Sets the recovery node's status as connected. (Used by GUI.)
-                    Radio.recovery_node.node_status = 1.0;
-                }
-                // Breaks FOR loop.
-                break;
-            }
-        }
-    }
 }
 
 
@@ -351,7 +269,6 @@ void RADIO::radio_receive()
                     Radio.payload_event = Radio.get_radio_payload_event(to_parse);
                     Radio.payload_speed = Radio.get_radio_payload_speed(to_parse);
                 }
-
                 // Reads in the time stamp for Mission Control's last broadcast.
                 temp_ts = Radio.get_radio_timestamp(to_parse, "recovery");
                 // Compares the currently brought in time stamp to the one stored onboad.

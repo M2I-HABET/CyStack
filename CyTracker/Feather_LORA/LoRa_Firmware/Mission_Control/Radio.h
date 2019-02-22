@@ -34,8 +34,6 @@ class RADIO
     void initialize();
     // Passively watches for incoming radio transmissions from Mission Control and other crafts.
     void manager();
-    // Responds to the RollCall signal sent from Mission Control.
-    void roll_call();
     // Sends the desired signal out over the radio antenna.
     void broadcast();
     // Compares current node against others. Prevents duplicates.
@@ -61,13 +59,10 @@ class RADIO
     const byte LED = 13;
     // Radio frequency used throught the Eagle Eye Program. CHECK WITH HABET BEFORE EACH FLIGHT!!!!!
     #define RF95_FREQ 433.0
+    // Craft ID (Mission Control LoRa.)
+    #define NODE_ID 1.0
     // Holds the ID of the craft that just broadcasted. THIS IS ANOTHER NODE, NOT MISSION CONTROL.
     float received_id = 0.0;
-    // List of nodes currently logged into network.
-    // mission control - 1
-    // HABET - 2
-    // Recovery - 3
-    float node_list[3] = {1.0, 0.0, 0.0};  // In future, need to cycle through null list and fill out 0.0.
     // Holds the current received radio signal.
     String radio_input = "";
     // Holds the current sent radio signal.
@@ -109,29 +104,12 @@ class RADIO
     // Mission Control's ms Time stamp.
     float mission_control_ts = 0.0;
 
-    /**
-     * This varaible is updated by each craft right before the array is broadcasted.
-     */
-
-	// Node_ID is used to tell which radio node is currently broadcasting the signal. This allows
-	// for Mission Control to have a sense of if information is being relayed through nodes,
-	// or if we have a direct line of communication with each node.
-	float node_id = 0.0;
-
-    // Craft ID (SPECIFIC TO THE Recovery LORA ONBOARD Recovery)
-    float NODE_ID = 1.0;
-    // Holds the delay amount needed to synchronize the network when NORMAL operations
-    // mode is started. Configured in Radio.rollcall().
-    float network_sync_delay = 0.0;
     // Holds the delay amount between this nodes broadcast window.
     // Configured in Radio.rollcall().
-    float network_node_delay = 0.0;
+    float network_node_delay = 500.0;
     // Timer is used to for the 10 second interval that the craft will broadcast when in normal.
     // operating mode. This value is in milliseconds.
     unsigned long broadcast_timer = 0;
-    // Timer is used to for the 10 second interval that the craft will broadcast on for RollCall.
-    // This value is in milliseconds.
-    unsigned long rc_broadcast = 0;
     // Used to house node objects.
     struct Network_Node {
 

@@ -34,8 +34,6 @@ class RADIO
     void initialize();
     // Passively watches for incoming radio transmissions from Mission Control and other crafts.
     void manager();
-    // Responds to the RollCall signal sent from Mission Control.
-    void roll_call();
     // Sends the desired signal out over the radio antenna.
     void broadcast();
     // Receives incoming transmission.
@@ -59,20 +57,8 @@ class RADIO
     const byte LED = 13;
 	// Radio frequency used throught the Eagle Eye Program. CHECK WITH HABET BEFORE EACH FLIGHT!!!!!
 	#define RF95_FREQ 433.0
-	// Status of the craft replying to Mission Control with its node #.
-	bool checked_in = false;
 	// Holds the ID of the craft that just broadcasted.
 	float received_id = 0.0;
-	// Holds the current received radio signal.
-    String radio_input = "";
-    // Holds the current sent radio signal.
-    String radio_output = "";
-	// State of Radio program.
-    // ROLLCALL - Currently in RollCall process.
-    // STANDBY  - RollCall completed, waiting for user to send out start signal.
-    // NORMAL   - Radio is running in its normal operation state.
-    enum RadioStatus {NONE, ROLLCALL, STANDBY, NORMAL};
-    enum RadioStatus operation_mode = NONE;
 
 	/**
 	 * This set of varaibles are accessed and overseen by the HABET Payload.
@@ -97,21 +83,8 @@ class RADIO
     // Mission Control's ms Time stamp.
     float mission_control_ts = 0.0;
 
-	/**
-	 * This varaible is updated by each craft right before the array is broadcasted.
-	 */
-
-	// Node_ID is used to tell which radio node is currently broadcasting the signal. This allows
-	// for Mission Control to have a sense of if information is being relayed through nodes,
-	// or if we have a direct line of communication with each node.
-	float node_id = 0.0;
-
-
 	// Craft ID (SPECIFIC TO THE PAYLOAD LORA ONBOARD HABET)
 	float NODE_ID = 2.0;
-	// Holds the delay amount needed to synchronize the network when NORMAL operations
-	// mode is started. Configured in Radio.rollcall().
-	float network_sync_delay = 0.0;
 	// Holds the delay amount between this nodes broadcast window.
 	// Configured in Radio.rollcall().
 	float network_node_delay = 0.0;

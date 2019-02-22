@@ -40,11 +40,11 @@ void loop(){
     {
         // Updates GUI/user with situational info.
         Data.serial_comms();
-        // Responsible for grabbing all of the craft's current information,
-        // turning that data into an array that can be sent out via radio.
-        // Also reads in incoming messages.
-        Radio.manager();
     }
+    // Responsible for grabbing all of the craft's current information,
+    // turning that data into an array that can be sent out via radio.
+    // Also reads in incoming messages.
+    Radio.manager();
 }
 
 
@@ -75,12 +75,6 @@ void serial_input()
             Data.gui_connection = true;
             // Blinks LED (on the LoRa) to show communication setup was established.
             Radio.blink_led_long();
-        }
-        // Checks for correct data format and prior connection status to the gui.
-        else if(toParse[0] == '$' && Data.gui_connection == true)
-        {
-            // Directly sets variables due to operation_mode being an enum state.
-            Data.get_serial_op_mode(toParse);
         }
     }
 }
