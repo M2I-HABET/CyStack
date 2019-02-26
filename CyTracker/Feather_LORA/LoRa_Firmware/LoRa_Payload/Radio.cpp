@@ -163,7 +163,7 @@ void RADIO::manager()
 	// Reads in radio transmission if available.
 	Radio.radio_receive();
 	// Each of the crafts have # seconds to broadcast.
-	else if(millis() - broadcast_timer > Radio.network_node_delay)
+	if(millis() - broadcast_timer > Radio.network_node_delay)
     {
 		// Resets the counter. This disables broadcasting again until 10 seconds has passed.
         broadcast_timer = millis();

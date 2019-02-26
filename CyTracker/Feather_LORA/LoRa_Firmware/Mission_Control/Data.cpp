@@ -104,8 +104,6 @@ void DATA::update_gui()
 		String temp_packet = "";
 		temp_packet += "$";
 		temp_packet += ",";
-		temp_packet += "N";
-		temp_packet += ",";
 		temp_packet += Radio.payload_ts;
 		temp_packet += ",";
 		temp_packet += Radio.payload_altitude;

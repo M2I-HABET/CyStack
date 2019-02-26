@@ -163,7 +163,7 @@ void RADIO::manager()
 	// Reads in radio transmission if available.
 	Radio.radio_receive();
 	// Each of the crafts have # seconds to broadcast. That means each craft will broadcast every # seconds.
-	else if(millis() - broadcast_timer >= Radio.network_node_delay)
+	if(millis() - broadcast_timer >= Radio.network_node_delay)
     {
 		// Resets the counter. This disables broadcasting again until 10 seconds has passed.
 		broadcast_timer = millis();
@@ -284,8 +284,6 @@ void RADIO::radio_receive()
                 received_rssi = rf95.lastRssi();
                 // Reads in Craft ID to see where signal came from.
                 received_id = Radio.get_radio_node_id(to_parse);
-                // Compares the transmission's craftID to see if its a brand new craft. If so, it logs it.
-                Radio.node_check_in();
             }
         }
     }

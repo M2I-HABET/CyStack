@@ -101,12 +101,9 @@ void DATA::update_gui()
 	    Data.serial_timer = millis();
 	    // Starts or updates mission control microsecond timer. (Converts to seconds w/ 2 decimal places for easy of use)
 	    Radio.recovery_ts = millis()/1000.0;
-
     	// Holds outgoing message.
 		String temp_packet = "";
 		temp_packet += "$";
-		temp_packet += ",";
-		temp_packet += "N";
 		temp_packet += ",";
   		temp_packet += Radio.payload_ts;
 		temp_packet += ",";
@@ -120,7 +117,7 @@ void DATA::update_gui()
 		temp_packet += ",";
 		temp_packet += Radio.payload_speed;
 	    temp_packet += ",";
-	    temp_packet += Radio.node_id;
+	    temp_packet += Radio.NODE_ID;
 	    temp_packet += ",";
 	    temp_packet += Radio.mission_control_ts;
 	    temp_packet += ",";
@@ -137,7 +134,6 @@ void DATA::update_gui()
 		temp_packet += Radio.received_rssi;
 		temp_packet += "/";
 		temp_packet += "$";
-
 		// Defines a char array with the length needed to hold the received packet.
 		char serial_packet[temp_packet.length()+1];
 		// Converts from String to char array.

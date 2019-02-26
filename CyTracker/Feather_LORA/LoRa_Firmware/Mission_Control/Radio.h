@@ -36,8 +36,6 @@ class RADIO
     void manager();
     // Sends the desired signal out over the radio antenna.
     void broadcast();
-    // Compares current node against others. Prevents duplicates.
-    void node_check_in();
     // Receives incoming transmission.
     void radio_receive();
     // Checks if packet is valid or invalid. Error detection.
@@ -60,7 +58,7 @@ class RADIO
     // Radio frequency used throught the Eagle Eye Program. CHECK WITH HABET BEFORE EACH FLIGHT!!!!!
     #define RF95_FREQ 433.0
     // Craft ID (Mission Control LoRa.)
-    #define NODE_ID 1.0
+    float NODE_ID = 1.0;
     // Holds the ID of the craft that just broadcasted. THIS IS ANOTHER NODE, NOT MISSION CONTROL.
     float received_id = 0.0;
     // Holds the current received radio signal.

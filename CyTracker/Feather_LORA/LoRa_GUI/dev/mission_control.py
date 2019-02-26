@@ -52,6 +52,7 @@ class MC_Tab():
 		# Mission Control variables.
 		self.mission_control_time = None
 		self.payload_time_previous = ""
+		self.recovery_time_previous = ""
 
 		# Recovery variables.
 		self.recovery_time = None
@@ -369,6 +370,7 @@ class MC_Tab():
 		if g.PORT_MISSION_CONTROL_LORA is not None:
 			# If valid connection, get its serial data input.
 			temp_input = g.PORT_MISSION_CONTROL_LORA.input.get()
+			self.node_mission_control.set("1")
 			# Splits the received serial data into two respective parts.
 			serial_data, radio_data = str(temp_input).split("]")
 			# Variables such as '$' and 'N' are thrown out as junk.
@@ -405,6 +407,7 @@ class MC_Tab():
 				# likely the same packet we already saw. If they are different, its 100%
 				# new.
 				if self.payload_time_previous != str(self.payload_time.get()):
+					self.node_payload.set("1")
 					# Updates the appropriate variables.
 					self.payload_time_previous = str(self.payload_time.get())
 					self.radio_last_received_node.set("Payload")
@@ -418,9 +421,10 @@ class MC_Tab():
 				# variable value to the proclaimed to be new value. If they are the same, its most
 				# likely the same packet we already saw. If they are different, its 100%
 				# new.
-				if self.payload_time_previous != str(self.payload_time.get()):
+				if self.recovery_time_previous != str(self.recovery_time.get()):
+					self.node_recovery.set("1")
 					# Updates the appropriate variables.
-					self.payload_time_previous = str(self.payload_time.get())
+					self.recovery_time_previous = str(self.recovery_time.get())
 					self.radio_last_received_node.set("Recovery")
 					self.update_recovery_rssi(received_rssi)
 

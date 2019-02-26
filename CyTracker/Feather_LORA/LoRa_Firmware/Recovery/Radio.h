@@ -61,6 +61,10 @@ class RADIO
     float received_id = 0.0;
     // Holds the most recent received singal's rssi value.
     float received_rssi = 0.0;
+    // Holds the current received radio signal.
+    String radio_input = "";
+    // Holds the current sent radio signal.
+    String radio_output = "";
 
 	/**
 	 * This set of varaibles are accessed and overseen by the HABET Payload.
