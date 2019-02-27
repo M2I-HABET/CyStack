@@ -24,7 +24,7 @@ RADIO::RADIO()
  *    payload         -> 1
  *    mission_control -> 6
  */
-float get_radio_timestamp(char buf[], String selector)
+float RADIO::get_radio_timestamp(char buf[], String selector)
 {
     if(selector == "payload")
     {
@@ -45,7 +45,7 @@ float get_radio_timestamp(char buf[], String selector)
 /**
  * Parses and returns the radio transmission's altitude.
  */
-float get_radio_payload_altitude(char buf[])
+float RADIO::get_radio_payload_altitude(char buf[])
 {
     return (Data.Parse(buf, 2));
 }
@@ -54,7 +54,7 @@ float get_radio_payload_altitude(char buf[])
 /**
  * Parses and returns the radio transmission's latitude.
  */
-float get_radio_payload_latitude(char buf[])
+float RADIO::get_radio_payload_latitude(char buf[])
 {
     return (Data.Parse(buf, 3)) / 10000.0;
 }
@@ -63,7 +63,7 @@ float get_radio_payload_latitude(char buf[])
 /**
  * Parses and returns the radio transmission's longitude.
  */
-float get_radio_payload_longitude(char buf[])
+float RADIO::get_radio_payload_longitude(char buf[])
 {
     return (Data.Parse(buf, 4)) / 10000.0;
 }
@@ -72,7 +72,7 @@ float get_radio_payload_longitude(char buf[])
 /**
  * Parses and returns the radio transmission's craft Event.
  */
-float get_radio_payload_event(char buf[])
+float RADIO::get_radio_payload_event(char buf[])
 {
     return (Data.Parse(buf, 5));
 }
@@ -81,7 +81,7 @@ float get_radio_payload_event(char buf[])
 /**
  * Parses and returns the radio transmission's craft Event.
  */
-float get_radio_payload_speed(char buf[])
+float RADIO::get_radio_payload_speed(char buf[])
 {
     return (Data.Parse(buf, 6));
 }
@@ -90,7 +90,7 @@ float get_radio_payload_speed(char buf[])
 /**
  * Parses and returns the radio transmission's craft Event.
  */
-float get_radio_recovery_latitude(char buf[])
+float RADIO::get_radio_recovery_latitude(char buf[])
 {
     return (Data.Parse(buf, 9));
 }
@@ -99,7 +99,7 @@ float get_radio_recovery_latitude(char buf[])
 /**
  * Parses and returns the radio transmission's craft Event.
  */
-float get_radio_recovery_longitude(char buf[])
+float RADIO::get_radio_recovery_longitude(char buf[])
 {
     return (Data.Parse(buf, 10));
 }
@@ -109,7 +109,7 @@ float get_radio_recovery_longitude(char buf[])
 /**
  * Parses and returns the radio transmission's Craft ID.
  */
-float get_radio_node_id(char buf[])
+float RADIO::get_radio_node_id(char buf[])
 {
     return (Data.Parse(buf, 11));
 }
@@ -176,7 +176,7 @@ void RADIO::manager()
 /**
  * Creates an array to be sent out via Radio. Fills that array with correct values and returns it.
  */
-void broadcast()
+void RADIO::broadcast()
 {
     // Updates the time object to hold the most current operation time.
     mission_control_ts = millis()/1000.0;
@@ -224,7 +224,7 @@ void broadcast()
 /**
  * Responsible for reading in signals over the radio antenna.
  */
-void radio_receive()
+void RADIO::radio_receive()
 {
     // Checks if radio message has been received.
     if (rf95.available())
@@ -296,7 +296,7 @@ void radio_receive()
  * by validating that the packet begins and ends with the correct
  * symbol '$'.
  */
-bool validate_checksum()
+bool RADIO::validate_checksum()
 {
     // Gets the length of the packet. Non-zero indexed.
     int str_length = radio_input.length();
@@ -318,7 +318,7 @@ bool validate_checksum()
 /*
  * Blinks LED.
  */
-void blink_led()
+void RADIO::blink_led()
 {
     // ON
     digitalWrite(LED, HIGH);

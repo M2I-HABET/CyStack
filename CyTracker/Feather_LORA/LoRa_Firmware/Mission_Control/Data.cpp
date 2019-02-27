@@ -91,7 +91,7 @@ void DATA::serial_comms()
 /**
  * Sends mission_control & craft inforamtion back to the GUI.
  */
-void update_gui()
+void DATA::update_gui()
 {
 	// Only sends info to update gui every 1/3 second.
 	if(!Serial.available() && (millis() - serial_timer >= 1500))

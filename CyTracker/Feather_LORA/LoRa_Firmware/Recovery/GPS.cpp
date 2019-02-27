@@ -48,7 +48,7 @@ void GPS::manager()
 /**
  * Pulls current data from GPS module.
  */
-void retrieve_gps_data()
+void GPS::retrieve_gps_data()
 {
     // Opens up a serial connection between the micro controller and
     // the GPS breakout board at a certain baudrate.
@@ -72,7 +72,7 @@ void retrieve_gps_data()
  * Checks for a valid gps satellite fix.
  * True = Yes. False = No.
  */
-bool fixation_monitor()
+bool GPS::fixation_monitor()
 {
     // Check for a GPS fix. (Does it have a signal from the satellites)
     if(gps.satellites.value() != 0 && fix_status == false)
@@ -98,7 +98,7 @@ bool fixation_monitor()
 /**
  * Takes the new gps data and assigns it to the correct variables.
  */
-void store_data()
+void GPS::store_data()
 {
     // Updates all struct variables with the most current sensor data.
     recovery_latitude = gps.location.lat();
@@ -113,7 +113,7 @@ void store_data()
  * Updates the current struct with the previous cycles values. Used incase of
  * GPS loss or sensor error so the craft doesn't instantly think its at 0m altitude.
  */
-void revert_gps_data()
+void GPS::revert_gps_data()
 {
     // Reverts values to that of the previous cycle.
     recovery_latitude = previous_latitude;

@@ -45,10 +45,6 @@ class RADIO
 
     /*---------------------------------Variables---------------------------------*/
 
-    // Chip select pin for the radio.
-    const byte RFM95_CS = 8;
-    // Intialization pin for radio.
-    const byte RFM95_INT = 7;
     // Reset pin onboard the radio.
     const byte RFM95_RST = 4;
     // Pins used to blink an LED to signal receival packet.
