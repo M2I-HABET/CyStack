@@ -92,8 +92,18 @@ void serial_input()
 void blink_led_long()
 {
     // ON
-    digitalWrite(LED, HIGH);
+    digitalWrite(13, HIGH);
     delay(2000);
     // OFF
-    digitalWrite(LED, LOW);
+    digitalWrite(13, LOW);
 }
+
+
+
+
+
+
+
+
+
+

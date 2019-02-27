@@ -226,6 +226,7 @@ void RADIO::broadcast()
  */
 void RADIO::radio_receive()
 {
+    Serial.println(rf95.available());
     // Checks if radio message has been received.
     if (rf95.available())
     {
