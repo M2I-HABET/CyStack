@@ -139,7 +139,7 @@ void RADIO::initialize()
         // If invalid connection, the program will stall and pulse the onbaord led.
 		while (1)
         {
-            Radio.blink_led();
+            blink_led();
         }
 	}
 	// Checks the radio objects tuned frequency.
@@ -148,7 +148,7 @@ void RADIO::initialize()
 		// If invalid connection, the program will stall and pulse the onbaord led.
         while (1)
         {
-            Radio.blink_led();
+            blink_led();
         }
 	}
 	// Sets the max power to be used to in the amplification of the signal being sent out.
@@ -162,14 +162,14 @@ void RADIO::initialize()
 void RADIO::manager()
 {
     // Reads in radio transmission if available.
-    Radio.radio_receive();
+    radio_receive();
     // Each of the crafts have # seconds to broadcast.
-    if(millis() - broadcast_timer > Radio.network_node_delay)
+    if(millis() - broadcast_timer > network_node_delay)
     {
         // Resets the counter. This disables broadcasting again until 10 seconds has passed.
         broadcast_timer = millis();
         // Sends the transmission via radio.
-        Radio.broadcast();
+        broadcast();
     }
 }
 
@@ -180,33 +180,33 @@ void RADIO::manager()
 void RADIO::broadcast()
 {
     // Updates the time object to hold the most current operation time.
-    Radio.recovery_ts = millis()/1000.0;
+    recovery_ts = millis()/1000.0;
     // Casting all float values to a character array with commas saved in between values
     // so the character array can be parsed when received by another craft.
     String temp = "";
     temp += "$";
     temp += ",";
-    temp += Radio.payload_ts;
+    temp += payload_ts;
     temp += ",";
-    temp += Radio.payload_altitude;
+    temp += payload_altitude;
     temp += ",";
-    temp += Radio.payload_latitude * 10000;
+    temp += payload_latitude * 10000;
     temp += ",";
-    temp += Radio.payload_longitude * 10000;
+    temp += payload_longitude * 10000;
     temp += ",";
-    temp += Radio.payload_event;
+    temp += payload_event;
     temp += ",";
-    temp += Radio.payload_speed;
+    temp += payload_speed;
     temp += ",";
-    temp += Radio.mission_control_ts;
+    temp += mission_control_ts;
     temp += ",";
-    temp += Radio.recovery_ts;
+    temp += recovery_ts;
     temp += ",";
     temp += Gps.recovery_latitude;
     temp += ",";
     temp += Gps.recovery_longitude;
     temp += ",";
-    temp += Radio.NODE_ID;
+    temp += NODE_ID;
     temp += ",";
     temp += "$";
     // Copy contents.
@@ -246,10 +246,10 @@ void RADIO::radio_receive()
             String str = (char*)buf;
             char to_parse[str.length()];
             str.toCharArray(to_parse,str.length());
-
+  
             // Checks for a valid packet. Only parses contents if valid to prevent
             // data corruption.
-            if(Radio.validate_checksum())
+            if(validate_checksum())
             {
                 // This whole section is comparing the currently held varaibles from the last radio update
                 // to that of the newly received signal. Updates the LoRa's owned variables and copies
@@ -257,33 +257,33 @@ void RADIO::radio_receive()
                 // for another node (LoRa's time stamp is higher than the new signal's), it replaces those vars.
 
                 // Reads in the time stamp for Payload's last broadcast.
-                float temp_ts = Radio.get_radio_timestamp(to_parse, "payload");
+                float temp_ts = get_radio_timestamp(to_parse, "payload");
                 // Compares the currently brought in time stamp to the one stored onboad.
-                if(temp_ts > Radio.payload_ts)
+                if(temp_ts > payload_ts)
                 {
                     // If the incoming signal has more up-to-date versions, we overwrite our saved version with
                     // the new ones.
-                    Radio.payload_ts = temp_ts;
-                    Radio.payload_altitude = Radio.get_radio_payload_altitude(to_parse);
-                    Radio.payload_latitude = Radio.get_radio_payload_latitude(to_parse);
-                    Radio.payload_longitude = Radio.get_radio_payload_longitude(to_parse);
-                    Radio.payload_event = Radio.get_radio_payload_event(to_parse);
-                    Radio.payload_speed = Radio.get_radio_payload_speed(to_parse);
+                    payload_ts = temp_ts;
+                    payload_altitude = get_radio_payload_altitude(to_parse);
+                    payload_latitude = get_radio_payload_latitude(to_parse);
+                    payload_longitude = get_radio_payload_longitude(to_parse);
+                    payload_event = get_radio_payload_event(to_parse);
+                    payload_speed = get_radio_payload_speed(to_parse);
                 }
-
+                temp_ts = 0.0;
                 // Reads in the time stamp for Mission Control's last broadcast.
-                temp_ts = Radio.get_radio_timestamp(to_parse, "mc");
+                temp_ts = get_radio_timestamp(to_parse, "mc");
                 // Compares the currently brought in time stamp to the one stored onboad.
-                if(temp_ts > Radio.mission_control_ts)
+                if(temp_ts > mission_control_ts)
                 {
                     // If the incoming signal has more up-to-date versions, we overwrite our saved version with
                     // the new ones.
-                    Radio.mission_control_ts = temp_ts;
+                    mission_control_ts = temp_ts;
                 }
                 // Pulls the RSSI from the signal. (Received Signal Strength Indicator)
                 received_rssi = rf95.lastRssi();
                 // Reads in Craft ID to see where signal came from.
-                received_id = Radio.get_radio_node_id(to_parse);
+                received_id = get_radio_node_id(to_parse);
             }
         }
     }
@@ -327,14 +327,4 @@ void RADIO::blink_led()
 }
 
 
-/*
- * Blinks LED long duration.
- */
-void RADIO::blink_led_long()
-{
-    // ON
-    digitalWrite(LED, HIGH);
-    delay(2000);
-    // OFF
-    digitalWrite(LED, LOW);
-}
+

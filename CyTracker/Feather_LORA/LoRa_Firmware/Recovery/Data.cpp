@@ -85,14 +85,14 @@ float DATA::Parse(char message[], int objective)
 void DATA::serial_comms()
 {
 	// Send useful information back to the python GUI.
-	Data.update_gui();
+	update_gui();
 }
 
 
 /**
  * Sends mission_control & craft inforamtion back to the GUI.
  */
-void DATA::update_gui()
+void update_gui()
 {
 	// Only sends info to update gui every 1/3 second.
 	if(!Serial.available() && (millis() - Data.serial_timer >= 1500))

@@ -48,7 +48,7 @@ void GPS::manager()
 /**
  * Pulls current data from GPS module.
  */
-void GPS::retrieve_gps_data()
+void retrieve_gps_data()
 {
     // Opens up a serial connection between the micro controller and
     // the GPS breakout board at a certain baudrate.
@@ -72,7 +72,7 @@ void GPS::retrieve_gps_data()
  * Checks for a valid gps satellite fix.
  * True = Yes. False = No.
  */
-bool GPS::fixation_monitor()
+bool fixation_monitor()
 {
     // Check for a GPS fix. (Does it have a signal from the satellites)
     if(gps.satellites.value() != 0 && fix_status == false)
@@ -102,7 +102,7 @@ bool GPS::fixation_monitor()
 /**
  * Takes the new gps data and assigns it to the correct variables.
  */
-void GPS::store_data()
+void store_data()
 {
     // Updates all struct variables with the most current sensor data.
     sprintf(payload_gps_time, "%02d:%02d:%02d ", gps.time.hour(), gps.time.minute(), gps.time.second());
@@ -122,7 +122,7 @@ void GPS::store_data()
  * Updates the current struct with the previous cycles values. Used incase of
  * GPS loss or sensor error so the craft doesn't instantly think its at 0m altitude.
  */
-void GPS::revert_gps_data()
+void revert_gps_data()
 {
     // Reverts values to that of the previous cycle.
     payload_altitude = previous_altitude;

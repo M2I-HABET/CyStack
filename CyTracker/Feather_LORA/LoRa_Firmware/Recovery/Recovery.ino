@@ -80,7 +80,20 @@ void serial_input()
             // Updates connection status.
             Data.gui_connection = true;
             // Blinks LED (on the LoRa) to show communication setup was established.
-            Radio.blink_led_long();
+            blink_led_long();
         }
     }
+}
+
+
+/*
+ * Blinks LED long duration.
+ */
+void blink_led_long()
+{
+    // ON
+    digitalWrite(LED, HIGH);
+    delay(2000);
+    // OFF
+    digitalWrite(LED, LOW);
 }

@@ -42,8 +42,6 @@ class RADIO
     bool validate_checksum();
     // Blinks the LED on the LoRa uC (quick blink).
     void blink_led();
-    // Blinks the LED on the LoRa uC (long duration pulse).
-    void blink_led_long();
 
     /*---------------------------------Variables---------------------------------*/
 
@@ -108,21 +106,6 @@ class RADIO
     // Timer is used to for the 10 second interval that the craft will broadcast when in normal.
     // operating mode. This value is in milliseconds.
     unsigned long broadcast_timer = 0;
-    // Used to house node objects.
-    struct Network_Node {
-
-        // General status of node.
-        // 0 - Offline
-        // 1 - Online
-        // 2 - Error State
-        float node_status = 0.0;
-        // TBD @ a later date. Heart beat of node.
-        unsigned long last_contact = 0.0;
-    };
-    // Node declarations.
-    struct Network_Node mc_node;
-    struct Network_Node payload_node;
-    struct Network_Node recovery_node;
 };
 
 #endif

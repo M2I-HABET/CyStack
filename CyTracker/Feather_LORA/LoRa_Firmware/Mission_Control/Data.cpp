@@ -84,20 +84,20 @@ float DATA::Parse(char message[], int objective)
 void DATA::serial_comms()
 {
 	// Send useful information back to the python GUI.
-	Data.update_gui();
+	update_gui();
 }
 
 
 /**
  * Sends mission_control & craft inforamtion back to the GUI.
  */
-void DATA::update_gui()
+void update_gui()
 {
 	// Only sends info to update gui every 1/3 second.
-	if(!Serial.available() && (millis() - Data.serial_timer >= 1500))
+	if(!Serial.available() && (millis() - serial_timer >= 1500))
 	{
 		// Resets / starts timer.
-	    Data.serial_timer = millis();
+	    serial_timer = millis();
 	    // Starts or updates mission control microsecond timer. (Converts to seconds w/ 2 decimal places for easy of use)
 	    Radio.mission_control_ts = millis()/1000.0;
     	// Holds outgoing message.

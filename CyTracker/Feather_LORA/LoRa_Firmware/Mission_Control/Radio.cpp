@@ -24,7 +24,7 @@ RADIO::RADIO()
  *    payload         -> 1
  *    mission_control -> 6
  */
-float RADIO::get_radio_timestamp(char buf[], String selector)
+float get_radio_timestamp(char buf[], String selector)
 {
     if(selector == "payload")
     {
@@ -45,7 +45,7 @@ float RADIO::get_radio_timestamp(char buf[], String selector)
 /**
  * Parses and returns the radio transmission's altitude.
  */
-float RADIO::get_radio_payload_altitude(char buf[])
+float get_radio_payload_altitude(char buf[])
 {
     return (Data.Parse(buf, 2));
 }
@@ -54,7 +54,7 @@ float RADIO::get_radio_payload_altitude(char buf[])
 /**
  * Parses and returns the radio transmission's latitude.
  */
-float RADIO::get_radio_payload_latitude(char buf[])
+float get_radio_payload_latitude(char buf[])
 {
     return (Data.Parse(buf, 3)) / 10000.0;
 }
@@ -63,7 +63,7 @@ float RADIO::get_radio_payload_latitude(char buf[])
 /**
  * Parses and returns the radio transmission's longitude.
  */
-float RADIO::get_radio_payload_longitude(char buf[])
+float get_radio_payload_longitude(char buf[])
 {
     return (Data.Parse(buf, 4)) / 10000.0;
 }
@@ -72,7 +72,7 @@ float RADIO::get_radio_payload_longitude(char buf[])
 /**
  * Parses and returns the radio transmission's craft Event.
  */
-float RADIO::get_radio_payload_event(char buf[])
+float get_radio_payload_event(char buf[])
 {
     return (Data.Parse(buf, 5));
 }
@@ -81,7 +81,7 @@ float RADIO::get_radio_payload_event(char buf[])
 /**
  * Parses and returns the radio transmission's craft Event.
  */
-float RADIO::get_radio_payload_speed(char buf[])
+float get_radio_payload_speed(char buf[])
 {
     return (Data.Parse(buf, 6));
 }
@@ -90,7 +90,7 @@ float RADIO::get_radio_payload_speed(char buf[])
 /**
  * Parses and returns the radio transmission's craft Event.
  */
-float RADIO::get_radio_recovery_latitude(char buf[])
+float get_radio_recovery_latitude(char buf[])
 {
     return (Data.Parse(buf, 9));
 }
@@ -99,7 +99,7 @@ float RADIO::get_radio_recovery_latitude(char buf[])
 /**
  * Parses and returns the radio transmission's craft Event.
  */
-float RADIO::get_radio_recovery_longitude(char buf[])
+float get_radio_recovery_longitude(char buf[])
 {
     return (Data.Parse(buf, 10));
 }
@@ -109,7 +109,7 @@ float RADIO::get_radio_recovery_longitude(char buf[])
 /**
  * Parses and returns the radio transmission's Craft ID.
  */
-float RADIO::get_radio_node_id(char buf[])
+float get_radio_node_id(char buf[])
 {
     return (Data.Parse(buf, 11));
 }
@@ -138,7 +138,7 @@ void RADIO::initialize()
         // If invalid connection, the program will stall and pulse the onbaord led.
 		while (1)
         {
-            Radio.blink_led();
+            blink_led();
         }
 	}
 	// Checks the radio objects tuned frequency.
@@ -147,7 +147,7 @@ void RADIO::initialize()
 		// If invalid connection, the program will stall and pulse the onbaord led.
         while (1)
         {
-            Radio.blink_led();
+            blink_led();
         }
 	}
 	// Sets the max power to be used to in the amplification of the signal being sent out.
@@ -161,14 +161,14 @@ void RADIO::initialize()
 void RADIO::manager()
 {
 	// Reads in radio transmission if available.
-	Radio.radio_receive();
+	radio_receive();
 	// Each of the crafts have # seconds to broadcast. That means each craft will broadcast every # seconds.
-	if(millis() - broadcast_timer >= Radio.network_node_delay)
+	if(millis() - broadcast_timer >= network_node_delay)
     {
 		// Resets the counter. This disables broadcasting again until 10 seconds has passed.
 		broadcast_timer = millis();
 		// Sends the transmission via radio.
-		Radio.broadcast();
+		broadcast();
     }
 }
 
@@ -176,36 +176,36 @@ void RADIO::manager()
 /**
  * Creates an array to be sent out via Radio. Fills that array with correct values and returns it.
  */
-void RADIO::broadcast()
+void broadcast()
 {
     // Updates the time object to hold the most current operation time.
-    Radio.mission_control_ts = millis()/1000.0;
+    mission_control_ts = millis()/1000.0;
     // Casting all float values to a character array with commas saved in between values
     // so the character array can be parsed when received by another craft.
     String temp = "";
     temp += "$";
     temp += ",";
-    temp += Radio.payload_ts;
+    temp += payload_ts;
     temp += ",";
-    temp += Radio.payload_altitude;
+    temp += payload_altitude;
     temp += ",";
-    temp += Radio.payload_latitude * 10000;
+    temp += payload_latitude * 10000;
     temp += ",";
-    temp += Radio.payload_longitude * 10000;
+    temp += payload_longitude * 10000;
     temp += ",";
-    temp += Radio.payload_event;
+    temp += payload_event;
     temp += ",";
-    temp += Radio.payload_speed;
+    temp += payload_speed;
     temp += ",";
-    temp += Radio.mission_control_ts;
+    temp += mission_control_ts;
     temp += ",";
-    temp += Radio.recovery_ts;
+    temp += recovery_ts;
     temp += ",";
-    temp += Radio.recovery_latitude;
+    temp += recovery_latitude;
     temp += ",";
-    temp += Radio.recovery_longitude;
+    temp += recovery_longitude;
     temp += ",";
-    temp += Radio.NODE_ID;
+    temp += NODE_ID;
     temp += ",";
     temp += "$";
     // Copy contents.
@@ -224,7 +224,7 @@ void RADIO::broadcast()
 /**
  * Responsible for reading in signals over the radio antenna.
  */
-void RADIO::radio_receive()
+void radio_receive()
 {
     // Checks if radio message has been received.
     if (rf95.available())
@@ -248,7 +248,7 @@ void RADIO::radio_receive()
 
             // Checks for a valid packet. Only parses contents if valid to prevent
             // data corruption.
-            if(Radio.validate_checksum())
+            if(validate_checksum())
             {
                 // This whole section is comparing the currently held varaibles from the last radio update
                 // to that of the newly received signal. Updates the LoRa's owned variables and copies
@@ -256,34 +256,35 @@ void RADIO::radio_receive()
                 // for another node (LoRa's time stamp is higher than the new signal's), it replaces those vars.
 
                 // Reads in the time stamp for Mission Control's last broadcast.
-                float temp_ts = Radio.get_radio_timestamp(to_parse, "payload");
+                float temp_ts = get_radio_timestamp(to_parse, "payload");
                 // Compares the currently brought in time stamp to the one stored onboad.
-                if(temp_ts > Radio.payload_ts)
+                if(temp_ts > payload_ts)
                 {
                     // If the incoming signal has more up-to-date versions, we overwrite our saved version with
                     // the new ones.
-                    Radio.payload_ts = temp_ts;
-                    Radio.payload_altitude = Radio.get_radio_payload_altitude(to_parse);
-                    Radio.payload_latitude = Radio.get_radio_payload_latitude(to_parse);
-                    Radio.payload_longitude = Radio.get_radio_payload_longitude(to_parse);
-                    Radio.payload_event = Radio.get_radio_payload_event(to_parse);
-                    Radio.payload_speed = Radio.get_radio_payload_speed(to_parse);
+                    payload_ts = temp_ts;
+                    payload_altitude = get_radio_payload_altitude(to_parse);
+                    payload_latitude = get_radio_payload_latitude(to_parse);
+                    payload_longitude = get_radio_payload_longitude(to_parse);
+                    payload_event = get_radio_payload_event(to_parse);
+                    payload_speed = get_radio_payload_speed(to_parse);
                 }
+                temp_ts = 0.0;
                 // Reads in the time stamp for Mission Control's last broadcast.
-                temp_ts = Radio.get_radio_timestamp(to_parse, "recovery");
+                temp_ts = get_radio_timestamp(to_parse, "recovery");
                 // Compares the currently brought in time stamp to the one stored onboad.
-                if(temp_ts > Radio.recovery_ts)
+                if(temp_ts > recovery_ts)
                 {
                     // If the incoming signal has more up-to-date versions, we overwrite our saved version with
                     // the new ones.
-                    Radio.recovery_ts = temp_ts;
-                    Radio.recovery_latitude = Radio.get_radio_recovery_latitude(to_parse);
-                    Radio.recovery_longitude = Radio.get_radio_recovery_longitude(to_parse);
+                    recovery_ts = temp_ts;
+                    recovery_latitude = get_radio_recovery_latitude(to_parse);
+                    recovery_longitude = get_radio_recovery_longitude(to_parse);
                 }
                 // Pulls the RSSI from the signal. (Received Signal Strength Indicator)
                 received_rssi = rf95.lastRssi();
                 // Reads in Craft ID to see where signal came from.
-                received_id = Radio.get_radio_node_id(to_parse);
+                received_id = get_radio_node_id(to_parse);
             }
         }
     }
@@ -295,7 +296,7 @@ void RADIO::radio_receive()
  * by validating that the packet begins and ends with the correct
  * symbol '$'.
  */
-bool RADIO::validate_checksum()
+bool validate_checksum()
 {
     // Gets the length of the packet. Non-zero indexed.
     int str_length = radio_input.length();
@@ -317,24 +318,11 @@ bool RADIO::validate_checksum()
 /*
  * Blinks LED.
  */
-void RADIO::blink_led()
+void blink_led()
 {
     // ON
     digitalWrite(LED, HIGH);
     delay(50);
-    // OFF
-    digitalWrite(LED, LOW);
-}
-
-
-/*
- * Blinks LED long duration.
- */
-void RADIO::blink_led_long()
-{
-    // ON
-    digitalWrite(LED, HIGH);
-    delay(2000);
     // OFF
     digitalWrite(LED, LOW);
 }
