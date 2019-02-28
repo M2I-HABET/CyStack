@@ -207,7 +207,6 @@ void RADIO::broadcast()
     temp += NODE_ID;
     temp += ",";
     temp += "$";
-    Serial.print("Radio Generate: "); Serial.println(temp);
     // Converts from String to char array.
     char transmission[temp.length()+1];
     temp.toCharArray(transmission, temp.length()+1);
@@ -236,7 +235,6 @@ void RADIO::radio_receive()
         {
             // Used to display the received data in the GUI.
             radio_input = buf;
-            Serial.print("Radio Capture: "); Serial.println(radio_input);
             blink_led();
             // Conversion from uint8_t to string. The purpose of this is to be able to convert to an
             // unsigned char array for parsing.
