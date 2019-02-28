@@ -46,5 +46,7 @@ class GPS
 	float payload_speed = 0.0;
 	// Time of flight. Used for data capture in SD card.
 	char payload_gps_time[10];
+	// Used to only read from the GPS every # seconds.
+	unsigned long gps_block = 0.0;
 };
 #endif

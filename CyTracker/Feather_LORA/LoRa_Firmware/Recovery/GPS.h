@@ -36,5 +36,7 @@ class GPS
 	float recovery_latitude = 0.0;
 	// Longitude of the recovery vehicle's gathered from GPS.
 	float recovery_longitude = 0.0;
+	// Used to only read from the GPS every # seconds.
+	unsigned long gps_block = 0.0;
 };
 #endif

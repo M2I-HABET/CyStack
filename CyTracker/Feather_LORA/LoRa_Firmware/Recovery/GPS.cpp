@@ -25,22 +25,29 @@ GPS::GPS()
  */
 void GPS::manager()
 {
-    // Pull new data from GPS.
-    retrieve_gps_data();
-    // Checks for a valid satellite fix.
-    if(fixation_monitor())
+    
+    // Forces the radio to wait at least a second for an incoming packet.
+    if(millis() - gps_block > 5000)
     {
-        // If valid gps fix, take that gps data and assign it to the
-        // correct onboard variables.
-        store_data();
-    }
-    else
-    {
-        // If no fixation, reverts current values to
-        // that of the previous cycle. This prevents the
-        // craft from thinking its currently at 0 degrees Lat & Lng
-        // and 0m in Altitude (which is bad).
-        revert_gps_data();
+        // Reset timer.
+        gps_block = millis();
+        // Pull new data from GPS.
+        retrieve_gps_data();
+        // Checks for a valid satellite fix.
+        if(fixation_monitor())
+        {
+            // If valid gps fix, take that gps data and assign it to the
+            // correct onboard variables.
+            store_data();
+        }
+        else
+        {
+            // If no fixation, reverts current values to
+            // that of the previous cycle. This prevents the
+            // craft from thinking its currently at 0 degrees Lat & Lng
+            // and 0m in Altitude (which is bad).
+            revert_gps_data();
+        }
     }
 }
 

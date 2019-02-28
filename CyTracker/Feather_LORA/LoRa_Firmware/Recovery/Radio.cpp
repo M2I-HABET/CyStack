@@ -228,71 +228,65 @@ void RADIO::broadcast()
  */
 void RADIO::radio_receive()
 {
-    // Forces the radio to wait at least a second for an incoming packet.
-    while(millis() - gps_read_in_timer < 1500)
+    // Checks if radio message has been received.
+    if (rf95.available())
     {
-      // Checks if radio message has been received.
-      if (rf95.available())
-      {
-          // Creates a temporary varaible to read in the incoming transmission.
-          uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
-          // Gets the length of the above temporary varaible.
-          uint8_t len = sizeof(buf);
-          // Reads in the avaiable radio transmission.
-          if(rf95.recv(buf, &len))
-          {
-              // Used to display the received data in the GUI.
-              radio_input = buf;
-              Serial.print("Radio Capture: "); Serial.println(radio_input);
-              blink_led();
-              // Conversion from uint8_t to string. The purpose of this is to be able to convert to an
-              // unsigned char array for parsing.
-              String str = (char*)buf;
-              char to_parse[str.length()];
-              str.toCharArray(to_parse,str.length());
-    
-              // Checks for a valid packet. Only parses contents if valid to prevent
-              // data corruption.
-              if(validate_checksum())
-              {
-                  // This whole section is comparing the currently held varaibles from the last radio update
-                  // to that of the newly received signal. Updates the LoRa's owned variables and copies
-                  // down the other nodes' varaibles. If the time LoRa currently holds the most updated values
-                  // for another node (LoRa's time stamp is higher than the new signal's), it replaces those vars.
+        // Creates a temporary varaible to read in the incoming transmission.
+        uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
+        // Gets the length of the above temporary varaible.
+        uint8_t len = sizeof(buf);
+        // Reads in the avaiable radio transmission.
+        if(rf95.recv(buf, &len))
+        {
+            // Used to display the received data in the GUI.
+            radio_input = buf;
+            Serial.print("Radio Capture: "); Serial.println(radio_input);
+            blink_led();
+            // Conversion from uint8_t to string. The purpose of this is to be able to convert to an
+            // unsigned char array for parsing.
+            String str = (char*)buf;
+            char to_parse[str.length()];
+            str.toCharArray(to_parse,str.length());
   
-                  // Reads in the time stamp for Payload's last broadcast.
-                  float temp_ts = get_radio_timestamp(to_parse, "payload");
-                  // Compares the currently brought in time stamp to the one stored onboad.
-                  if(temp_ts > payload_ts)
-                  {
-                      // If the incoming signal has more up-to-date versions, we overwrite our saved version with
-                      // the new ones.
-                      payload_ts = temp_ts;
-                      payload_altitude = get_radio_payload_altitude(to_parse);
-                      payload_latitude = get_radio_payload_latitude(to_parse);
-                      payload_longitude = get_radio_payload_longitude(to_parse);
-                      payload_event = get_radio_payload_event(to_parse);
-                      payload_speed = get_radio_payload_speed(to_parse);
-                  }
-                  temp_ts = 0.0;
-                  // Reads in the time stamp for Mission Control's last broadcast.
-                  temp_ts = get_radio_timestamp(to_parse, "mc");
-                  // Compares the currently brought in time stamp to the one stored onboad.
-                  if(temp_ts > mission_control_ts)
-                  {
-                      // If the incoming signal has more up-to-date versions, we overwrite our saved version with
-                      // the new ones.
-                      mission_control_ts = temp_ts;
-                  }
-                  // Pulls the RSSI from the signal. (Received Signal Strength Indicator)
-                  received_rssi = rf95.lastRssi();
-                  // Reads in Craft ID to see where signal came from.
-                  received_id = get_radio_node_id(to_parse);
-              }
-          }
-          // Breaks out of the blocking while loop.
-          break;
-      }
+            // Checks for a valid packet. Only parses contents if valid to prevent
+            // data corruption.
+            if(validate_checksum())
+            {
+                // This whole section is comparing the currently held varaibles from the last radio update
+                // to that of the newly received signal. Updates the LoRa's owned variables and copies
+                // down the other nodes' varaibles. If the time LoRa currently holds the most updated values
+                // for another node (LoRa's time stamp is higher than the new signal's), it replaces those vars.
+
+                // Reads in the time stamp for Payload's last broadcast.
+                float temp_ts = get_radio_timestamp(to_parse, "payload");
+                // Compares the currently brought in time stamp to the one stored onboad.
+                if(temp_ts > payload_ts)
+                {
+                    // If the incoming signal has more up-to-date versions, we overwrite our saved version with
+                    // the new ones.
+                    payload_ts = temp_ts;
+                    payload_altitude = get_radio_payload_altitude(to_parse);
+                    payload_latitude = get_radio_payload_latitude(to_parse);
+                    payload_longitude = get_radio_payload_longitude(to_parse);
+                    payload_event = get_radio_payload_event(to_parse);
+                    payload_speed = get_radio_payload_speed(to_parse);
+                }
+                temp_ts = 0.0;
+                // Reads in the time stamp for Mission Control's last broadcast.
+                temp_ts = get_radio_timestamp(to_parse, "mc");
+                // Compares the currently brought in time stamp to the one stored onboad.
+                if(temp_ts > mission_control_ts)
+                {
+                    // If the incoming signal has more up-to-date versions, we overwrite our saved version with
+                    // the new ones.
+                    mission_control_ts = temp_ts;
+                }
+                // Pulls the RSSI from the signal. (Received Signal Strength Indicator)
+                received_rssi = rf95.lastRssi();
+                // Reads in Craft ID to see where signal came from.
+                received_id = get_radio_node_id(to_parse);
+            }
+        }
     }
 }
 
