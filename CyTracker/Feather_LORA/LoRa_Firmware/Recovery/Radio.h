@@ -94,7 +94,7 @@ class RADIO
     float NODE_ID = 3.0;
     // Holds the delay amount between this nodes broadcast window.
     // Configured in Radio.rollcall().
-    float network_node_delay = 1000.0;
+    float network_node_delay = 2000.0;
     // Timer is used to for the 10 second interval that the craft will broadcast when in normal.
     // operating mode. This value is in milliseconds.
     unsigned long broadcast_timer = 0;

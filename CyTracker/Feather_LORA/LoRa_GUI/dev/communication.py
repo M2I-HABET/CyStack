@@ -169,7 +169,7 @@ def config_scheduler():
 			print("Scheduling task for mc LoRa.\n")
 			# Creates countdown timer that, upon hitting zero runs the associated method.
 			# Units are seconds.
-			g.timer_mission_control_lora = threading.Timer(0.3, mission_control_lora_receive)
+			g.timer_mission_control_lora = threading.Timer(0.2, mission_control_lora_receive)
 			# Starts the countdown timer.
 			g.timer_mission_control_lora.start()
 		# Checks for valid connection to the payload's Arduino LoRa.
@@ -178,7 +178,7 @@ def config_scheduler():
 			print("Scheduling task for payload LoRa.\n")
 			# Creates countdown timer that, upon hitting zero runs the associated method.
 			# Units are seconds.
-			g.timer_payload_lora = threading.Timer(0.3, payload_lora_receive)
+			g.timer_payload_lora = threading.Timer(0.2, payload_lora_receive)
 			# Starts the countdown timer.
 			g.timer_payload_lora.start()
 		# Checks for valid connection to the recovery vehicle's Arduino LoRa.
@@ -187,7 +187,7 @@ def config_scheduler():
 			print("Scheduling task for recovery LoRa.\n")
 			# Creates countdown timer that, upon hitting zero runs the associated method.
 			# Units are seconds.
-			g.timer_recovery_lora = threading.Timer(0.3, recovery_lora_receive)
+			g.timer_recovery_lora = threading.Timer(0.2, recovery_lora_receive)
 			# Starts the countdown timer.
 			g.timer_recovery_lora.start()
 	# Prints exception handler.

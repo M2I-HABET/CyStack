@@ -40,11 +40,11 @@ void loop(){
     {
         // Updates GUI/user with situational info.
         Data.serial_comms();
+        // Responsible for grabbing all of the craft's current information,
+        // turning that data into an array that can be sent out via radio.
+        // Also reads in incoming messages.
+        Radio.manager();
     }
-    // Responsible for grabbing all of the craft's current information,
-    // turning that data into an array that can be sent out via radio.
-    // Also reads in incoming messages.
-    Radio.manager();
 }
 
 

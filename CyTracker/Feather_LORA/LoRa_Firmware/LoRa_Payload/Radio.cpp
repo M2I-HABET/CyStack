@@ -24,7 +24,7 @@ RADIO::RADIO()
  *    payload         -> 1
  *    mission_control -> 6
  */
-float get_radio_timestamp(char buf[], String selector)
+float RADIO::get_radio_timestamp(char buf[], String selector)
 {
     if(selector == "payload")
     {
@@ -164,7 +164,7 @@ void RADIO::manager()
 	// Each of the crafts have # seconds to broadcast.
 	if(millis() - broadcast_timer > network_node_delay)
     {
-		// Resets the counter. This disables broadcasting again until 10 seconds has passed.
+		// Resets the counter. This disables broadcasting again until # seconds have passed.
         broadcast_timer = millis();
 		// Sends the transmission via radio.
 		broadcast();
@@ -247,7 +247,7 @@ void RADIO::radio_receive()
 
             // Checks for a valid packet. Only parses contents if valid to prevent
             // data corruption.
-            if(validate_checksum())
+            if(Radio.validate_checksum())
             {
                 // This whole section is comparing the currently held varaibles from the last radio update
                 // to that of the newly received signal. Updates the craft's owned variables and copies

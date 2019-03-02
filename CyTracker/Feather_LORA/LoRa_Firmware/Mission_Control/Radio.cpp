@@ -226,11 +226,9 @@ void RADIO::broadcast()
  */
 void RADIO::radio_receive()
 {
-    Serial.println(rf95.available());
     // Checks if radio message has been received.
     if (rf95.available())
     {
-        // Serial.println("Incoming packet...");
         // Creates a temporary varaible to read in the incoming transmission.
         uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
         // Gets the length of the above temporary varaible.

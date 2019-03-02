@@ -373,7 +373,7 @@ class MC_Tab():
 			self.node_mission_control.set("1")
 			# Splits the received serial data into two respective parts.
 			serial_data, radio_data = str(temp_input).split("]")
-			# Variables such as '$' and 'N' are thrown out as junk.
+			# Checksums '$' are thrown out at junk.
 			junk, p_ts, p_alt, p_lat, p_lng, p_event, p_speed, mc_ts, r_ts, r_lat, r_lng = str(serial_data).split(",")
 			radio_in, radio_out, received_rssi, junk = str(radio_data).split("/")
 			# Setting individual variables from the parsed packet.
