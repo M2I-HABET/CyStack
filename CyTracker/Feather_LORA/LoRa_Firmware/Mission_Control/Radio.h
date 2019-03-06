@@ -28,6 +28,8 @@ class RADIO
     float get_radio_recovery_latitude(char buf[]);
     // Returns the transmission's recovery longitude.
     float get_radio_recovery_longitude(char buf[]);
+    // Returns the transmission's reset flag.
+    float get_radio_node_reset(char buf[]);
     // Returns the transmission's craft ID.
     float get_radio_node_id(char buf[]);
     // Runs initialzation script for the Radio.
@@ -52,9 +54,11 @@ class RADIO
     // Radio frequency used throught the Eagle Eye Program. CHECK WITH HABET BEFORE EACH FLIGHT!!!!!
     #define RF95_FREQ 433.0
     // Craft ID (Mission Control LoRa.)
-    float NODE_ID = 1.0;
+    float node_id = 1.0;
     // Holds the ID of the craft that just broadcasted. THIS IS ANOTHER NODE, NOT MISSION CONTROL.
     float received_id = 0.0;
+    // Holds the reset bit used to clear the timestamp of the associated node.
+    float received_reset = 0.0;
     // Holds the current received radio signal.
     String radio_input = "";
     // Holds the current sent radio signal.

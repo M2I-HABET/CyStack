@@ -28,6 +28,8 @@ class RADIO
     float get_radio_recovery_latitude(char buf[]);
     // Returns the transmission's recovery longitude.
     float get_radio_recovery_longitude(char buf[]);
+    // Returns the transmission's reset flag.
+    float get_radio_node_reset(char buf[]);
     // Returns the transmission's craft ID.
     float get_radio_node_id(char buf[]);
     // Runs initialzation script for the Radio.
@@ -59,6 +61,8 @@ class RADIO
     String radio_input = "";
     // Holds the ID of the craft that just broadcasted.
     float received_id = 0.0;
+    // Holds the reset bit used to clear the timestamp of the associated node.
+    float received_reset = 0.0;
 
     /**
      * This set of varaibles are accessed and overseen by the HABET Payload.
@@ -84,7 +88,7 @@ class RADIO
     float mission_control_ts = 0.0;
 
     // Craft ID (SPECIFIC TO THE PAYLOAD LORA ONBOARD HABET)
-    float NODE_ID = 2.0;
+    float node_id = 2.0;
     // Holds the delay amount between this nodes broadcast window.
     // Configured in Radio.rollcall().
     float network_node_delay = 3000.0;

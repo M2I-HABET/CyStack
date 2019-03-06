@@ -31,6 +31,9 @@ void setup(){
     Serial.begin(115200);
     // Initializes the Radio.
     Radio.initialize();
+    // Bootup has happened. Set flags.
+    Data.node_reset = 1;
+    Data.system_boot = true;
 }
 
 
@@ -40,6 +43,8 @@ void setup(){
 void loop(){
     // Reads in serial port data if available.
     serial_input();
+    // Monitors if the LoRa just reset and changes values accordingly.
+    system_boot();
     if(Data.gui_connection)
     {
         // Updates GUI/user with situational info.
@@ -53,6 +58,21 @@ void loop(){
     Radio.manager();
 }
 
+
+/**
+ * Flag management during and after boot process.
+ */
+void system_boot()
+{
+    // For the first # seconds of boot.
+    if((millis() - Data.startup_timer >= 3000) && !Data.system_boot)
+    {
+        // System has now been operating for # seconds.
+        Data.node_reset = 0;
+        // Adjust flag.
+        Data.system_boot = false;
+    }
+}
 
 /**
  * Reads in serial data.

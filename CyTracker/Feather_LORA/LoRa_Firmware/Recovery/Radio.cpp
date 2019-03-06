@@ -108,11 +108,20 @@ float RADIO::get_radio_recovery_longitude(char buf[])
 
 
 /**
- * Parses and returns the radio transmission's Craft ID.
+ * Parses and returns the radio transmission's craft Event.
  */
-float RADIO::get_radio_node_id(char buf[])
+float RADIO::get_radio_recovery_longitude(char buf[])
 {
     return (Data.Parse(buf, 11));
+}
+
+
+/**
+ * Parses and returns the radio transmission's reset bit.
+ */
+float RADIO::get_radio_node_reset(char buf[])
+{
+    return (Data.Parse(buf, 12));
 }
 
 
@@ -206,7 +215,9 @@ void RADIO::broadcast()
     temp += ",";
     temp += Gps.recovery_longitude;
     temp += ",";
-    temp += NODE_ID;
+    temp += Data.node_reset;
+    temp += ",";
+    temp += node_id;
     temp += ",";
     temp += "$";
     // Copy contents.
@@ -281,8 +292,31 @@ void RADIO::radio_receive()
                 }
                 // Pulls the RSSI from the signal. (Received Signal Strength Indicator)
                 received_rssi = rf95.lastRssi();
+                // Reads in the value associated with the reset. 
+                received_reset = get_radio_node_reset(to_parse);
                 // Reads in Craft ID to see where signal came from.
                 received_id = get_radio_node_id(to_parse);
+                // Checks for a value of 1 (reset needs to happen).
+                if(received_reset)
+                {
+                    // Check which node reset bit is bound to.
+                    // Mission Control.
+                    if(received_id == 1.0)
+                    {
+                        // Mission Control LoRa has powercycled. 
+                        // Clear its time stamp variable to ensure that the 
+                        // this node continues to pull in new data.
+                        mission_control_ts = 0.0;
+                    }
+                    // Payload.
+                    else if(received_id == 3.0)
+                    {
+                        // Payload LoRa has powercycled. 
+                        // Clear its time stamp variable to ensure that the 
+                        // this node continues to pull in new data.
+                        payload_ts = 0.0;
+                    }
+                }
             }
         }
     }

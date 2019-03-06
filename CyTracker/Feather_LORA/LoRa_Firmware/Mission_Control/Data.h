@@ -30,6 +30,15 @@ class DATA
     bool gui_connection = false;
     // Timer used for sending serial updates to gui.
     unsigned long serial_timer = 0;
+    // Set High for # (defined below) seconds on startup to tell other nodes in the system
+    // that an unexpected power cycle has occurred and they need to clear 
+    // their locally held variables.
+    int node_reset = 0;
+    // Number of seconds after startup that the reset_node will be held high.
+    unsigned long startup_timer = 0;
+    // Turns true after # seconds of running. Used to tell if the system started 
+    // up correctly.
+    bool system_boot = false;
 };
 
 #endif
