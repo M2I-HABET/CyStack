@@ -242,7 +242,7 @@ def mission_control_lora_receive():
 			# Reads in and decodes incoming serial data.
 			message = ser.readline().decode()
 			# Debug info.
-			print("Received from " + str(ser.port) + ". Input: " + message + "\n")
+			#print("Received from " + str(ser.port) + ". Input: " + message + "\n")
 			# Return data.
 			g.PORT_MISSION_CONTROL_LORA.set_input(str(message))
 		return
@@ -273,7 +273,7 @@ def payload_lora_receive():
 			# Reads in and decodes incoming serial data.
 			message = ser.readline().decode()
 			# Debug info.
-			print("Received from " + str(ser.port) + ". Input: " + message + "\n")
+			#print("Received from " + str(ser.port) + ". Input: " + message + "\n")
 			# Return data.
 			g.PORT_PAYLOAD_LORA.set_input(str(message))
 		return
@@ -303,7 +303,7 @@ def recovery_lora_receive():
 			# Reads in and decodes incoming serial data.
 			message = ser.readline().decode()
 			# Debug info.
-			print("Received from " + str(ser.port) + ". Input: " + message + "\n")
+			#print("Received from " + str(ser.port) + ". Input: " + message + "\n")
 			# Return data.
 			g.PORT_RECOVERY_LORA.set_input(str(message))
 		return

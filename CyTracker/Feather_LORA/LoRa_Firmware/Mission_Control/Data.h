@@ -38,7 +38,7 @@ class DATA
     unsigned long startup_timer = 0;
     // Turns true after # seconds of running. Used to tell if the system started 
     // up correctly.
-    bool system_boot = false;
+    bool system_boot_complete = false;
 };
 
 #endif

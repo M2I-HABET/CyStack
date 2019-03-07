@@ -104,11 +104,10 @@ float RADIO::get_radio_recovery_longitude(char buf[])
 }
 
 
-
 /**
  * Parses and returns the radio transmission's craft Event.
  */
-float RADIO::get_radio_recovery_longitude(char buf[])
+float RADIO::get_radio_node_reset(char buf[])
 {
     return (Data.Parse(buf, 11));
 }
@@ -117,7 +116,7 @@ float RADIO::get_radio_recovery_longitude(char buf[])
 /**
  * Parses and returns the radio transmission's reset bit.
  */
-float RADIO::get_radio_node_reset(char buf[])
+float RADIO::get_radio_node_id(char buf[])
 {
     return (Data.Parse(buf, 12));
 }

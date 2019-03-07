@@ -297,12 +297,15 @@ void RADIO::radio_receive()
                 // Reads in Craft ID to see where signal came from.
                 received_id = get_radio_node_id(to_parse);
                 // Checks for a value of 1 (reset needs to happen).
+                Serial.println("-");
                 if(received_reset)
                 {
+                    Serial.println("Reset.");
                     // Check which node reset bit is bound to.
                     // Payload.
                     if(received_id == 2.0)
                     {
+                        Serial.println("Payload Reset.");
                         // Payload LoRa has powercycled. 
                         // Clear its time stamp variable to ensure that the 
                         // this node continues to pull in new data.
@@ -311,6 +314,7 @@ void RADIO::radio_receive()
                     // Recovery.
                     else if(received_id == 3.0)
                     {
+                        Serial.println("Recovery Reset.");
                         // Recovery LoRa has powercycled. 
                         // Clear its time stamp variable to ensure that the 
                         // this node continues to pull in new data.

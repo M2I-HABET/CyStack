@@ -372,11 +372,13 @@ class MC_Tab():
 			temp_input = g.PORT_MISSION_CONTROL_LORA.input.get()
 			self.node_mission_control.set("1")
 			# Splits the received serial data into two respective parts.
-			serial_data, radio_data = str(temp_input).split("]")
+			junk, local_vars, radio_in, radio_out, received_rssi, junk = str(temp_input).split("/")
+			print("---------------------------------------------------------------------------------------------")
+			mc_ts = local_vars
+			self.mission_control_time.set(mc_ts)
+			print("Local: " + str(local_vars) +"\n")
 			# Checksums '$' are thrown out at junk.
-			junk, p_ts, p_alt, p_lat, p_lng, p_event, p_speed, mc_ts, r_ts, r_lat, r_lng = str(serial_data).split(",")
-			radio_in, radio_out, received_rssi, junk = str(radio_data).split("/")
-			# Setting individual variables from the parsed packet.
+			junk, p_ts, p_alt, p_lat, p_lng, p_event, p_speed, junk, r_ts, r_lat, r_lng, node_rs, self.radio_received_node_id, junk = str(radio_in).split(",")
 			self.payload_time.set(p_ts)
 			self.payload_altitude.set(p_alt)
 			t_lat = (float(p_lat) / 10000)
@@ -385,18 +387,16 @@ class MC_Tab():
 			self.payload_longitude.set(str(t_lng))
 			self.payload_event.set(p_event)
 			self.payload_speed.set(p_speed)
-			self.mission_control_time.set(mc_ts)
 			self.recovery_time.set(r_ts)
 			t_lat = (float(r_lat) / 10000)
 			t_lng = (float(r_lng) / 10000)
 			self.recovery_latitude.set(t_lat)
 			self.recovery_longitude.set(t_lng)
 			self.radio_received.set(radio_in)
+			print("Radio In: " + str(radio_in) +"\n")
 			self.radio_sent.set(radio_out)
-			# To retrieve the RSSI value of the last received packet, we need to parse out the radio_in
-			# variable to see the node id.
-			# $   p_ts  p_alt p_lat p_lng p_ev  p_sp  mc_ts r_ts  r_lat r_lng      node id                  $
-			junk, junk, junk, junk, junk, junk, junk, junk, junk, junk, junk, self.radio_received_node_id, junk = str(radio_in).split(",")
+			print("Radio Out: " + str(radio_out) +"\n")
+			print("RSSI: " + str(received_rssi) +"\n")
 			# Checks if the packet is from the payload.
 			if "2" in self.radio_received_node_id:
 				# Say you don't receive the a packet in a while. The mission control
@@ -407,7 +407,10 @@ class MC_Tab():
 				# likely the same packet we already saw. If they are different, its 100%
 				# new.
 				if self.payload_time_previous != str(self.payload_time.get()):
-					self.node_payload.set("1")
+					if node_rs is 0:
+						self.node_payload.set("1")
+					elif node_rs is 1:
+						self.node_payload.set("2")
 					# Updates the appropriate variables.
 					self.payload_time_previous = str(self.payload_time.get())
 					self.radio_last_received_node.set("Payload")
@@ -422,7 +425,10 @@ class MC_Tab():
 				# likely the same packet we already saw. If they are different, its 100%
 				# new.
 				if self.recovery_time_previous != str(self.recovery_time.get()):
-					self.node_recovery.set("1")
+					if node_rs is 0:
+						self.node_recovery.set("1")
+					elif node_rs is 1:
+						self.node_recovery.set("2")
 					# Updates the appropriate variables.
 					self.recovery_time_previous = str(self.recovery_time.get())
 					self.radio_last_received_node.set("Recovery")

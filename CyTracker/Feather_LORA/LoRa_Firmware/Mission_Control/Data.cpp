@@ -96,6 +96,7 @@ void DATA::update_gui()
 	// Only sends info to update gui every 1/3 second.
 	if(!Serial.available() && (millis() - serial_timer >= 1500))
 	{
+		
 		// Resets / starts timer.
 	    serial_timer = millis();
 	    // Starts or updates mission control microsecond timer. (Converts to seconds w/ 2 decimal places for easy of use)
@@ -103,27 +104,9 @@ void DATA::update_gui()
     	// Holds outgoing message.
 		String temp_packet = "";
 		temp_packet += "$";
-		temp_packet += ",";
-		temp_packet += Radio.payload_ts;
-		temp_packet += ",";
-		temp_packet += Radio.payload_altitude;
-		temp_packet += ",";
-		temp_packet += Radio.payload_latitude * 10000;
-		temp_packet += ",";
-		temp_packet += Radio.payload_longitude * 10000;
-		temp_packet += ",";
-		temp_packet += Radio.payload_event;
-		temp_packet += ",";
-		temp_packet += Radio.payload_speed;
-		temp_packet += ",";
+		temp_packet += "/";
 		temp_packet += Radio.mission_control_ts;
-		temp_packet += ",";
-		temp_packet += Radio.recovery_ts;
-		temp_packet += ",";
-		temp_packet += Radio.recovery_latitude * 10000;
-		temp_packet += ",";
-		temp_packet += Radio.recovery_longitude * 10000;
-		temp_packet += "]";
+		temp_packet += "/";
 		temp_packet += Radio.radio_input;
 		temp_packet += "/";
 		temp_packet += Radio.radio_output;

@@ -33,7 +33,7 @@ void setup()
     Radio.initialize();
     // Bootup has happened. Set flags.
     Data.node_reset = 1;
-    Data.system_boot = true;
+    Data.system_boot_complete = false;
 }
 
 
@@ -59,11 +59,11 @@ void loop()
 void system_boot()
 {
     // For the first # seconds of boot.
-    if((millis() - Data.startup_timer >= 3000) && !Data.system_boot)
+    if((millis() - Data.startup_timer >= 3000) && !Data.system_boot_complete)
     {
         // System has now been operating for # seconds.
         Data.node_reset = 0;
         // Adjust flag.
-        Data.system_boot = false;
+        Data.system_boot_complete = true;
     }
 }
