@@ -220,6 +220,8 @@ void RADIO::broadcast()
     temp += "$";
     // Copy contents.
     radio_output = temp;
+    Serial.print("Out Pkt: ");
+    Serial.println(radio_output);
     // Converts from String to char array.
     char transmission[temp.length()+1];
     temp.toCharArray(transmission, temp.length()+1);
@@ -297,13 +299,17 @@ void RADIO::radio_receive()
                 // Reads in Craft ID to see where signal came from.
                 received_id = get_radio_node_id(to_parse);
                 // Checks for a value of 1 (reset needs to happen).
-                Serial.println("-");
+                Serial.println("------------------------------------------------------------------------");
+                Serial.print("In Pkt: ");
+                Serial.println(radio_input);
+                Serial.print("Reset Value: ");
+                Serial.println(received_reset);
                 if(received_reset)
                 {
                     Serial.println("Reset.");
                     // Check which node reset bit is bound to.
                     // Payload.
-                    if(received_id == 2.0)
+                    if(1.9 < received_id && received_id > 2.1)
                     {
                         Serial.println("Payload Reset.");
                         // Payload LoRa has powercycled. 
@@ -312,7 +318,7 @@ void RADIO::radio_receive()
                         payload_ts = 0.0;
                     }
                     // Recovery.
-                    else if(received_id == 3.0)
+                    else if(2.9 < received_id && received_id > 3.1)
                     {
                         Serial.println("Recovery Reset.");
                         // Recovery LoRa has powercycled. 
