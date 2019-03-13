@@ -217,6 +217,10 @@ void RADIO::broadcast()
     temp += node_id;
     temp += ",";
     temp += "$";
+    radio_output = "";
+    // Copy contents.
+    radio_output = temp;
+    Serial.print("Out Pkt: ");
     // Converts from String to char array.
     char transmission[temp.length()+1];
     temp.toCharArray(transmission, temp.length()+1);
@@ -295,7 +299,7 @@ void RADIO::radio_receive()
                 {
                     // Check which node reset bit is bound to.
                     // Mission Control.
-                    if(received_id == 1.0)
+                    if(0.9 < received_id && received_id < 1.1)
                     {
                         // Mission Control LoRa has powercycled. 
                         // Clear its time stamp variable to ensure that the 
@@ -303,7 +307,7 @@ void RADIO::radio_receive()
                         mission_control_ts = 0.0;
                     }
                     // Recovery.
-                    else if(received_id == 3.0)
+                    else if(2.9 < received_id && received_id < 3.1)
                     {
                         // Recovery LoRa has powercycled. 
                         // Clear its time stamp variable to ensure that the 
@@ -313,7 +317,7 @@ void RADIO::radio_receive()
                 }
             }
         }
-	}
+	  }
 }
 
 

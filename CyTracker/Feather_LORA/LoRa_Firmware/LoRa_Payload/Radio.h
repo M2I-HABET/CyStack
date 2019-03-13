@@ -57,6 +57,8 @@ class RADIO
     const byte LED = 13;
     // Radio frequency used throught the Eagle Eye Program. CHECK WITH HABET BEFORE EACH FLIGHT!!!!!
     #define RF95_FREQ 433.0
+    // Holds the current sent radio signal.
+    String radio_output = "";
     // Holds current packet for parsing.
     String radio_input = "";
     // Holds the ID of the craft that just broadcasted.

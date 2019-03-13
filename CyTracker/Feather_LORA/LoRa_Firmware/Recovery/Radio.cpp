@@ -219,6 +219,7 @@ void RADIO::broadcast()
     temp += node_id;
     temp += ",";
     temp += "$";
+    radio_output = "";
     // Copy contents.
     radio_output = temp;
     Serial.print("Out Pkt: ");
@@ -297,27 +298,27 @@ void RADIO::radio_receive()
                 received_reset = get_radio_node_reset(to_parse);
                 // Reads in Craft ID to see where signal came from.
                 received_id = get_radio_node_id(to_parse);
-                
-                Serial.println("------------------------------------------------------------------------");
-                Serial.print("In Pkt: ");
-                Serial.println(radio_input);
-                Serial.print("Reset Value: ");
-                Serial.println(received_reset);
+                Serial.println("\n\n------------------------------------------------------------------------");
+                Serial.print("In Pkt:  "); Serial.println(radio_input);
+                Serial.print("R value: "); Serial.println(received_reset);
                 // Checks for a value of 1 (reset needs to happen).
                 if(received_reset)
                 {
+                    Serial.print("Reset: ");
                     // Check which node reset bit is bound to.
                     // Mission Control.
-                    if(0.9 < received_id && received_id > 1.1)
+                    if(0.9 < received_id && received_id < 1.1)
                     {
+                        Serial.println("Mission Control");
                         // Mission Control LoRa has powercycled. 
                         // Clear its time stamp variable to ensure that the 
                         // this node continues to pull in new data.
                         mission_control_ts = 0.0;
                     }
                     // Payload.
-                    else if(1.9 < received_id && received_id > 2.1)
+                    else if(1.9 < received_id && received_id < 2.1)
                     {
+                        Serial.println("Payload");
                         // Payload LoRa has powercycled. 
                         // Clear its time stamp variable to ensure that the 
                         // this node continues to pull in new data.
