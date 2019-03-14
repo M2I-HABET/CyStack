@@ -220,7 +220,6 @@ void RADIO::broadcast()
     radio_output = "";
     // Copy contents.
     radio_output = temp;
-    Serial.print("Out Pkt: ");
     // Converts from String to char array.
     char transmission[temp.length()+1];
     temp.toCharArray(transmission, temp.length()+1);

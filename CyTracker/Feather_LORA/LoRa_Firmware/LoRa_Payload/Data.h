@@ -28,5 +28,9 @@ class DATA
     // Turns true after # seconds of running. Used to tell if the system started 
     // up correctly.
     bool system_boot_complete = false;
+    // Power status of the LED outside of the box.
+    bool external_led = false;
+    // Timer to switch the external_led on/off at 1/2sec.
+    unsigned long ext_led_timer = 0;
 };
 #endif

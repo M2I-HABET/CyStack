@@ -371,68 +371,126 @@ class MC_Tab():
 			# If valid connection, get its serial data input.
 			temp_input = g.PORT_MISSION_CONTROL_LORA.input.get()
 			self.node_mission_control.set("1")
-			# Splits the received serial data into two respective parts.
-			junk, local_vars, radio_in, radio_out, received_rssi, junk = str(temp_input).split("/")
-			print("---------------------------------------------------------------------------------------------")
-			mc_ts = local_vars
-			self.mission_control_time.set(mc_ts)
-			print("Local: " + str(local_vars) +"\n")
-			# Checksums '$' are thrown out at junk.
-			junk, p_ts, p_alt, p_lat, p_lng, p_event, p_speed, junk, r_ts, r_lat, r_lng, node_rs, self.radio_received_node_id, junk = str(radio_in).split(",")
-			self.payload_time.set(p_ts)
-			self.payload_altitude.set(p_alt)
-			t_lat = (float(p_lat) / 10000)
-			t_lng = (float(p_lng) / 10000)
-			self.payload_latitude.set(str(t_lat))
-			self.payload_longitude.set(str(t_lng))
-			self.payload_event.set(p_event)
-			self.payload_speed.set(p_speed)
-			self.recovery_time.set(r_ts)
-			t_lat = (float(r_lat) / 10000)
-			t_lng = (float(r_lng) / 10000)
-			self.recovery_latitude.set(t_lat)
-			self.recovery_longitude.set(t_lng)
-			self.radio_received.set(radio_in)
-			print("Radio In: " + str(radio_in) +"\n")
-			self.radio_sent.set(radio_out)
-			print("Radio Out: " + str(radio_out) +"\n")
-			print("RSSI: " + str(received_rssi) +"\n")
-			# Checks if the packet is from the payload.
-			if "2" in self.radio_received_node_id:
-				# Say you don't receive the a packet in a while. The mission control
-				# LoRa still sends you its last known packet each time it tries to
-				# update the gui (roughly 1.5 seconds). To prevent the gui from thinking
-				# each "gui update" is brand new information, we compare a previous
-				# variable value to the proclaimed to be new value. If they are the same, its most
-				# likely the same packet we already saw. If they are different, its 100%
-				# new.
-				if self.payload_time_previous != str(self.payload_time.get()):
-					if node_rs is 0:
-						self.node_payload.set("1")
-					elif node_rs is 1:
-						self.node_payload.set("2")
-					# Updates the appropriate variables.
-					self.payload_time_previous = str(self.payload_time.get())
-					self.radio_last_received_node.set("Payload")
-					self.update_payload_rssi(received_rssi)
-			# Checks if the packet is from the recovery team.
-			if "3" in self.radio_received_node_id:
-				# Say you don't receive the a packet in a while. The mission control
-				# LoRa still sends you its last known packet each time it tries to
-				# update the gui (roughly 1.5 seconds). To prevent the gui from thinking
-				# each "gui update" is brand new information, we compare a previous
-				# variable value to the proclaimed to be new value. If they are the same, its most
-				# likely the same packet we already saw. If they are different, its 100%
-				# new.
-				if self.recovery_time_previous != str(self.recovery_time.get()):
-					if node_rs is 0:
-						self.node_recovery.set("1")
-					elif node_rs is 1:
-						self.node_recovery.set("2")
-					# Updates the appropriate variables.
-					self.recovery_time_previous = str(self.recovery_time.get())
-					self.radio_last_received_node.set("Recovery")
-					self.update_recovery_rssi(received_rssi)
+			if(temp_input.count("/") is 5):
+				# Splits the received serial data into two respective parts.
+				junk, local_vars, radio_in, radio_out, received_rssi, junk = str(temp_input).split("/")
+				self.parse_mission_control(local_vars)
+				self.parse_payload(radio_in, received_rssi)
+				self.parse_recovery(radio_in, received_rssi)
+				self.radio_sent.set(radio_out)
+				self.radio_received.set(radio_in)
+				# Prints input.
+				print("---------------------------------------------------------------------------------------------")
+				print("Input: " + str(temp_input))
+				print("Local: " + str(local_vars) +"\n")
+				print("Pkt Received: " + str(radio_in) +"\n")
+				print("Pkt Sent: " + str(radio_out) +"\n")
+				print("RSSI: " + str(received_rssi) +"\n")
+
+
+	def parse_mission_control(self, local_vars):
+		"""
+		Parses out variables from given string section.
+		Assigns to correct variables.
+		
+		@param self - Instance of the class.
+		@param local_vars - Variables associated with the connected microcontroller.
+		"""
+		
+		# Parses out the mission control timestamp.
+		mc_ts = local_vars
+		# Sets parsed values to their corresponding StringVar.
+		self.mission_control_time.set(mc_ts)
+
+
+	def parse_payload(self, radio_in, rssi):
+		"""
+		Parses out variables from given string section.
+		Assigns to correct variables.
+		
+		@param self - Instance of the class.
+		@param radio_in - Packet received via radio.
+		@param rssi - Relative Signal Strength Index for the received packet.
+		"""
+		
+		# Checksums '$' and non payload variables are thrown out.
+		junk, p_ts, p_alt, p_lat, p_lng, p_event, p_speed, junk, junk, junk, junk, node_reset, node_id, junk = str(radio_in).split(",")
+		# Sets parsed values to their corresponding StringVar.
+		self.payload_time.set(p_ts)
+		self.payload_altitude.set(p_alt)
+		t_lat = (float(p_lat) / 10000)
+		t_lng = (float(p_lng) / 10000)
+		self.payload_latitude.set(str(t_lat))
+		self.payload_longitude.set(str(t_lng))
+		self.payload_event.set(p_event)
+		self.payload_speed.set(p_speed)
+		self.radio_received_node_id.set(str(node_id))
+		# Checks if the packet is from the payload.
+		print(self.radio_received_node_id.get())
+		# Checks if the packet was from payload.
+		if self.radio_received_node_id.get().count("2") is 1:
+			# Say you don't receive the a packet in a while. The mission control
+			# LoRa still sends you its last known packet each time it tries to
+			# update the gui (roughly 1.5 seconds). To prevent the gui from thinking
+			# each "gui update" is brand new information, we compare a previous
+			# variable value to the proclaimed to be new value. If they are the same, its most
+			# likely the same packet we already saw. If they are different, its 100%
+			# new.
+			if self.payload_time_previous != str(self.payload_time.get()):
+				# Node has not power cycled.
+				if node_reset.count("1") is 1:
+					self.node_payload.set("2")
+				# Node has power cycled.
+				else:
+					self.node_payload.set("1")
+				# Updates the appropriate variables.
+				self.payload_time_previous = str(self.payload_time.get())
+				# Updates the visual indicatior.
+				self.radio_last_received_node.set("Payload")
+				self.update_payload_rssi(rssi)
+
+
+	def parse_recovery(self, radio_in, rssi):
+		"""
+		Parses out variables from given string section.
+		Assigns to correct variables.
+		
+		@param self - Instance of the class.
+		@param radio_in - Packet received via radio.
+		@param rssi - Relative Signal Strength Index for the received packet.
+		"""
+		
+		# Checksums '$' and non recovery variables are thrown out.
+		junk, junk, junk, junk, junk, junk, junk, junk, r_ts, r_lat, r_lng, node_reset, node_id, junk = str(radio_in).split(",")
+		# Sets parsed values to their corresponding StringVar.
+		self.recovery_time.set(r_ts)
+		t_lat = (float(r_lat) / 10000)
+		t_lng = (float(r_lng) / 10000)
+		self.recovery_latitude.set(t_lat)
+		self.recovery_longitude.set(t_lng)
+		self.radio_received_node_id.set(str(node_id))
+		# Checks if the packet is from recovery.
+		if self.radio_received_node_id.get().count("3") is 1:
+			# Say you don't receive the a packet in a while. The mission control
+			# LoRa still sends you its last known packet each time it tries to
+			# update the gui (roughly 1.5 seconds). To prevent the gui from thinking
+			# each "gui update" is brand new information, we compare a previous
+			# variable value to the proclaimed to be new value. If they are the same, its most
+			# likely the same packet we already saw. If they are different, its 100%
+			# new.
+			if self.recovery_time_previous != str(self.recovery_time.get()):
+				print(node_reset)
+				# Node has not power cycled. (1.00)
+				if node_reset.count("1") is 1:
+					self.node_recovery.set("2")
+				# Node has power cycled. (0.00)
+				else:
+					self.node_recovery.set("1")
+				# Updates the appropriate variables.
+				self.recovery_time_previous = str(self.recovery_time.get())
+				# Updates the visual indicatior.
+				self.radio_last_received_node.set("Recovery")
+				self.update_recovery_rssi(rssi)
 
 
 	def update_payload_rssi(self, received_rssi):
