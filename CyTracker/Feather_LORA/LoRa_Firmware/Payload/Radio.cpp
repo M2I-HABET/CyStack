@@ -127,8 +127,6 @@ float RADIO::get_radio_node_id(char buf[])
  */
 void RADIO::initialize()
 {
-    // Assigns pin 13 to have an output power connection to the LoRa's onboard LED.
-    pinMode(LED, OUTPUT);
     // Assigns pin 4 to have an output singal connection to the LoRa's radio port.
     pinMode(RFM95_RST, OUTPUT);
     // Sends a high signal to the radio port for intialization.
@@ -145,7 +143,7 @@ void RADIO::initialize()
         // If invalid connection, the program will stall and pulse the onbaord led.
         while (1)
         {
-            blink_led();
+            Data.blink_error_led();
         }
     }
     // Checks the radio objects tuned frequency.
@@ -154,7 +152,7 @@ void RADIO::initialize()
         // If invalid connection, the program will stall and pulse the onbaord led.
         while (1)
         {
-            blink_led();
+            Data.blink_error_led();
         }
     }
     // Sets the max power to be used to in the amplification of the signal being sent out.
@@ -225,6 +223,7 @@ void RADIO::broadcast()
     temp.toCharArray(transmission, temp.length()+1);
     // Sends message passed in as paramter via antenna.
     rf95.send(transmission, sizeof(transmission));
+    Data.blink_send_led();
     // Pauses all operations until the micro controll has guaranteed the transmission of the
     // signal.
     rf95.waitPacketSent();
@@ -248,7 +247,7 @@ void RADIO::radio_receive()
         {
             // Used to display the received data in the GUI.
             radio_input = buf;
-            blink_led();
+            Data.blink_receive_led();
             // Conversion from uint8_t to string. The purpose of this is to be able to convert to an
             // unsigned char array for parsing.
             String str = (char*)buf;
@@ -342,16 +341,4 @@ bool RADIO::validate_checksum()
         // attempting to parse its contents.
         return false;
     }
-}
-
-/*
- * Blinks LED.
- */
-void RADIO::blink_led()
-{
-    // ON
-    digitalWrite(LED, HIGH);
-    delay(50);
-    // OFF
-    digitalWrite(LED, LOW);
 }

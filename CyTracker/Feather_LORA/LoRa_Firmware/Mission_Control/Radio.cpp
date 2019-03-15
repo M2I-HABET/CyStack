@@ -310,7 +310,7 @@ void RADIO::radio_receive()
                     // Payload.
                     if(1.9 < received_id && received_id < 2.1)
                     {
-                        //Serial.println("Payload");
+                        Serial.println("Payload");
                         // Payload LoRa has powercycled. 
                         // Clear its time stamp variable to ensure that the 
                         // this node continues to pull in new data.

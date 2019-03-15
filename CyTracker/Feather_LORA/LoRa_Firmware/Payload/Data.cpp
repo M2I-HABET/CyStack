@@ -79,5 +79,44 @@ float DATA::Parse(char message[], int objective)
 	// Converts the final array to a float.
 	float temp = atof(parsed_section);
 	// Returns the desired parsed section in number (float) form.
-	return temp;
+  return temp; 
+}
+
+
+/**
+ * Blinks the external led referring to the receive led.
+ */
+void DATA::blink_receive_led()
+{
+    // ON
+    digitalWrite(RECEIVE_LED, HIGH);
+    delay(100);
+    // OFF
+    digitalWrite(RECEIVE_LED, LOW);
+}
+
+
+/**
+ * Blinks the external led referring to the sending led.
+ */
+void DATA::blink_send_led()
+{
+    // ON
+    digitalWrite(SEND_LED, HIGH);
+    delay(100);
+    // OFF
+    digitalWrite(SEND_LED, LOW);
+}
+
+
+/*
+ * Blinks LED on error.
+ */
+void DATA::blink_error_led()
+{
+    // ON
+    digitalWrite(ERROR_LED, HIGH);
+    delay(100);
+    // OFF
+    digitalWrite(ERROR_LED, LOW);
 }

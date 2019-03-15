@@ -53,8 +53,6 @@ class RADIO
     const byte RFM95_INT = 7;
     // Reset pin onboard the radio.
     const byte RFM95_RST = 4;
-    // Pins used to blink an LED to signal a radio packet has been received.
-    const byte LED = 13;
     // Radio frequency used throught the Eagle Eye Program. CHECK WITH HABET BEFORE EACH FLIGHT!!!!!
     #define RF95_FREQ 433.0
     // Holds the current sent radio signal.
@@ -93,7 +91,7 @@ class RADIO
     float node_id = 2.0;
     // Holds the delay amount between this nodes broadcast window.
     // Configured in Radio.rollcall().
-    float network_node_delay = 3000.0;
+    float network_node_delay = 1500.0;
       // Used in the computation of the radio system.
   	unsigned long broadcast_timer = 0;
 };

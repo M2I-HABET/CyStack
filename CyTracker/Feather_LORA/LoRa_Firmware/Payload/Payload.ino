@@ -34,8 +34,11 @@ void setup()
     // Bootup has happened. Set flags.
     Data.node_reset = 1;
     Data.system_boot_complete = false;
-    // Sets digital pin 10 to be used for an led.
-    pinMode(9, OUTPUT);
+    // Sets digital pins to be used as leds.
+    pinMode(Data.SEND_LED, OUTPUT);
+    pinMode(Data.RECEIVE_LED, OUTPUT);
+    pinMode(Data.OPERATIONAL_LED, OUTPUT);
+    pinMode(Data.ERROR_LED, OUTPUT);
 }
 
 
@@ -46,8 +49,8 @@ void loop()
 {
     // Monitors if the LoRa just reset and changes values accordingly.
     system_boot();
-    // Turns external led on/off.
-    active_led();
+    // Turns OPERATIONAL_LED led on/off.
+    system_led();
     // Reads in a new NMEA sentence.
     Gps.manager();
     // Responsible for all network operations. Includes variable 
@@ -58,9 +61,9 @@ void loop()
 
 
 /**
- * Non-blocking alternating timer to turn the led on/off at intervals of 1/2 second.
+ * Non-blocking alternating timer to turn the OPERATIONAL_LED on/off at intervals of 1/2 second.
  */
-void active_led()
+void system_led()
 {
     if(millis() - Data.ext_led_timer >= 300)
     {
@@ -69,17 +72,18 @@ void active_led()
         if(Data.external_led)
         {
             Data.external_led = false;
-            digitalWrite(9, LOW);
+            digitalWrite(Data.OPERATIONAL_LED, LOW);
         }
         // Turns external LED on.
         else
         {
             Data.external_led = true;
-            digitalWrite(9, HIGH);
+            digitalWrite(Data.OPERATIONAL_LED, HIGH);
         }
     }
-    
 }
+
+
 /**
  * Flag management during and after boot process.
  */

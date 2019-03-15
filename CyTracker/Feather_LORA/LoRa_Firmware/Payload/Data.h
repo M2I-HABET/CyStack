@@ -14,6 +14,12 @@ class DATA
 	DATA();
 	// Parses passed in message by using commas as the identifiers.
 	float Parse(char message[], int objective);
+  // Pulses external receive led.
+  void blink_receive_led();
+  // Pulses external sending led.
+  void blink_send_led();
+  // Pulses onboard error led.
+  void blink_error_led();
 	
 	/*---------------------------------Native Variables---------------------------------*/
 
@@ -32,5 +38,13 @@ class DATA
     bool external_led = false;
     // Timer to switch the external_led on/off at 1/2sec.
     unsigned long ext_led_timer = 0;
+    // Digital pin number of the external reset led.
+    int OPERATIONAL_LED = 9;
+    // Digital pin number of the external receive led.
+    int RECEIVE_LED = 6;
+    // Digital pin number of the external send led.
+    int SEND_LED = 10;
+    // Error led.
+    const byte ERROR_LED = 13;
 };
 #endif
