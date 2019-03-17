@@ -93,7 +93,7 @@ float RADIO::get_radio_payload_speed(char buf[])
  */
 float RADIO::get_radio_recovery_latitude(char buf[])
 {
-    return (Data.Parse(buf, 9));
+    return (Data.Parse(buf, 9)) / 10000.0;
 }
 
 
@@ -102,7 +102,7 @@ float RADIO::get_radio_recovery_latitude(char buf[])
  */
 float RADIO::get_radio_recovery_longitude(char buf[])
 {
-    return (Data.Parse(buf, 10));
+    return (Data.Parse(buf, 10)) / 10000.0;
 }
 
 
@@ -210,9 +210,9 @@ void RADIO::broadcast()
     temp += ",";
     temp += recovery_ts;
     temp += ",";
-    temp += Gps.recovery_latitude;
+    temp += Gps.recovery_latitude * 10000;
     temp += ",";
-    temp += Gps.recovery_longitude;
+    temp += Gps.recovery_longitude * 10000;
     temp += ",";
     temp += Data.node_reset;
     temp += ",";
