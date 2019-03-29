@@ -20,7 +20,6 @@ class MC_Tab():
 	def __init__(self, mc_frame):
 		"""
 		Initialization function for the class.
-
 		@param self     - Instance of the class.
 		@param mc_frame - Where this class will place its widgets.
 		"""
@@ -66,7 +65,6 @@ class MC_Tab():
 	def variable_setup(self):
 		"""
 		Initializes classe variables to proper types and starting values.
-
 		@param self - Instance of the class.
 		"""
 
@@ -126,7 +124,6 @@ class MC_Tab():
 	def create_entry_objects(self):
 		"""
 		Creates/configures entry objects.
-
 		@param self - Instance of the class.
 		"""
 
@@ -155,7 +152,6 @@ class MC_Tab():
 	def create_button_objects(self):
 		"""
 		Creates/configures button objects.
-
 		@param self - Instance of the class.
 		"""
 
@@ -166,7 +162,6 @@ class MC_Tab():
 	def create_label_objects(self):
 		"""
 		Creates/configures Label objects.
-
 		@param self - Instance of the class.
 		"""
 
@@ -184,7 +179,6 @@ class MC_Tab():
 		"""
 		Binds the sections of widgets related to the network to the top
 		portion of the frame.
-
 		@param self - Instance of the class.
 		"""
 
@@ -219,7 +213,6 @@ class MC_Tab():
 		"""
 		Binds the sections of widgets related to the payload to the middle
 		portion of the frame.
-
 		@param self - Instance of the class.
 		"""
 
@@ -261,7 +254,6 @@ class MC_Tab():
 		"""
 		Binds the sections of widgets related to mission_control to the bottom
 		portion of the frame.
-
 		@param self - Instance of the class.
 		"""
 
@@ -273,7 +265,6 @@ class MC_Tab():
 	def populate_mc_tab(self):
 		"""
 		Fills the frame with widgets needed for the mission control interface.
-
 		@param self - Instance of the class.
 		"""
 
@@ -299,7 +290,6 @@ class MC_Tab():
 		Green = Connected.
 		Yellow = Was, but lost.
 		Red = Not connected / lost.
-
 		@param self - Instance of the class.
 		"""
 
@@ -320,7 +310,6 @@ class MC_Tab():
 		Green = Connected.
 		Yellow = Was, but lost.
 		Red = Not connected / lost.
-
 		@param self - Instance of the class.
 		"""
 
@@ -341,7 +330,6 @@ class MC_Tab():
 		Green = Connected.
 		Yellow = Was, but lost.
 		Red = Not connected / lost.
-
 		@param self - Instance of the class.
 		"""
 
@@ -359,7 +347,6 @@ class MC_Tab():
 		Method is run each time the connected microcontrollers send serial data to the gui.
 		This method is triggered via a .trace() on the StringVar object .input which
 		can be found near the bottom of the communication.py file.
-
 		@param self - Instance of the class.
 		@param *args - Any other random system varaible that gets passed in.
 		"""
@@ -497,7 +484,6 @@ class MC_Tab():
 		"""
 		Updates GUI's variables holding information about the last received
 		payload packet.
-
 		@param self  - Instance of the class.
 		@param *args - The RSSI of the last received packet.
 		"""
@@ -522,7 +508,6 @@ class MC_Tab():
 		Increments the payload node's last contact variable each second.
 		This timer is resynced each time a packet from the payload
 		is received.
-
 		@param self  - Instance of the class.
 		"""
 
@@ -539,7 +524,6 @@ class MC_Tab():
 		"""
 		Updates GUI's variables holding information about the last received
 		recovery packet.
-
 		@param self  - Instance of the class.
 		@param *args - The RSSI of the last received packet.
 		"""
@@ -564,7 +548,6 @@ class MC_Tab():
 		Increments the recovery node's last contact variable each second.
 		This timer is resynced each time a packet from the payload
 		is received.
-
 		@param self  - Instance of the class.
 		"""
 
@@ -580,7 +563,6 @@ class MC_Tab():
 	def callback_update_transmission(self, *args):
 		"""
 		Updates the StringVar used to show user changes in the GUI.
-
 		@param self  - Instance of the class.
 		@param *args - Any other random system varaible that gets passed in.
 		"""
@@ -609,7 +591,6 @@ class MC_Tab():
 	def callback_construct_serial_packet(self):
 		"""
 		Triggered by the press of SEND button next to the display_changed_commands entry.
-
 		@param self		- Instance of the class.
 		"""
 
@@ -631,7 +612,6 @@ class MC_Tab():
 		"""
 		Responsible for taking the variables to be set via serial to the mission
 		control micro controller and converting them to their correct integer value.
-
 		@param self - Instance of the class.
 		"""
 

@@ -28,5 +28,6 @@ payload_class_reference = None
 timer_mission_control_lora = None
 timer_payload_lora = None
 timer_recovery_lora = None
+timer_mission_control_contact_timer = None
 timer_payload_contact_timer = None
 timer_recovery_contact_timer = None

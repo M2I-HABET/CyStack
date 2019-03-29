@@ -143,17 +143,17 @@ def validate_ports(ports):
 			print("Unknown Response: " + str(response))
 
 		# Prints all info related to port (used for debugging).
-		if not passed:
-			print("port:" + str(port))
-			print("com_number: " + com_number)
-			print("port_description: " + port_description)
-			print("ser object: " + str(ser))
-			print("ser.port: " + ser.port)
-			print("ser.baudrate: " + str(ser.baudrate))
-			print("port status: " + str(ser.is_open))
+		#if not passed:
+		#	print("port:" + str(port))
+		#	print("com_number: " + com_number)
+		#	print("port_description: " + port_description)
+		#	print("ser object: " + str(ser))
+		#	print("ser.port: " + ser.port)
+		#	print("ser.baudrate: " + str(ser.baudrate))
+		#	print("port status: " + str(ser.is_open))
 		# Otherwise prints the success message of the port.
-		else:
-			print("Successful setup of: " + str(ser.port))
+		#else:
+		#	print("Successful setup of: " + str(ser.port))
 
 
 def config_scheduler():
@@ -211,7 +211,7 @@ def generic_receive(ser):
 			# Reads in and decodes incoming serial data.
 			message = ser.readline().decode()
 			# Debug message.
-			print("Received from " + str(ser.port) + ". Input: " + message)
+			print("Received from " + str(ser.port) + ". Input: " + "|" + message + "|")
 			# Return data in string datatype.
 			return str(message)
 		# No incoming data.
@@ -348,7 +348,10 @@ class serial_object():
 		self.input = StringVar()
 		# Each time the self.input variable is written to, the callback_update_gui
 		# method will be ran in the mission_control.py file.
-		self.input.trace("w", g.mc_class_reference.callback_update_gui)
+		if name in "mission_control":
+			self.input.trace("w", g.mc_class_reference.callback_update_gui)
+		elif name in "recovery":
+			self.input.trace("w", g.payload_class_reference.callback_update_gui)
 
 	def get_context(self):
 		"""

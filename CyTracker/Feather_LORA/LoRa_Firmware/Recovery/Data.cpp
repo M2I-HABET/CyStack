@@ -101,32 +101,20 @@ void DATA::update_gui()
 	    Data.serial_timer = millis();
 	    // Starts or updates mission control microsecond timer. (Converts to seconds w/ 2 decimal places for easy of use)
 	    Radio.recovery_ts = millis()/1000.0;
+		
+		String local_vars = "";
+		local_vars += Radio.recovery_ts;
+		local_vars += ",";
+		local_vars += Gps.recovery_latitude;
+		local_vars += ",";
+		local_vars += Gps.recovery_longitude;
+
     	// Holds outgoing message.
-		String temp_packet = "";
+      String temp_packet = "";
 		temp_packet += "$";
-		temp_packet += ",";
-  		temp_packet += Radio.payload_ts;
-		temp_packet += ",";
-		temp_packet += Radio.payload_altitude;
-		temp_packet += ",";
-		temp_packet += Radio.payload_latitude * 10000;
-		temp_packet += ",";
-		temp_packet += Radio.payload_longitude * 10000;
-		temp_packet += ",";
-		temp_packet += Radio.payload_event;
-		temp_packet += ",";
-		temp_packet += Radio.payload_speed;
-	    temp_packet += ",";
-	    temp_packet += Radio.node_id;
-	    temp_packet += ",";
-	    temp_packet += Radio.mission_control_ts;
-	    temp_packet += ",";
-	    temp_packet += Radio.recovery_ts;
-	    temp_packet += ",";
-	    temp_packet += Gps.recovery_latitude * 10000;
-	    temp_packet += ",";
-	    temp_packet += Gps.recovery_longitude * 10000;
-		temp_packet += "]";
+		temp_packet += "/";
+		temp_packet += local_vars;
+		temp_packet += "/";
 		temp_packet += Radio.radio_input;
 		temp_packet += "/";
 		temp_packet += Radio.radio_output;
