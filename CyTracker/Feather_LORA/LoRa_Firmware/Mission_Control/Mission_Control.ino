@@ -97,6 +97,10 @@ void serial_input()
             // Blinks LED (on the LoRa) to show communication setup was established.
             blink_led_long();
         }
+        if(toParse[3] == 'L' && Data.gui_connection == true)
+        {
+            
+        }
     }
 }
 

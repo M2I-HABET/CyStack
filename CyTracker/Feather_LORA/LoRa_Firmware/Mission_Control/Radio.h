@@ -36,6 +36,8 @@ class RADIO
     void initialize();
     // Passively watches for incoming radio transmissions from Mission Control and other crafts.
     void manager();
+    // Constructs a normal netowrk packet.
+    String construct_network_packet();
     // Sends the desired signal out over the radio antenna.
     void broadcast();
     // Receives incoming transmission.

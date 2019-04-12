@@ -175,16 +175,28 @@ void RADIO::manager()
     {
 		// Resets the counter. This disables broadcasting again until 10 seconds has passed.
 		broadcast_timer = millis();
-		// Sends the transmission via radio.
-		broadcast();
+        // Checks for mission_control's launch command.
+        if(platform_launch == true)
+        {
+            // Sends the balloon release packet to the platform node.
+            String packet = "$,L,$";
+            broadcast(packet);
+        }
+        // Normal network operation.
+        else
+        {
+            // Sends normal variables.
+            String packet = construct_network_packet();
+            broadcast(packet);
+        }
     }
 }
 
 
 /**
- * Creates an array to be sent out via Radio. Fills that array with correct values and returns it.
+ * Constructs the normal network packet.
  */
-void RADIO::broadcast()
+String RADIO::construct_network_packet()
 {
     // Updates the time object to hold the most current operation time.
     mission_control_ts = millis()/1000.0;
@@ -221,11 +233,20 @@ void RADIO::broadcast()
     radio_output = "";
     // Copy contents.
     radio_output = temp;
+    return temp;
+}
+
+
+/**
+ * Creates an array to be sent out via Radio. Fills that array with correct values and returns it.
+ */
+void RADIO::broadcast(String packet)
+{
     //Serial.print("Out Pkt: ");
     //Serial.println(radio_output);
     // Converts from String to char array.
-    char transmission[temp.length()+1];
-    temp.toCharArray(transmission, temp.length()+1);
+    char transmission[packet.length()+1];
+    temp.toCharArray(transmission, packet.length()+1);
     // Sends message passed in as paramter via antenna.
     rf95.send(transmission, sizeof(transmission));
     // Pauses all operations until the micro controll has guaranteed the transmission of the

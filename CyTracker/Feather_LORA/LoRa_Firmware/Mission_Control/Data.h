@@ -39,6 +39,9 @@ class DATA
     // Turns true after # seconds of running. Used to tell if the system started 
     // up correctly.
     bool system_boot_complete = false;
+    // When true, this will trigger the special "release" packet to be sent to the
+    // platform node.
+    bool platform_launch = false;
 };
 
 #endif

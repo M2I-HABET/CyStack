@@ -31,6 +31,8 @@ class MC_Tab():
 		self.node_mission_control = None
 		self.node_payload = None
 		self.node_recovery = None
+		self.node_platform = None
+		self.release_status = None
 		self.radio_received = None
 		self.radio_sent = None
 		self.radio_payload_rssi = None
@@ -58,9 +60,6 @@ class MC_Tab():
 		self.recovery_latitude = None
 		self.recovery_longitude = None
 
-		# GUI variables.
-		self.display_changed_commands = None
-
 
 	def variable_setup(self):
 		"""
@@ -77,6 +76,8 @@ class MC_Tab():
 		self.node_mission_control = StringVar(self.mc_frame)
 		self.node_payload = StringVar(self.mc_frame)
 		self.node_recovery = StringVar(self.mc_frame)
+		self.node_platform = StringVar(self.mc_frame)
+		self.release_status = StringVar(self.mc_frame)
 		self.radio_received = StringVar(self.mc_frame)
 		self.radio_sent = StringVar(self.mc_frame)
 		self.radio_payload_rssi = StringVar(self.mc_frame)
@@ -91,13 +92,14 @@ class MC_Tab():
 		self.payload_longitude = StringVar(self.mc_frame)
 		self.payload_event = StringVar(self.mc_frame)
 		self.payload_speed = StringVar(self.mc_frame)
-		self.display_changed_commands = StringVar(self.mc_frame)
 
 		# Configures tracing for all variables. When these variables are written to,
 		# the corresponding method will run. (Allows for real time display updating)
 		self.node_mission_control.trace("w", self.callback_update_mission_control_node_status)
 		self.node_payload.trace("w", self.callback_update_payload_node_status)
 		self.node_recovery.trace("w", self.callback_update_recovery_node_status)
+		self.node_platform.trace("w", self.callback_update_platform_node_status)
+		self.release_status.trace("w", self.callback_update_release_status)
 
 		# Initialization of varaible values on GUI startup.
 		self.radio_received.set("-------")
@@ -118,7 +120,6 @@ class MC_Tab():
 		self.recovery_time.set("-------")
 		self.recovery_latitude.set("-------")
 		self.recovery_longitude.set("-------")
-		self.display_changed_commands.set("")
 
 
 	def create_entry_objects(self):
@@ -145,7 +146,6 @@ class MC_Tab():
 		self.entry_recovery_time = Entry(self.mc_frame, state="readonly", textvariable=self.recovery_time, justify='right', font='Helvtica 11')
 		self.entry_recovery_latitude = Entry(self.mc_frame, state="readonly", textvariable=self.recovery_latitude, justify='right', font='Helvtica 11')
 		self.entry_recovery_longitude = Entry(self.mc_frame, state="readonly", textvariable=self.recovery_longitude, justify='right', font='Helvtica 11')
-		self.entry_display_changed_commands = Entry(self.mc_frame, state="readonly", justify='right', textvariable=self.display_changed_commands, font='Helvtica 11')
 		self.entry_radio_last_received_node = Entry(self.mc_frame, state="readonly", justify='center', textvariable=self.radio_last_received_node, font='Helvetica 18 bold')
 
 
@@ -156,7 +156,7 @@ class MC_Tab():
 		"""
 
 		# Creates button widgets. (Triggers specified callback method.)
-		self.button_construct_serial_packet = Button(self.mc_frame, text="Send", command=self.callback_construct_serial_packet)
+		self.button_platform_launch = Button(self.mc_frame, text="Release\nBalloon", command=self.callback_release_balloon)
 
 
 	def create_label_objects(self):
@@ -173,6 +173,10 @@ class MC_Tab():
 		self.label_payload_node.configure(background='red')
 		self.label_recovery_node = Label(self.mc_frame,  text="RECOVERY", relief='solid', anchor="center")
 		self.label_recovery_node.configure(background='red')
+		self.label_platform_node = Label(self.mc_frame,  text="PLATFORM", relief='solid', anchor="center")
+		self.label_platform_node.configure(background='red')
+		self.label_release_status = Label(self.mc_frame, relief='solid', anchor="center")
+		self.label_release_status.configure(background='red', text="Pre-Launch")
 
 
 	def layout_network(self):
@@ -187,6 +191,7 @@ class MC_Tab():
 		self.label_mission_control_node.grid(row=0, column=3, sticky='nswe')
 		self.label_payload_node.grid(row=1, column=3, sticky='nswe')
 		self.label_recovery_node.grid(row=0, column=4, sticky='nswe')
+		self.label_platform_node.grid(row=1, column=4, sticky='nswe')
 		self.create_label_east(0, 5, self.mc_frame, "Received:")
 		self.entry_radio_received.grid(row=0, column=6, columnspan=14, sticky='we')
 		self.create_label_east(1, 5, self.mc_frame, "Sent:")
@@ -250,7 +255,7 @@ class MC_Tab():
 		terminal_divider_two.grid(row=13, column=0, columnspan=20, sticky='we')
 
 
-	def layout_updated_commands(self):
+	def layout_mission_status(self):
 		"""
 		Binds the sections of widgets related to mission_control to the bottom
 		portion of the frame.
@@ -258,8 +263,8 @@ class MC_Tab():
 		"""
 
 		# Below final divider.
-		self.entry_display_changed_commands.grid(row=22, column=2, columnspan=6, sticky='we')
-		self.button_construct_serial_packet.grid(row=22, column=8)
+		self.button_platform_launch.grid(row=14, column=9, sticky='nswe')
+		self.label_release_status.grid(row=14, column=10, sticky='nswe')
 
 
 	def populate_mc_tab(self):
@@ -277,7 +282,7 @@ class MC_Tab():
 		# Aligns the widgets to the frame's grid.
 		self.layout_network()
 		self.layout_nodes()
-		self.layout_updated_commands()
+		self.layout_mission_status()
 		# Update class instance stored as global.
 		g.mc_class_reference = self
 
@@ -340,6 +345,46 @@ class MC_Tab():
 			self.label_recovery_node.configure(background='green')
 		elif self.node_recovery.get() in "2.00":
 			self.label_recovery_node.configure(background='yellow')
+
+
+	def callback_update_platform_node_status(self, *args):
+		"""
+		Upon serial data notification that the platform_node's network status has been
+		updated, this method will change the color of the visual representation on
+		the gui to inform the user.
+		Green = Connected.
+		Yellow = Was, but lost.
+		Red = Not connected / lost.
+		@param self - Instance of the class.
+		"""
+
+		# Refer to above documentation for what the numbers mean.
+		if self.node_platform.get() in "0.00":
+			self.label_platform_node.configure(background='red')
+		elif self.node_platform.get() in "1.00":
+			self.label_platform_node.configure(background='green')
+		elif self.node_platform.get() in "2.00":
+			self.label_platform_node.configure(background='yellow')
+
+
+	def callback_update_release_status(self, *args):
+		"""
+		Upon serial data notification that the release status has been
+		updated, this method will change the color of the visual representation on
+		the gui to inform the user.
+		Green = Connected.
+		Yellow = Was, but lost.
+		Red = Not connected / lost.
+		@param self - Instance of the class.
+		"""
+
+		# Refer to above documentation for what the numbers mean.
+		if self.release_status.get() in "0.00":
+			self.label_release_status.configure(background='red', text="Pre-Launch")
+		elif self.release_status.get() in "1.00":
+			self.label_release_status.configure(background='yellow', text="Standby..")
+		elif self.release_status.get() in "2.00":
+			self.label_release_status.configure(background='green', text="Released\nConfirmed")
 
 
 	def callback_update_gui(self, *args):
@@ -560,35 +605,7 @@ class MC_Tab():
 		self.radio_recovery_last_contact.set(str(int(self.radio_recovery_last_contact.get()) + 1))
 
 
-	def callback_update_transmission(self, *args):
-		"""
-		Updates the StringVar used to show user changes in the GUI.
-		@param self  - Instance of the class.
-		@param *args - Any other random system varaible that gets passed in.
-		"""
-
-		temp_packet = ""
-
-		try:
-			temp_packet += "$"
-			temp_packet += ","
-			# temp_packet += // Release payload flag.
-			temp_packet += ","
-			temp_packet += "$"
-
-			# Displays the changed commands that would be sent to the mission control
-			# lora if the user were to press send.
-			self.display_changed_commands.set(temp_packet)
-
-		# Prints exeception status.
-		except Exception as e:
-			# Prints general error statement. (Used to tell which method errored out)
-			print("Unable to change packet type.")
-			# Prints actual error.
-			print("Exception: " + str(e))
-
-
-	def callback_construct_serial_packet(self):
+	def callback_release_balloon(self):
 		"""
 		Triggered by the press of SEND button next to the display_changed_commands entry.
 		@param self		- Instance of the class.
@@ -597,10 +614,11 @@ class MC_Tab():
 		try:
 			# Checks for non-null connection to mission control's lora microcontroller.
 			if g.PORT_MISSION_CONTROL_LORA is not None:
-				# Converts substring into each's corresponding integer value.
-				converted_transmission = self.convert_serial()
+				# Manual creation of a serial packet to send to the mission control microcontroller.
+				injection_packet = self.create_injection_packet("L")
 				# If non-null, send transmission via serial port.
-				send(g.PORT_MISSION_CONTROL_LORA.get_port(), converted_transmission)
+				send(g.PORT_MISSION_CONTROL_LORA.get_port(), injection_packet)
+				self.release_status.set("1")
 		# Null connection.
 		except Exception as e:
 			# Prints general error statement. (Used to tell which method errored out)
@@ -608,11 +626,11 @@ class MC_Tab():
 			print("Exception: " + str(e))
 
 
-	def convert_serial(self):
+	def create_injection_packet(self, to_be_sent):
 		"""
-		Responsible for taking the variables to be set via serial to the mission
-		control micro controller and converting them to their correct integer value.
+		Creates a manually specified packet to be sent to the connected LoRa node.
 		@param self - Instance of the class.
+		@param to_be_sent - Info to be sent to the connected microcontroller.
 		"""
 
 		new_packet = ""
@@ -620,7 +638,7 @@ class MC_Tab():
 		try:
 			new_packet += "$"
 			new_packet += ","
-			# temp_packet += // Release payload flag.
+			new_packet += str(to_be_sent)
 			new_packet += ","
 			new_packet += "$"
 			# Returns new packet.
@@ -629,7 +647,7 @@ class MC_Tab():
 		# Prints exception handler.
 		except Exception as e:
 			# Prints general error statement. (Used to tell which method errored out)
-			print("Unable to convert commands.")
+			print("Unable to create packet.")
 			print("Exception: " + str(e))
 
 
