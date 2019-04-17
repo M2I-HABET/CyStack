@@ -130,7 +130,7 @@ void RADIO::initialize()
 {
 	// Assigns pin 13 to have an output power connection to the LoRa's onboard LED.
 	pinMode(LED, OUTPUT);
-	// Assigns pin 4 to have an output singal connection to the LoRa's radio port.
+	// Assigns pin to have an output singal connection to the LoRa's radio port.
 	pinMode(RFM95_RST, OUTPUT);
 	// Sends a high signal to the radio port for intialization.
 	digitalWrite(RFM95_RST, HIGH);
@@ -175,18 +175,19 @@ void RADIO::manager()
     {
 		// Resets the counter. This disables broadcasting again until 10 seconds has passed.
 		broadcast_timer = millis();
+    String packet = "";
         // Checks for mission_control's launch command.
-        if(platform_launch == true)
+        if(false)
         {
             // Sends the balloon release packet to the platform node.
-            String packet = "$,L,$";
+            packet = "$,L,$";
             broadcast(packet);
         }
         // Normal network operation.
         else
         {
             // Sends normal variables.
-            String packet = construct_network_packet();
+            packet = construct_network_packet();
             broadcast(packet);
         }
     }
@@ -246,9 +247,9 @@ void RADIO::broadcast(String packet)
     //Serial.println(radio_output);
     // Converts from String to char array.
     char transmission[packet.length()+1];
-    temp.toCharArray(transmission, packet.length()+1);
+    packet.toCharArray(transmission, packet.length()+1);
     // Sends message passed in as paramter via antenna.
-    rf95.send(transmission, sizeof(transmission));
+    rf95.send((const uint8_t*)transmission, sizeof(transmission));
     // Pauses all operations until the micro controll has guaranteed the transmission of the
     // signal.
     rf95.waitPacketSent();
@@ -271,7 +272,7 @@ void RADIO::radio_receive()
         if(rf95.recv(buf, &len))
         {
             // Used to display the received data in the GUI.
-            radio_input = buf;
+            radio_input = (char*)buf;
             blink_led();
             // Conversion from uint8_t to string. The purpose of this is to be able to convert to an
             // unsigned char array for parsing.

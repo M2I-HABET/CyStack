@@ -177,18 +177,19 @@ void RADIO::manager()
         // Resets the counter. This disables broadcasting again until 10 seconds has passed.
         broadcast_timer = millis();
         // Sends the transmission via radio.
-        broadcast();
+        String packet = construct_network_packet();
+        broadcast(packet);
     }
 }
 
 
 /**
- * Creates an array to be sent out via Radio. Fills that array with correct values and returns it.
+ * Constructs the normal network packet.
  */
-void RADIO::broadcast()
+String RADIO::construct_network_packet()
 {
     // Updates the time object to hold the most current operation time.
-    recovery_ts = millis()/1000.0;
+    mission_control_ts = millis()/1000.0;
     // Casting all float values to a character array with commas saved in between values
     // so the character array can be parsed when received by another craft.
     String temp = "";
@@ -219,16 +220,24 @@ void RADIO::broadcast()
     temp += node_id;
     temp += ",";
     temp += "$";
-    radio_output = "";
     // Copy contents.
     radio_output = temp;
+    return temp;
+}
+
+
+/**
+ * Creates an array to be sent out via Radio. Fills that array with correct values and returns it.
+ */
+void RADIO::broadcast(String packet)
+{
     //Serial.print("Out Pkt: ");
     //Serial.println(radio_output);
     // Converts from String to char array.
-    char transmission[temp.length()+1];
-    temp.toCharArray(transmission, temp.length()+1);
+    char transmission[packet.length()+1];
+    packet.toCharArray(transmission, packet.length()+1);
     // Sends message passed in as paramter via antenna.
-    rf95.send(transmission, sizeof(transmission));
+    rf95.send((const uint8_t*)transmission, sizeof(transmission));
     // Pauses all operations until the micro controll has guaranteed the transmission of the
     // signal.
     rf95.waitPacketSent();
@@ -251,7 +260,7 @@ void RADIO::radio_receive()
         if(rf95.recv(buf, &len))
         {
             // Used to display the received data in the GUI.
-            radio_input = buf;
+            radio_input = (char*)buf;
             blink_led();
             // Conversion from uint8_t to string. The purpose of this is to be able to convert to an
             // unsigned char array for parsing.

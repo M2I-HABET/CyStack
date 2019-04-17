@@ -39,7 +39,7 @@ class RADIO
     // Constructs a normal netowrk packet.
     String construct_network_packet();
     // Sends the desired signal out over the radio antenna.
-    void broadcast();
+    void broadcast(String packet);
     // Receives incoming transmission.
     void radio_receive();
     // Checks if packet is valid or invalid. Error detection.
@@ -50,7 +50,9 @@ class RADIO
     /*---------------------------------Variables---------------------------------*/
 
     // Reset pin onboard the radio.
-    const byte RFM95_RST = 4;
+    const byte RFM95_RST = 11;
+    const byte RFM95_INT = 6;
+    const byte RFM95_CS = 10;
     // Pins used to blink an LED to signal receival packet.
     const byte LED = 13;
     // Radio frequency used throught the Eagle Eye Program. CHECK WITH HABET BEFORE EACH FLIGHT!!!!!

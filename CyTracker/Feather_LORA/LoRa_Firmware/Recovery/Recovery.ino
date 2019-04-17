@@ -17,7 +17,7 @@ RADIO Radio;
 GPS Gps;
 
 //Directs the radio object to focus on two specific ports.
-RH_RF95 rf95(8,7);
+RH_RF95 rf95(Radio.RFM95_CS, Radio.RFM95_INT);
 // Creates an instance of the gps class from TinyGPSPlus.
 TinyGPSPlus gps;
 
@@ -117,13 +117,3 @@ void blink_led_long()
     // OFF
     digitalWrite(13, LOW);
 }
-
-
-
-
-
-
-
-
-
-
