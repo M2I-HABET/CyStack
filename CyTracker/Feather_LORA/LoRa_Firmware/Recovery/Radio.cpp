@@ -189,7 +189,7 @@ void RADIO::manager()
 String RADIO::construct_network_packet()
 {
     // Updates the time object to hold the most current operation time.
-    mission_control_ts = millis()/1000.0;
+    recovery_ts = millis()/1000.0;
     // Casting all float values to a character array with commas saved in between values
     // so the character array can be parsed when received by another craft.
     String temp = "";
@@ -220,7 +220,8 @@ String RADIO::construct_network_packet()
     temp += node_id;
     temp += ",";
     temp += "$";
-    // Copy contents.
+    radio_output = "";
+    // Copy of packet so GUI knows what is being sent.
     radio_output = temp;
     return temp;
 }
