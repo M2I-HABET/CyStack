@@ -375,8 +375,8 @@ class MC_Tab():
 				print("RSSI: " + str(received_rssi) +"\n")
 				# SD Card.
 				self.log_file = open('mc_data.txt','a') 
-				self.log_file.write("---------------------------------------------------------------------------------------------")
-				self.log_file.write("Input: " + str(temp_input))
+				self.log_file.write("---------------------------------------------------------------------------------------------" +"\n")
+				self.log_file.write("Input: " + str(temp_input) +"\n")
 				self.log_file.write("Local: " + str(local_vars) +"\n")
 				self.log_file.write("Pkt Received: " + str(radio_in) +"\n")
 				self.log_file.write("Pkt Sent: " + str(radio_out) +"\n")
