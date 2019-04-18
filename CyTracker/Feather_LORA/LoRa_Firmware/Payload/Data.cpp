@@ -28,7 +28,7 @@ DATA::DATA()
 void DATA::initialize()
 {
     // Check for valid connection to SD card.
-    if(SD.begin(SD_CS))
+    if(!SD.begin(SD_CS))
     {
         // Invalid connection.
         while(1)
@@ -36,11 +36,6 @@ void DATA::initialize()
             blink_error_led(); 
         }
     }
-    // Configure LEDs.
-    pinMode(OPERATIONAL_LED, OUTPUT);
-    pinMode(ERROR_LED, OUTPUT);
-    pinMode(RECEIVE_LED, OUTPUT);
-    digitalWrite(ERROR_LED, LOW);
 }
 
 
@@ -49,12 +44,8 @@ void DATA::initialize()
  */
 void DATA::manager()
 {
-    // Monitors for a powercycle.
-    system_boot();
-    // Turns OPERATIONAL_LED led on/off.
-    system_led();
     // Stores data to sd card.
-    log_data();
+    // log_data();
 }
 
 
@@ -122,62 +113,24 @@ float DATA::Parse(char message[], int objective)
 
 
 /**
- * Flag management during and after boot process.
- */
-void DATA::system_boot()
-{
-    // For the first # seconds of boot.
-    if((millis() - startup_timer >= 3000) && !system_boot_complete)
-    {
-        // System has now been operating for # seconds.
-        node_reset = 0;
-        // Adjust flag.
-        system_boot_complete = true;
-    }
-}
-
-
-/**
- * Non-blocking alternating timer to turn the OPERATIONAL_LED on/off at intervals of 1/2 second.
- */
-void DATA::system_led()
-{
-    if(millis() - ext_led_timer >= 300)
-    {
-        ext_led_timer = millis();
-        // Turns external LED off.
-        if(external_led)
-        {
-            external_led = false;
-            digitalWrite(OPERATIONAL_LED, LOW);
-        }
-        // Turns external LED on.
-        else
-        {
-            external_led = true;
-            digitalWrite(OPERATIONAL_LED, HIGH);
-        }
-    }
-}
-
-
-/**
  * 
  */
 void DATA::log_data()
 {
   if(millis() - sd_timer > 1000)
   {
-    sd_card = SD.open("Payload_Data", FILE_WRITE);
     sd_timer = millis();
+    // Open & Save.
+    File sd_card;
+    sd_card = SD.open("Payload_Data", FILE_WRITE);
     if(sd_card)
     {
       sd_card.print("Radio In: ");
       sd_card.println(Radio.radio_input);
       sd_card.print("Radio Out: ");
       sd_card.println(Radio.radio_output);
-      sd_card.close();
     }
+    sd_card.close();
   }
 }
 

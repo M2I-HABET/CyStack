@@ -18,10 +18,6 @@ class DATA
     void initialize();
     // Manages the bootup process and status leds.
     void manager();
-    // Oversees the bootup process.
-    void system_boot();
-    // Changes status leds.
-    void system_led();
     // Log the data to the sd card.
     void log_data();
     // Parses passed in message by using commas as the identifiers.
@@ -60,6 +56,5 @@ class DATA
     const byte ERROR_LED = 13;
     // SD CARD.
     const byte SD_CS = 4;
-    File sd_card;
 };
 #endif

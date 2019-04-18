@@ -35,7 +35,12 @@ void setup()
     Data.node_reset = 1;
     Data.system_boot_complete = false;
     // Configures LEDs and the sd card.
-    Data.initialize();
+    // Data.initialize();
+    // Configure LEDs.
+    pinMode(Data.OPERATIONAL_LED, OUTPUT);
+    pinMode(Data.ERROR_LED, OUTPUT);
+    pinMode(Data.RECEIVE_LED, OUTPUT);
+    digitalWrite(Data.ERROR_LED, LOW);
 }
 
 
@@ -44,7 +49,10 @@ void setup()
  */
 void loop()
 {
-    Serial.println("hello");
+    // Monitors for a powercycle.
+    system_boot();
+    // Turns OPERATIONAL_LED led on/off.
+    system_led();
     // Reads in a new NMEA sentence.
     Gps.manager();
     // Responsible for all network operations. Includes variable 
@@ -53,4 +61,44 @@ void loop()
     Radio.manager();
     // Responsible for the health of the system and logging data.
     Data.manager();
+}
+
+
+/**
+ * Flag management during and after boot process.
+ */
+void system_boot()
+{
+    // For the first # seconds of boot.
+    if((millis() - Data.startup_timer >= 3000) && !Data.system_boot_complete)
+    {
+        // System has now been operating for # seconds.
+        Data.node_reset = 0;
+        // Adjust flag.
+        Data.system_boot_complete = true;
+    }
+}
+
+
+/**
+ * Non-blocking alternating timer to turn the OPERATIONAL_LED on/off at intervals of 1/2 second.
+ */
+void system_led()
+{
+    if(millis() - Data.ext_led_timer >= 300)
+    {
+        Data.ext_led_timer = millis();
+        // Turns external LED off.
+        if(Data.external_led)
+        {
+            Data.external_led = false;
+            digitalWrite(Data.OPERATIONAL_LED, LOW);
+        }
+        // Turns external LED on.
+        else
+        {
+            Data.external_led = true;
+            digitalWrite(Data.OPERATIONAL_LED, HIGH);
+        }
+    }
 }
