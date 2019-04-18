@@ -131,7 +131,7 @@ void RADIO::initialize()
 {
 	// Assigns pin 13 to have an output power connection to the LoRa's onboard LED.
 	pinMode(LED, OUTPUT);
-	// Assigns pin 4 to have an output singal connection to the LoRa's radio port.
+	// Assigns pin to have an output singal connection to the LoRa's radio port.
 	pinMode(RFM95_RST, OUTPUT);
 	// Sends a high signal to the radio port for intialization.
 	digitalWrite(RFM95_RST, HIGH);
@@ -232,8 +232,6 @@ String RADIO::construct_network_packet()
  */
 void RADIO::broadcast(String packet)
 {
-    //Serial.print("Out Pkt: ");
-    //Serial.println(radio_output);
     // Converts from String to char array.
     char transmission[packet.length()+1];
     packet.toCharArray(transmission, packet.length()+1);

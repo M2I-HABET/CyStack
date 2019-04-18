@@ -102,10 +102,10 @@ void DATA::blink_receive_led()
 void DATA::blink_send_led()
 {
     // ON
-    digitalWrite(SEND_LED, HIGH);
+    analogWrite(SEND_LED, HIGH);
     delay(100);
     // OFF
-    digitalWrite(SEND_LED, LOW);
+    analogWrite(SEND_LED, LOW);
 }
 
 

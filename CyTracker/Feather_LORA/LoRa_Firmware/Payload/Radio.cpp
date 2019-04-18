@@ -127,7 +127,7 @@ float RADIO::get_radio_node_id(char buf[])
  */
 void RADIO::initialize()
 {
-    // Assigns pin 4 to have an output singal connection to the LoRa's radio port.
+    // Assigns pin to have an output singal connection to the LoRa's radio port.
     pinMode(RFM95_RST, OUTPUT);
     // Sends a high signal to the radio port for intialization.
     digitalWrite(RFM95_RST, HIGH);
@@ -165,25 +165,26 @@ void RADIO::initialize()
  */
 void RADIO::manager()
 {
-	// Reads in radio transmission if available.
-	radio_receive();
-	// Each of the crafts have # seconds to broadcast.
-	if(millis() - broadcast_timer > network_node_delay)
-    {
-		// Resets the counter. This disables broadcasting again until # seconds have passed.
-        broadcast_timer = millis();
-		// Sends the transmission via radio.
-		broadcast();
-	}
+  // Reads in radio transmission if available.
+  radio_receive();
+  // Each of the crafts have # seconds to broadcast.
+  if(millis() - broadcast_timer > network_node_delay)
+  {
+  	// Resets the counter. This disables broadcasting again until # seconds have passed.
+    broadcast_timer = millis();
+    String packet = construct_network_packet();
+  	// Sends the transmission via radio.
+  	broadcast(packet);
+  }
 }
 
 
 /**
- * Responsible for sending out messages via the radio antenna.
+ * Constructs the normal network packet.
  */
-void RADIO::broadcast()
+String RADIO::construct_network_packet()
 {
-    // Updates the time object to hold the most current operation time.
+  // Updates the time object to hold the most current operation time.
     payload_ts = millis()/1000.0;
     // Casting all float values to a character array with commas saved in between values
     // so the character array can be parsed when received by another craft.
@@ -218,15 +219,26 @@ void RADIO::broadcast()
     radio_output = "";
     // Copy contents.
     radio_output = temp;
+    Serial.print("Radio Out: ");
+    Serial.println(radio_output);
+    return temp;
+}
+
+
+/**
+ * Responsible for sending out messages via the radio antenna.
+ */
+void RADIO::broadcast(String packet)
+{
     // Converts from String to char array.
-    char transmission[temp.length()+1];
-    temp.toCharArray(transmission, temp.length()+1);
+    char transmission[packet.length()+1];
+    packet.toCharArray(transmission, packet.length()+1);
     // Sends message passed in as paramter via antenna.
-    rf95.send(transmission, sizeof(transmission));
-    Data.blink_send_led();
+    rf95.send((const uint8_t*)transmission, sizeof(transmission));
     // Pauses all operations until the micro controll has guaranteed the transmission of the
     // signal.
     rf95.waitPacketSent();
+    Data.blink_send_led();
 }
 
 
@@ -246,7 +258,7 @@ void RADIO::radio_receive()
         if(rf95.recv(buf, &len))
         {
             // Used to display the received data in the GUI.
-            radio_input = buf;
+            radio_input = (char*)buf;
             Data.blink_receive_led();
             // Conversion from uint8_t to string. The purpose of this is to be able to convert to an
             // unsigned char array for parsing.
@@ -254,8 +266,8 @@ void RADIO::radio_receive()
             char to_parse[str.length()];
             str.toCharArray(to_parse,str.length());
             // Debugging to the Serial Monitor.
-            //Serial.print("Radio In: ");
-            //Serial.println(radio_input);
+            Serial.print("Radio In: ");
+            Serial.println(radio_input);
 
             // Checks for a valid packet. Only parses contents if valid to prevent
             // data corruption.

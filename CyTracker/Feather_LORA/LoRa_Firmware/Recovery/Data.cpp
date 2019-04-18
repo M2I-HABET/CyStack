@@ -109,8 +109,8 @@ void DATA::update_gui()
 		local_vars += ",";
 		local_vars += Gps.recovery_longitude;
 
-    	// Holds outgoing message.
-      String temp_packet = "";
+    // Holds outgoing message.
+    String temp_packet = "";
 		temp_packet += "$";
 		temp_packet += "/";
 		temp_packet += local_vars;

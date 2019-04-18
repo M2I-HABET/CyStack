@@ -16,7 +16,7 @@ GPS Gps;
 RADIO Radio;
 
 // Directs the radio object to focus on two specific ports.
-RH_RF95 rf95(8,7);
+RH_RF95 rf95(Radio.RFM95_CS, Radio.RFM95_INT);
 // Creates an instance of the gps class from TinyGPSPlus.
 TinyGPSPlus gps;
 
@@ -34,11 +34,10 @@ void setup()
     // Bootup has happened. Set flags.
     Data.node_reset = 1;
     Data.system_boot_complete = false;
-    // Sets digital pins to be used as leds.
-    pinMode(Data.SEND_LED, OUTPUT);
-    pinMode(Data.RECEIVE_LED, OUTPUT);
     pinMode(Data.OPERATIONAL_LED, OUTPUT);
     pinMode(Data.ERROR_LED, OUTPUT);
+    pinMode(Data.RECEIVE_LED, OUTPUT);
+    digitalWrite(Data.ERROR_LED, LOW);
 }
 
 
