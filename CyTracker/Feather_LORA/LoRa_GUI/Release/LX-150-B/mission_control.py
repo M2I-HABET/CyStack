@@ -367,8 +367,8 @@ class MC_Tab():
 				self.radio_sent.set(radio_out)
 				self.radio_received.set(radio_in)
 				# Terminal printing.
-				print("---------------------------------------------------------------------------------------------")
-				print("Input: " + str(temp_input))
+				print("---------------------------------------------------------------------------------------------" +"\n")
+				print("Input: " + str(temp_input) +"\n")
 				print("Local: " + str(local_vars) +"\n")
 				print("Pkt Received: " + str(radio_in) +"\n")
 				print("Pkt Sent: " + str(radio_out) +"\n")
