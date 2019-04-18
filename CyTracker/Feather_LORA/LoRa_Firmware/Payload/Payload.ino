@@ -44,6 +44,7 @@ void setup()
  */
 void loop()
 {
+    Serial.println("hello");
     // Reads in a new NMEA sentence.
     Gps.manager();
     // Responsible for all network operations. Includes variable 

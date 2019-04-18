@@ -60,8 +60,6 @@ class MC_Tab():
 
 		# GUI variables.
 		self.display_changed_commands = None
-		self.log_file = open(“mc_data.txt”, “w”) 
-		self.log_file.close()
 
 
 	def variable_setup(self):
@@ -376,7 +374,7 @@ class MC_Tab():
 				print("Pkt Sent: " + str(radio_out) +"\n")
 				print("RSSI: " + str(received_rssi) +"\n")
 				# SD Card.
-				self.log_file = open(“mc_data.txt”,”a”) 
+				self.log_file = open('mc_data.txt','a') 
 				self.log_file.write("---------------------------------------------------------------------------------------------")
 				self.log_file.write("Input: " + str(temp_input))
 				self.log_file.write("Local: " + str(local_vars) +"\n")

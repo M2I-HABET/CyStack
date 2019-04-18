@@ -60,6 +60,6 @@ class DATA
     const byte ERROR_LED = 13;
     // SD CARD.
     const byte SD_CS = 4;
-    File sd_card = SD.open("Payload_Data", FILE_WRITE);
+    File sd_card;
 };
 #endif

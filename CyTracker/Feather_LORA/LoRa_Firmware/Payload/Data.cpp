@@ -168,8 +168,9 @@ void DATA::log_data()
 {
   if(millis() - sd_timer > 1000)
   {
+    sd_card = SD.open("Payload_Data", FILE_WRITE);
     sd_timer = millis();
-    if (sd_card)
+    if(sd_card)
     {
       sd_card.print("Radio In: ");
       sd_card.println(Radio.radio_input);
