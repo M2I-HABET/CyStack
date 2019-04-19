@@ -336,7 +336,7 @@ def send_rotor_telemetry(message):
 			# Creates empty serial object.
 			ser = serial.Serial()
 			# Assigns the com port number to the serial object.
-			ser.port = 20
+			ser.port = "COM20"
 			# Assigns the baudrate to communicate with the rotor firmware.
 			ser.baudrate = 9600
 			# Sets the timeout of the serial port to 1 second.
