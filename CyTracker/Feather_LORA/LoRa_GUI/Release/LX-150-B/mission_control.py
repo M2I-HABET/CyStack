@@ -445,7 +445,7 @@ class MC_Tab():
 				self.radio_last_received_node.set("Payload")
 				self.update_payload_rssi(rssi)
 		# Constructs a CSV string to be sent to the rotor.
-		telemetry = str(self.payload_latitude.get()) + "," + str(self.payload_longitude.get()) + "," + str(self.payload_altitude.get())
+		telemetry = str(self.payload_latitude.get()) + "," + str(self.payload_longitude.get()) + "," + str(self.payload_altitude.get() + "\n\r")
 		# Sends data to rotor so it can compute turning angle.
 		send_rotor_telemetry(telemetry)
 
