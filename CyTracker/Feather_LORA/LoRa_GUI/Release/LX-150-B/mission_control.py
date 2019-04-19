@@ -444,6 +444,10 @@ class MC_Tab():
 				# Updates the visual indicatior.
 				self.radio_last_received_node.set("Payload")
 				self.update_payload_rssi(rssi)
+		# Constructs a CSV string to be sent to the rotor.
+		telemetry = str(self.payload_latitude.get()) + "," + str(self.payload_longitude.get()) + "," + str(self.payload_altitude.get())
+		# Sends data to rotor so it can compute turning angle.
+		send_rotor_telemetry(telemetry)
 
 
 	def parse_recovery(self, radio_in, rssi):
