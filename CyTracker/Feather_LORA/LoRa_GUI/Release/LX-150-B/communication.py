@@ -357,7 +357,6 @@ def send_rotor_telemetry(message):
 		# Attempt to send telemetry data to the rotor controller.
 		try:
 			send(g.PORT_ROTOR_CONTROLLER.get_port(), message)
-			print("Sent To Rotor: " + str(message))
 		except Exception as e:
 			# Terminal verbose message to show the exact error that occurred.
 			print("Exception: " + str(e))
