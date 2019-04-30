@@ -10,6 +10,7 @@
 from tkinter import *
 from tkinter.ttk import *
 from communication import *
+from maps import *
 import time
 import threading
 import globals as g
@@ -283,6 +284,7 @@ class MC_Tab():
 		self.layout_network()
 		self.layout_nodes()
 		self.layout_mission_status()
+		generate_map(4,3)
 		# Update class instance stored as global.
 		g.mc_class_reference = self
 
@@ -493,6 +495,9 @@ class MC_Tab():
 		telemetry = str(self.payload_latitude.get()) + "," + str(self.payload_longitude.get()) + "," + str(self.payload_altitude.get() + "\n\r")
 		# Sends data to rotor so it can compute turning angle.
 		send_rotor_telemetry(telemetry)
+		# Pull down an image from google maps, place a marker where the payload is
+		# and place it on the GUI. 
+		generate_map(self.payload_latitude.get(), self.payload_longitude.get())
 
 
 	def parse_recovery(self, radio_in, rssi):
