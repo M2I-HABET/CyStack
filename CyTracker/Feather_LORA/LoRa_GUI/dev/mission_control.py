@@ -418,6 +418,15 @@ class MC_Tab():
 				print("Pkt Received: " + str(radio_in) +"\n")
 				print("Pkt Sent: " + str(radio_out) +"\n")
 				print("RSSI: " + str(received_rssi) +"\n")
+				# SD Card.
+				self.log_file = open('mc_data.txt','a') 
+				self.log_file.write("---------------------------------------------------------------------------------------------" +"\n")
+				self.log_file.write("Input: " + str(temp_input) +"\n")
+				self.log_file.write("Local: " + str(local_vars) +"\n")
+				self.log_file.write("Pkt Received: " + str(radio_in) +"\n")
+				self.log_file.write("Pkt Sent: " + str(radio_out) +"\n")
+				self.log_file.write("RSSI: " + str(received_rssi) +"\n")
+				self.log_file.close()
 
 
 	def parse_mission_control(self, local_vars):
@@ -480,6 +489,10 @@ class MC_Tab():
 				# Updates the visual indicatior.
 				self.radio_last_received_node.set("Payload")
 				self.update_payload_rssi(rssi)
+		# Constructs a CSV string to be sent to the rotor.
+		telemetry = str(self.payload_latitude.get()) + "," + str(self.payload_longitude.get()) + "," + str(self.payload_altitude.get() + "\n\r")
+		# Sends data to rotor so it can compute turning angle.
+		send_rotor_telemetry(telemetry)
 
 
 	def parse_recovery(self, radio_in, rssi):

@@ -11,9 +11,11 @@
 SYSTEM_USER = None
 
 # Serial port objects. Object class defined at bottom of communication.py.
+# If let None, it will dynamically find its correct port #.
 PORT_MISSION_CONTROL_LORA = None
 PORT_PAYLOAD_LORA = None
 PORT_RECOVERY_LORA = None
+PORT_ROTOR_CONTROLLER = None
 
 # Node ID's.
 NODE_MISSION_CONTROL_ID = 0

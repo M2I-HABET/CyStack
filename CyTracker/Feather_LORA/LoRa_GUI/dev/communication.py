@@ -142,19 +142,6 @@ def validate_ports(ports):
 			# Terminal verbose message displaying the unknown microcontroller's reponse.
 			print("Unknown Response: " + str(response))
 
-		# Prints all info related to port (used for debugging).
-		#if not passed:
-		#	print("port:" + str(port))
-		#	print("com_number: " + com_number)
-		#	print("port_description: " + port_description)
-		#	print("ser object: " + str(ser))
-		#	print("ser.port: " + ser.port)
-		#	print("ser.baudrate: " + str(ser.baudrate))
-		#	print("port status: " + str(ser.is_open))
-		# Otherwise prints the success message of the port.
-		#else:
-		#	print("Successful setup of: " + str(ser.port))
-
 
 def config_scheduler():
 	"""
@@ -335,6 +322,46 @@ def send(ser, message):
 		ser.open()
 	# Encode message to bits & send via serial (USB).
 	ser.write(message.encode())
+
+
+def send_rotor_telemetry(message):
+	"""
+	Sends passed in parameter over the serial port.
+
+	@param message - Parameter to be encoded and sent.
+	"""
+
+	if g.PORT_ROTOR_CONTROLLER is None:
+		try:
+			# Creates empty serial object.
+			ser = serial.Serial()
+			# Assigns the com port number to the serial object.
+			ser.port = "COM20"
+			# Assigns the baudrate to communicate with the rotor firmware.
+			ser.baudrate = 9600
+			# Sets the timeout of the serial port to 1 second.
+			ser.timeout = 1
+			# Opens configured serial port
+			ser.open()
+			# Creates a serial object bound to the COM port & global rotor controller object.
+			g.PORT_ROTOR_CONTROLLER = serial_object(ser, "Rotor Controller", "Rotor Controller Interface")
+		# Prints exception handler.
+		except Exception as e:
+			# Terminal verbose message to show the exact error that occurred.
+			print("Exception: " + str(e))
+			# Terminal verbose message displaying the port that failed.
+			print("Invalid connection to: " + str(ser.port))
+	# Connection to the COM port interfacing into the rotor controller firmware has 
+	# previously been established.
+	else:
+		# Attempt to send telemetry data to the rotor controller.
+		try:
+			send(g.PORT_ROTOR_CONTROLLER.get_port(), message)
+		except Exception as e:
+			# Terminal verbose message to show the exact error that occurred.
+			print("Exception: " + str(e))
+			# Terminal verbose message displaying the port that failed.
+			print("Unable to send telemetry data: " + str(g.PORT_ROTOR_CONTROLLER.get_port()))
 
 
 class serial_object():
