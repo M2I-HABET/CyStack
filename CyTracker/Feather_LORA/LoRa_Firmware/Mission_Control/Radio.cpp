@@ -175,7 +175,7 @@ void RADIO::manager()
     {
 		// Resets the counter. This disables broadcasting again until 10 seconds has passed.
 		broadcast_timer = millis();
-    String packet = "";
+        String packet = "";
         // Checks for mission_control's launch command.
         if(false)
         {
