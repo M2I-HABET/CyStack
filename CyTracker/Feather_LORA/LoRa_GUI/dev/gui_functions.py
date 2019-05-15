@@ -99,14 +99,14 @@ class GUI_Terminal():
 		# position buttons and displays around the GUI. Weight of 1 just means no button possess more
 		# "importance" than other buttons. Just don't change the weight.
 		self.mc_frame.columnconfigure((0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19), weight=1)
-		self.mc_frame.rowconfigure((0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22), weight=1)
+		self.mc_frame.rowconfigure((0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30), weight=1)
 
 		# The layout of each frame works as a grid system. The next two lines define how many
 		# rows and columsn exist on the frames. These row/column numbers are used to
 		# position buttons and displays around the GUI. Weight of 1 just means no button possess more
 		# "importance" than other buttons. Just don't change the weight.
 		self.payload_frame.columnconfigure((0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19), weight=1)
-		self.payload_frame.rowconfigure((0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22), weight=1)
+		self.payload_frame.rowconfigure((0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30), weight=1)
 		if g.SYSTEM_USER is "mc":
 			# Adds frames to the GUI terminal.
 			book.add(self.mc_frame, text="Mission Control")

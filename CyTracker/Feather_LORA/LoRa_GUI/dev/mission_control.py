@@ -188,15 +188,17 @@ class MC_Tab():
 		"""
 
 		# Above divider one. (divider at bottom of method)
+		self.button_platform_launch.grid(row=3, column=1, sticky='nse')
+		self.label_release_status.grid(row=3, column=2, sticky='nswe')
 		self.create_label_east(0, 2, self.mc_frame, "Node Status:")
 		self.label_mission_control_node.grid(row=0, column=3, sticky='nswe')
 		self.label_payload_node.grid(row=1, column=3, sticky='nswe')
 		self.label_recovery_node.grid(row=0, column=4, sticky='nswe')
 		self.label_platform_node.grid(row=1, column=4, sticky='nswe')
 		self.create_label_east(0, 5, self.mc_frame, "Received:")
-		self.entry_radio_received.grid(row=0, column=6, columnspan=14, sticky='we')
+		self.entry_radio_received.grid(row=0, column=6, columnspan=13, sticky='we')
 		self.create_label_east(1, 5, self.mc_frame, "Sent:")
-		self.entry_radio_sent.grid(row=1, column=6, columnspan=14, stick='we')
+		self.entry_radio_sent.grid(row=1, column=6, columnspan=13, stick='we')
 		self.create_label_east(2, 5, self.mc_frame, "RSSI Payload:")
 		self.entry_radio_payload_rssi.grid(row=2, column=6, columnspan=1, stick='we')
 		self.create_label_east(2, 7, self.mc_frame, "Last Contact (s):")
@@ -245,15 +247,9 @@ class MC_Tab():
 		self.create_label_center(9, 5, self.mc_frame, "Longitude:   ")
 		self.entry_recovery_longitude.grid(row=9, column=6, sticky='we')
 		# MISSION CONTROL
-		self.create_label_center(6, 9, self.mc_frame, "MISSION CONTROL")
-		self.create_label_center(7, 8, self.mc_frame, "Up Time (s):   ")
-		self.entry_mission_control_time.grid(row=7, column=9, sticky='we')
-
-		# Terminal divider. KEEP AT THE BOTTOM OF THIS METHOD.
-		# This divider is a golden bar strecthing across the screen to provide
-		# distinction between variable sections.
-		terminal_divider_two = Label(self.mc_frame, background="#F1BE48")
-		terminal_divider_two.grid(row=13, column=0, columnspan=20, sticky='we')
+		self.create_label_center(6, 10, self.mc_frame, "MISSION CONTROL")
+		self.create_label_center(7, 9, self.mc_frame, "Up Time (s):   ")
+		self.entry_mission_control_time.grid(row=7, column=10, sticky='we')
 
 
 	def layout_mission_status(self):
@@ -263,9 +259,7 @@ class MC_Tab():
 		@param self - Instance of the class.
 		"""
 
-		# Below final divider.
-		self.button_platform_launch.grid(row=14, column=9, sticky='nswe')
-		self.label_release_status.grid(row=14, column=10, sticky='nswe')
+		
 
 
 	def populate_mc_tab(self):
@@ -284,7 +278,6 @@ class MC_Tab():
 		self.layout_network()
 		self.layout_nodes()
 		self.layout_mission_status()
-		generate_map(4,3)
 		# Update class instance stored as global.
 		g.mc_class_reference = self
 
@@ -496,10 +489,11 @@ class MC_Tab():
 		# Sends data to rotor so it can compute turning angle.
 		send_rotor_telemetry(telemetry)
 		# Configure a map image from Google Static Maps API.
-		maps.generate_map(self.payload_latitude.get(), self.payload_longitude.get(), "payload")
+		new_map_flag = maps.generate_map(self.payload_latitude.get(), self.payload_longitude.get(), "payload")
 		# If a new map was created (new GPS coords), places that image into the GUI.
-		maps.
-
+		# maps.
+		if new_map_flag is True:
+			# Place map onto GUI.
 
 	def parse_recovery(self, radio_in, rssi):
 		"""
