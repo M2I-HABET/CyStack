@@ -9,6 +9,8 @@
 
 import urllib.request
 from io import StringIO
+from tkinter import *
+from tkinter.ttk import *
 
 
 google_api_key = "&key=AIzaSyBPC7y0fIjsbz61P16wTudIrkfKK0Unzd4"
@@ -48,11 +50,11 @@ def generate_map(latitude, longitude, node):
             # Configures the Url needed to get the correct map from Google.
             url = build_url_payload(map_center)
             # Pulls down the configured Static Maps image from Google.
-            urllib.request.urlretrieve(url, "gui_maps/payload_map" + "." + "jpeg")
+            urllib.request.urlretrieve(url, "gui_maps/payload_map" + "." + "PNG")
             # Configures the big picture map. (containing all nodes in 1 map).
             url = build_url_network()
             # Pulls down the configured Static Maps image from Google.
-            urllib.request.urlretrieve(url, "gui_maps/network_map" + "." + "jpeg")
+            urllib.request.urlretrieve(url, "gui_maps/network_map" + "." + "PNG")
             # New map has been generated. Replace the current image.
             return True
         # A map with this configuration has already been generated.
@@ -69,11 +71,11 @@ def generate_map(latitude, longitude, node):
             # Configures the Url needed to get the correct map from Google.
             url = build_url_recovery(map_center)
             # Pulls down the configured Static Maps image from Google.
-            urllib.request.urlretrieve(url, "gui_maps/recovery_map" + "." + "jpeg")
+            urllib.request.urlretrieve(url, "gui_maps/recovery_map" + "." + "PNG")
             # Configures the big picture map. (containing all nodes in 1 map).
             url = build_url_network()
             # Pulls down the configured Static Maps image from Google.
-            urllib.request.urlretrieve(url, "gui_maps/network_map" + "." + "jpeg")
+            urllib.request.urlretrieve(url, "gui_maps/network_map" + "." + "PNG")
             # New map has been generated. Replace the current image.
             return True
         # A map with this configuration has already been generated.
@@ -123,10 +125,19 @@ def build_url_recovery(map_center):
 def build_url_network():
     """ 
     Builds the required url to request the desired image from Google.
-    
-    @param map_cetner - 
+    This image holds all nodes in the network.
     """
 
+    # Seperates all latitude and longitude values from pairs into individual variables.
+    p_lat, p_lng = previous_payload_coords.split(",")
+    r_lat, r_lng = previous_recovery_coords.split(",")
+    mc_lat, mc_lng = howe_hall_coords.split(",")
+
+    # Calculates the center latitude value.
+    center_lat = (float(p_lat) + float(r_lat) + float(mc_lat)) / 3.0
+    center_lng = (float(p_lng) + float(r_lng) + float(mc_lng)) / 3.0
+
+    map_center = str(center_lat) + "," + str(center_lng)
 
     # Builds the url to request a specific image.
     map_url = None
@@ -139,3 +150,59 @@ def build_url_network():
     # Returns url.
     return map_url
     
+
+def place_payload(mc_frame):
+    """
+    Replaces the payload map w/ the updated one.
+
+    @param mc_frame - Reference object that holds the payload_map_image object.
+    """
+
+    # Removes old image from GUI. Prevents stacking which may lead to crashing.
+    mc_frame.payload_map_image.grid_forget()
+    # Pulls Static Maps image into python.
+    temp_image = PhotoImage(file="gui_maps/payload_map.png")
+    # Binds image inside of label object. (Needed to use the grid layout)
+    mc_frame.payload_map_image = Label(mc_frame, image=temp_image)
+    # Reassigns the label object with the image attribute.
+    mc_frame.payload_map_image.image = temp_image
+    # Places image into GUI.
+    mc_frame.payload_map_image.grid(row=16, column=0, rowspan=2, columnspan=3, sticky='nswe')
+
+
+def place_recovery(mc_frame):
+    """
+    Replaces the recovery map w/ the updated one.
+
+    @param mc_frame - Reference object that holds the recovery_map_image object.
+    """
+
+    # Removes old image from GUI. Prevents stacking which may lead to crashing.
+    mc_frame.recovery_map_image.grid_forget()
+    # Pulls Static Maps image into python.
+    temp_image = PhotoImage(file="gui_maps/recovery_map.png")
+    # Binds image inside of label object. (Needed to use the grid layout)
+    mc_frame.recovery_map_image = Label(mc_frame, image=temp_image)
+    # Reassigns the label object with the image attribute.
+    mc_frame.recovery_map_image.image = temp_image
+    # Places image into GUI.
+    mc_frame.recovery_map_image.grid(row=16, column=5, rowspan=2, columnspan=3, sticky='nswe')
+
+
+def place_network(mc_frame):
+    """
+    Replaces the network map w/ the updated one.
+
+    @param mc_frame - Reference object that holds the network_map_image object.
+    """
+
+    # Removes old image from GUI. Prevents stacking which may lead to crashing.
+    mc_frame.network_map_image.grid_forget()
+    # Pulls Static Maps image into python.
+    temp_image = PhotoImage(file="gui_maps/network_map.png")
+    # Binds image inside of label object. (Needed to use the grid layout)
+    mc_frame.network_map_image = Label(mc_frame, image=temp_image)
+    # Reassigns the label object with the image attribute.
+    mc_frame.network_map_image.image = temp_image
+    # Places image into GUI.
+    mc_frame.network_map_image.grid(row=16, column=9, rowspan=2, columnspan=3, sticky='nswe')

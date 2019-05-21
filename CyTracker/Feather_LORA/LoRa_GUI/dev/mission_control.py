@@ -10,10 +10,12 @@
 from tkinter import *
 from tkinter.ttk import *
 from communication import *
+import globals as g
 import maps as maps
 import time
 import threading
-import globals as g
+import urllib.request
+from io import StringIO
 
 
 class MC_Tab():
@@ -50,16 +52,19 @@ class MC_Tab():
 		self.payload_longitude = None
 		self.payload_event = None
 		self.payload_speed = None
+		self.payload_map_image = None
 
 		# Mission Control variables.
 		self.mission_control_time = None
 		self.payload_time_previous = ""
 		self.recovery_time_previous = ""
+		self.network_map_image = None
 
 		# Recovery variables.
 		self.recovery_time = None
 		self.recovery_latitude = None
 		self.recovery_longitude = None
+		self.recovery_map_image = None
 
 
 	def variable_setup(self):
@@ -234,10 +239,10 @@ class MC_Tab():
 		self.entry_payload_latitude.grid(row=9, column=1, sticky='we')
 		self.create_label_center(10, 0, self.mc_frame, "Longitude:   ")
 		self.entry_payload_longitude.grid(row=10, column=1, sticky='we')
-		self.create_label_center(11, 0, self.mc_frame, "Event:            ")
-		self.entry_payload_event.grid(row=11, column=1, sticky='we')
-		self.create_label_center(12, 0, self.mc_frame, "Speed:            ")
-		self.entry_payload_speed.grid(row=12, column=1, sticky='we')
+		# self.create_label_center(11, 0, self.mc_frame, "Event:            ")
+		# self.entry_payload_event.grid(row=11, column=1, sticky='we')
+		self.create_label_center(11, 0, self.mc_frame, "Speed:            ")
+		self.entry_payload_speed.grid(row=11, column=1, sticky='we')
 		# RECOVERY
 		self.create_label_center(6, 6, self.mc_frame, "RECOVERY")
 		self.create_label_center(7, 5, self.mc_frame, "Up Time (s): ")
@@ -252,14 +257,35 @@ class MC_Tab():
 		self.entry_mission_control_time.grid(row=7, column=10, sticky='we')
 
 
-	def layout_mission_status(self):
+	def layout_mission_maps(self):
 		"""
-		Binds the sections of widgets related to mission_control to the bottom
-		portion of the frame.
+		Binds placeholder maps to the GUI. These will later be updated once GPS data
+		starts to feed in from various nodes.
+
 		@param self - Instance of the class.
 		"""
 
+		# Pulls Static Maps image into TKinter GUI. (Placeholder)
+		temp_image = PhotoImage(file="gui_maps/offline.png")
 		
+		# Binds image inside of label object. (Needed to use the grid layout)
+		self.payload_map_image = Label(self.mc_frame, image=temp_image)
+		# Reassigns the label object with the image attribute.
+		self.payload_map_image.image = temp_image
+		# Places image into GUI.
+		self.payload_map_image.grid(row=16, column=0, rowspan=2, columnspan=3, sticky='nswe')
+		# Binds image inside of label object. (Needed to use the grid layout)
+		self.recovery_map_image = Label(self.mc_frame, image=temp_image)
+		# Reassigns the label object with the image attribute.
+		self.recovery_map_image.image = temp_image
+		# Places image into GUI.
+		self.recovery_map_image.grid(row=16, column=5, rowspan=2, columnspan=3, sticky='nswe')
+		# Binds image inside of label object. (Needed to use the grid layout)
+		self.network_map_image = Label(self.mc_frame, image=temp_image)
+		# Reassigns the label object with the image attribute.
+		self.network_map_image.image = temp_image
+		# Places image into GUI.
+		self.network_map_image.grid(row=16, column=9, rowspan=2, columnspan=3, sticky='nswe')
 
 
 	def populate_mc_tab(self):
@@ -277,10 +303,9 @@ class MC_Tab():
 		# Aligns the widgets to the frame's grid.
 		self.layout_network()
 		self.layout_nodes()
-		self.layout_mission_status()
+		self.layout_mission_maps()
 		# Update class instance stored as global.
 		g.mc_class_reference = self
-
 
 	def callback_update_mission_control_node_status(self, *args):
 		"""
@@ -493,7 +518,11 @@ class MC_Tab():
 		# If a new map was created (new GPS coords), places that image into the GUI.
 		# maps.
 		if new_map_flag is True:
-			# Place map onto GUI.
+			# Reset flag.
+			new_map_flag = False
+			maps.place_payload(self.mc_frame)
+			maps.place_network(self.mc_frame)
+			
 
 	def parse_recovery(self, radio_in, rssi):
 		"""
@@ -537,8 +566,14 @@ class MC_Tab():
 				self.radio_last_received_node.set("Recovery")
 				self.update_recovery_rssi(rssi)
 		# Configure a map image from Google Static Maps API.
-		maps.generate_map(self.payload_latitude.get(), self.payload_longitude.get(), "recovery")
-
+		new_map_flag = maps.generate_map(self.recovery_latitude.get(), self.recovery_longitude.get(), "recovery")
+		# If a new map was created (new GPS coords), places that image into the GUI.
+		# maps.
+		if new_map_flag is True:
+			# Reset flag.
+			new_map_flag = False
+			maps.place_recovery(self.mc_frame)
+			maps.place_network(self.mc_frame)
 
 	def update_payload_rssi(self, received_rssi):
 		"""
@@ -634,6 +669,8 @@ class MC_Tab():
 				# If non-null, send transmission via serial port.
 				send(g.PORT_MISSION_CONTROL_LORA.get_port(), injection_packet)
 				self.release_status.set("1")
+			else:
+				print("No connection to mission control's LoRa\n")
 		# Null connection.
 		except Exception as e:
 			# Prints general error statement. (Used to tell which method errored out)
