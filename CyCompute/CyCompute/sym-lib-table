@@ -1,4 +1,7 @@
 (sym_lib_table
-  (lib (name RPi-modules)(type Legacy)(uri C:/Users/matth/Desktop/githubrepos/CyStack/CyCompute/CyCompute/RPi-modules.lib)(options "")(descr ""))
-  (lib (name pcie)(type Legacy)(uri C:/Users/matth/Desktop/githubrepos/CyStack/CyCompute/CyCompute/pcie.lib)(options "")(descr ""))
+  (lib (name RPi-modules)(type Legacy)(uri C:/Users/matth/Desktop/githubrepos/CyStack/CyCompute/CyCompute/RPi-modules.lib)(options " pwr_sym_only")(descr ""))
+  (lib (name pcie)(type Legacy)(uri C:/Users/matth/Desktop/githubrepos/CyStack/CyCompute/CyCompute/pcie.lib)(options " pwr_sym_only")(descr ""))
+  (lib (name CyCompute-rescue)(type Legacy)(uri ${KIPRJMOD}/CyCompute-rescue.lib)(options "")(descr ""))
+  (lib (name P82B715DR)(type Legacy)(uri C:/Users/Matthew/Repos/CyStack/CyCompute/CyCompute/P82B715DR.lib)(options "")(descr ""))
+  (lib (name ip4234cz6)(type Legacy)(uri C:/Users/Matthew/Repos/CyStack/CyCompute/CyCompute/ip4234cz6.lib)(options "")(descr ""))
 )

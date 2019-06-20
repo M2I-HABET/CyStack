@@ -2,4 +2,6 @@
   (lib (name pcie_mini)(type KiCad)(uri ${KIPRJMOD}/pcie_mini.pretty)(options "")(descr ""))
   (lib (name pcie)(type KiCad)(uri ${KIPRJMOD}/pcie.pretty)(options "")(descr ""))
   (lib (name Pi_Sodimm)(type KiCad)(uri ${KIPRJMOD}/Pi_Sodimm.pretty)(options "")(descr ""))
+  (lib (name P82B715DR)(type KiCad)(uri ${KIPRJMOD}/P82B715DR.pretty)(options "")(descr ""))
+  (lib (name gsg-modules)(type KiCad)(uri ${KIPRJMOD}/gsg-modules.pretty)(options "")(descr ""))
 )

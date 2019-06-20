@@ -1,0 +1,795 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Shopping Sheet</title>
+    <link href="https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/style/main.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/scripts/main.js"></script>
+</head>
+<body style='font-family:Arial;'>
+    <div style='width:800px;margin-left:auto;margin-right:auto;margin-top:5px;padding-bottom:5px;'>
+        <div id='dvBanner' style='width:800px;background-color:#d02129;'>
+            <div style='width:800px;height:5px;'><img src='https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/banner_top.gif' title='' alt=''/></div>
+            <div style='width:800px;height:75px;'>
+                <div style='float:left;width:771px;margin-left:20px;'>
+                    <div style='text-align:right;margin-top:6px;margin-right:1px;'><span id='spnDate' class='ss_header3'>04/23/2018</span></div>
+                    <div style='margin-top:5px;float:left;width:700px;'>
+                      <img src='https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/isu.png'
+                       alt='Iowa State University'
+                       title='Iowa State University'/>
+                    </div>
+                    <div class='ss_header1' style='margin-top:10px;'><span> </span></div>
+                    <div style='clear:both;'></div>
+                    <div style='margin-top:4px;float:left;width:400px;'>
+                    <span id='spnStudentName' class='ss_header2'>Matthew Isaac Plewa, 200-840-712</span></div>
+                    <div style='text-align:right;margin-right:1px;float:right;width:150px;'>
+                      <img id='imgBtnDownload' src='https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/download_notselect.png'
+                      alt='Download' title='Download'
+                      onmouseover="this.src='https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/download_select.png'"
+                      onmouseout="this.src='https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/download_notselect.png'"
+                      style='cursor:pointer;' onclick='downloadReport()'/></div>
+                </div>
+                <div style='clear:both;'></div>
+            </div>
+        </div>
+        <div style='width:800px;height:5px;'>
+              <img src='https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/banner_bottom.gif' title='' alt=''/></div>
+        <div style='clear:both;'></div>
+        <div id='dvMainBody' style='margin-top:15px;'>
+            <div id='dvMiddleLeft' style='float:left;width:557px;'>
+                <div id='dvCosts' style='width:557px;'>
+                    <div style='background-image:url(https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/ss_top.gif);
+                      background-repeat:no-repeat;width:557px;height:37px;'><div style='padding-left:14px;padding-top:9px;'>
+                      <span id='spnCostTab' class='ss_tap_item'>Costs in the 2018-19 year</span></div></div>
+                    <div style='background-image:url(https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/ss_repeator.gif);
+                      background-repeat:repeat-y;width:557px;height:131px;'>
+                        <div style='margin-left:15px;padding-top:8px;'>
+                            <div style='width:540px;'><div style='float:left;width:430px;'>
+                              <span id='spnCostExplanation' class='ss_header_item'>Estimated Cost of Attendance</span></div>
+                              <div style='float:left;width:90px;text-align:right;'>
+                                <span class='ss_header_item' id='spnEstimatedCost'> $38,448</span>
+                                <span class='ss_body_item' style='font-size:9px;'> / yr</span>
+                              </div><div style='clear:both;'></div></div>
+                            <div id='dvCostNumbers' style='padding-left:20px;'>
+                                <div style='width:407px;height:14px;margin-top:9px;'>
+                                  <table width='100%' cellpadding="0" cellspacing="0">
+                                    <tbody><tr>
+                                      <td style='width:80px;'><span class='ss_body_item'>Tuition and fees</span></td>
+                                      <td style=''>
+                                        <div style='height:8px;width:96%;
+                                          background-image:url(https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/dot.gif);
+                                          background-repeat:repeat-x;margin-top:1px;float:left'>&nbsp;</div>
+                                        <div style='float:left;width:4%;text-align:right;'>
+                                          <span class='ss_body_item'> </span></div>
+                                          <div style='clear:both;'></div>
+                                      </td>
+                                      <td style='width:45px;text-align:right;'>
+                                        <span class='ss_body_item' id='spnCost_TuitionFees'> $26,264</span>
+                                      </td></tr></tbody></table></div>
+                                <div style='width:407px;height:14px;margin-top:5px;'>
+                                  <table width='100%' cellpadding="0" cellspacing="0">
+                                    <tbody><tr>
+                                      <td style='width:95px;'>
+                                        <span class='ss_body_item'>Housing and meals</span>
+                                      </td>
+                                      <td style=''>
+                                        <div style='height:8px;width:100%;
+                                          background-image:url(https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/dot.gif);
+                                          background-repeat:repeat-x;margin-top:1px;'>&nbsp;</div>
+                                      </td>
+                                      <td style='width:57px;text-align:right;'>
+                                        <span class='ss_body_item' id='spnCost_HousingMeals'>  $8,720</span>
+                                      </td></tr></tbody></table></div>
+                                <div style='width:407px;height:14px;margin-top:5px;'>
+                                  <table width='100%' cellpadding="0" cellspacing="0">
+                                    <tbody><tr>
+                                      <td style='width:98px;'>
+                                        <span class='ss_body_item'>Books and supplies</span>
+                                      </td>
+                                      <td style=''>
+                                        <div style='height:8px;width:100%;
+                                          background-image:url(https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/dot.gif);
+                                          background-repeat:repeat-x;margin-top:1px;'>&nbsp;</div>
+                                      </td>
+                                      <td style='width:57px;text-align:right;'>
+                                        <span class='ss_body_item' id='spnCost_BooksSupplies'>  $1,034</span>
+                                      </td></tr></tbody></table></div>
+                                <div style='width:407px;height:14px;margin-top:5px;'>
+                                  <table width='100%' cellpadding="0" cellspacing="0">
+                                    <tbody><tr>
+                                      <td style='width:73px;'><span class='ss_body_item'>Transportation</span></td>
+                                      <td style=''>
+                                        <div style='height:8px;width:100%;
+                                          background-image:url(https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/dot.gif);
+                                          background-repeat:repeat-x;margin-top:1px;'>&nbsp;</div></td>
+                                        <td style='width:57px;text-align:right;'>
+                                          <span class='ss_body_item' id='spnCost_Trasnportation'>    $400</span></td></tr></tbody></table></div>
+                                <div style='width:407px;height:14px;margin-top:5px;'>
+                                  <table width='100%' cellpadding="0" cellspacing="0">
+                                    <tbody><tr>
+                                      <td style='width:110px;'><span class='ss_body_item'>Other education costs</span></td>
+                                      <td style=''><div style='height:8px;width:100%;
+                                          background-image:url(https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/dot.gif);
+                                          background-repeat:repeat-x;margin-top:1px;'>&nbsp;</div></td>
+                                      <td style='width:57px;text-align:right;'>
+                                        <span class='ss_body_item' id='spnCost_Other'>  $2,030</span>
+                                      </td></tr></tbody></table></div>
+                            </div></div></div>
+                    <div><img src='https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/ss_bottom.gif' alt='' title=''/></div>
+                </div>
+                <div id='dvGrants' style='width:557px;margin-top:10px;'>
+                    <div style='background-image:url(https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/ss_top.gif);
+                      background-repeat:no-repeat;width:557px;height:37px;'><div style='padding-left:14px;padding-top:9px;'>
+                      <span id='spnGrantTabl' class='ss_tap_item'>Grants and scholarships to pay for college</span></div></div>
+                    <div style='background-image:url(https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/ss_repeator.gif);
+                      background-repeat:repeat-y;width:557px;height:112px;'>
+                        <div style='margin-left:15px;padding-top:8px;'>
+                            <div style='width:540px;'>
+                              <div style='float:left;width:430px;'>
+                                <span id='Span1' class='ss_header_item'>Total Grants and Scholarships</span>
+                                <span class='ss_body_item' style='font-size:9px;'> ("Gift" Aid; no repayment needed)</span></div>
+                              <div style='float:left;width:90px;text-align:right;'>
+                                <span class='ss_header_item' id='spnGrant_Total'> $10,400</span>
+                                <span class='ss_body_item' style='font-size:9px;'> / yr</span></div>
+                              <div style='clear:both;'></div></div>
+                            <div id='dvGrantsNumbers' style='padding-left:20px;'>
+                                <div style='width:407px;height:14px;margin-top:9px;'>
+                                  <table width='100%' cellpadding="0" cellspacing="0"><tbody><tr>
+                                    <td style='width:210px;'>
+                                      <span class='ss_body_item'>Grants and scholarships from your school</span></td>
+                                    <td style=''>
+                                      <div style='height:8px;width:95%;
+                                        background-image:url(https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/dot.gif);
+                                        background-repeat:repeat-x;margin-top:1px;float:left;'>&nbsp;</div>
+                                      <div style='float:left;width:5%;text-align:right;'>
+                                        <span class='ss_body_item'> </span></div>
+                                      <div style='clear:both;'></div></td>
+                                    <td style='width:47px;text-align:right;'>
+                                      <span class='ss_body_item' id='spnGrant_Grants'>  $2,400</span>
+                                    </td></tr></tbody>
+                                  </table></div>
+                                <div style='width:407px;height:14px;margin-top:5px;'>
+                                  <table width='100%' cellpadding="0" cellspacing="0"><tbody><tr>
+                                    <td style='width:93px;'>
+                                      <span class='ss_body_item'>Federal Pell Grant</span></td>
+                                    <td style=''>
+                                      <div style='height:8px;width:100%;
+                                        background-image:url(https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/dot.gif);
+                                        background-repeat:repeat-x;margin-top:1px;'>&nbsp;</div></td>
+                                    <td style='width:58px;text-align:right;'>
+                                      <span class='ss_body_item' id='spnGrant_FederalPellGrant'>      $0</span>
+                                    </td></tr></tbody>
+                                  </table></div>
+                                <div style='width:407px;height:14px;margin-top:5px;'>
+                                  <table width='100%' cellpadding="0" cellspacing="0"><tbody><tr>
+                                    <td style='width:111px;'>
+                                      <span class='ss_body_item'>Grants from your state</span></td>
+                                    <td style=''>
+                                      <div style='height:8px;width:100%;
+                                        background-image:url(https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/dot.gif);
+                                        background-repeat:repeat-x;margin-top:1px;'>&nbsp;</div></td>
+                                    <td style='width:58px;text-align:right;'>
+                                      <span class='ss_body_item' id='spnGrant_State'>      $0</span>
+                                    </td></tr></tbody>
+                                  </table></div>
+                                <div style='width:407px;height:14px;margin-top:5px;'>
+                                  <table width='100%' cellpadding="0" cellspacing="0"><tbody><tr>
+                                    <td style='width:156px;'>
+                                      <span class='ss_body_item'>Other scholarships you can use</span></td>
+                                    <td style=''>
+                                      <div style='height:8px;width:100%;
+                                        background-image:url(https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/dot.gif);
+                                        background-repeat:repeat-x;margin-top:1px;'>&nbsp;</div></td>
+                                    <td style='width:58px;text-align:right;'>
+                                      <span class='ss_body_item' id='spnGrant_Other'>  $8,000</span>
+                                    </td></tr></tbody>
+                                  </table></div>
+                            </div></div></div>
+                    <div><img src='https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/ss_bottom.gif' alt='' title=''/></div>
+                </div>
+                <div id='divPay' style='width:557px;margin-top:10px;'>
+                    <div style='background-image:url(https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/ss_top.gif);
+                      background-repeat:no-repeat;width:557px;height:37px;'>
+                      <div style='padding-left:14px;padding-top:9px;'>
+                        <span id='spnPayTab' class='ss_tap_item'>What will you pay for college</span></div></div>
+                    <div style='background-image:url(https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/ss_repeator.gif);
+                      background-repeat:repeat-y;width:557px;height:46px;'>
+                        <div style='margin-left:15px;padding-top:8px;'>
+                            <div style='width:540px;'>
+                              <div style='float:left;width:430px;'>
+                                <span id='Span4' class='ss_header_item'
+                                  style='font-size:16px;color:#d02129;font-weight:bold;'>Net Costs</span></div>
+                              <div style='float:left;width:90px;text-align:right;'>
+                                <span class='ss_header_item' id='spnPay_NetCost'
+                                  style='color:#d02129;'> $28,048</span>
+                                <span class='ss_body_item'
+                                  style='font-size:9px;color:#d02129;'> / yr</span></div>
+                              <div style='clear:both;'></div></div>
+                            <div>
+                              <span class='ss_body_item'
+                                style='font-size:9px;color:#d02129;'>(Cost of attendance minus total grants and scholarships)
+                              </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div><img src='https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/ss_bottom.gif'
+                      alt='' title=''/></div>
+                </div>
+                <div style='color:#d02129;font-weight:bold;font-size:15px;margin-top:10px;padding-left:10px;'>Options to pay net costs</div>
+                <div id='dvWork' style='width:557px;margin-top:7px;'>
+                    <div style='background-image:url(https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/ss_top.gif);
+                      background-repeat:no-repeat;width:557px;height:37px;'>
+                      <div style='padding-left:14px;padding-top:9px;'>
+                        <span id='spnWorkTab' class='ss_tap_item'>Work options</span></div></div>
+                    <div style='background-image:url(https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/ss_repeator.gif);
+                      background-repeat:repeat-y;width:557px;'>
+                        <div style='padding-top:4px;margin-left:15px;'>
+                            <div id='dvWorkNumbers'>
+                                <div style='width:426px;height:20px;margin-top:5px;'>
+                                  <table width='100%' cellpadding="0" cellspacing="0"><tbody><tr>
+                                    <td style='width:213px;'>
+                                      <span class='ss_body_item'>Work-Study (Federal, state, or institutional)</span></td>
+                                    <td>
+                                      <div style='height:8px;width:93%;
+                                        background-image:url(https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/dot.gif);
+                                        background-repeat:repeat-x;margin-top:1px;float:left;'>&nbsp;</div>
+                                      <div style='float:left;width:7%;text-align:right;'>
+                                        <span class='ss_body_item'> </span></div>
+                                      <div style='clear:both;'></div></td>
+                                    <td style='width:47px;text-align:right;'>
+                                      <span class='ss_body_item' id='spnWork_WorkStudy'>      $0</span></td></tr></tbody>
+                                  </table></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div><img src='https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/ss_bottom.gif' alt='' title=''/></div>
+                </div>
+                <div id='dvLoan' style='width:557px;margin-top:10px;'>
+                    <div style='background-image:url(https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/ss_top.gif);
+                      background-repeat:no-repeat;width:557px;height:37px;'>
+                      <div style='padding-left:14px;padding-top:9px;'>
+                        <span id='spnLoanTab' class='ss_tap_item'>Loan Options*</span></div></div>
+                    <div style='background-image:url(https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/ss_repeator.gif);
+                      background-repeat:repeat-y;width:557px;'>
+                        <div style='margin-left:15px;padding-top:1px;'>
+                            <div id='dvLoanNumbers' style='padding-bottom:8px;'>
+                                <div style='width:425px;height:14px;margin-top:9px;'>
+                                  <table width='100%' cellpadding="0" cellspacing="0"><tbody><tr>
+                                    <td style='width:113px;'>
+                                      <span class='ss_body_item'>Federal Perkins Loan</span></td>
+                                    <td style=''>
+                                      <div style='height:8px;width:95%;
+                                        background-image:url(https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/dot.gif);
+                                        background-repeat:repeat-x;margin-top:1px;float:left;'>&nbsp;</div>
+                                      <div style='float:left;width:5%;text-align:right;'>
+                                        <span class='ss_body_item'> </span></div>
+                                      <div style='clear:both;'></div></td>
+                                    <td style='width:47px;text-align:right;'>
+                                      <span class='ss_body_item' id='spnLoan_FederalPerkins'>      $0</span></td></tr></tbody>
+                                  </table></div>
+                                <div style='width:425px;height:14px;margin-top:5px;'>
+                                  <table width='100%' cellpadding="0" cellspacing="0"><tbody><tr>
+                                    <td style='width:154px;'>
+                                      <span class='ss_body_item'>Federal Direct Subsidized Loan</span></td>
+                                    <td style=''>
+                                      <div style='height:8px;width:100%;
+                                        background-image:url(https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/dot.gif);
+                                        background-repeat:repeat-x;margin-top:1px;'>&nbsp;</div></td>
+                                    <td style='width:59px;text-align:right;'>
+                                      <span class='ss_body_item' id='spnLoan_FederalSubsidized'>  $5,500</span></td></tr></tbody>
+                                  </table></div>
+                                <div style='width:425px;height:14px;margin-top:5px;'>
+                                  <table width='100%' cellpadding="0" cellspacing="0"><tbody><tr>
+                                    <td style='width:167px;'>
+                                      <span class='ss_body_item'>Federal Direct Unsubsidized Loan</span></td>
+                                    <td style=''>
+                                      <div style='height:8px;width:100%;
+                                        background-image:url(https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/dot.gif);
+                                        background-repeat:repeat-x;margin-top:1px;'>&nbsp;</div></td>
+                                      <td style='width:59px;text-align:right;'>
+                                        <span class='ss_body_item' id='spnLoan_FederalUnSubsidized'>  $2,000</span></td></tr></tbody>
+                                    </table></div>
+                                <div class='ss_body_item' style='font-size:9px;margin-top:10px;width:540px;'>
+                                  *Recommended amounts shown here. You may be eligible for a different amount. Contact your financial aid office.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div><img src='https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/ss_bottom.gif' alt='' title=''/></div>
+                </div>
+                <div id='dvOtherOptions' style='width:557px;margin-top:10px;'>
+                    <div style='background-image:url(https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/ss_top.gif);
+                      background-repeat:no-repeat;width:557px;height:37px;'>
+                      <div style='padding-left:14px;padding-top:9px;'>
+                        <span id='spnOtherTab' class='ss_tap_item'>Other options</span></div></div>
+                    <div style='background-image:url(https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/ss_repeator.gif);
+                      background-repeat:repeat-y;width:557px;'>
+                        <div style='padding-bottom:10px;'>
+                            <div style='margin-left:15px;padding-top:8px;'>
+                                <div style='width:540px;'>
+                                  <div style='float:left;width:430px;'>
+                                    <span id='Span7' class='ss_header_item'>Family Contribution</span></div>
+                                <div style='float:left;width:90px;text-align:right;'>
+                                  <span class='ss_header_item' id='spnOther_FamilyContribution'> $20,548</span>
+                                  <span class='ss_body_item' style='font-size:9px;'> / yr</span></div>
+                                <div style='clear:both;'></div></div>
+                                <div><span class='ss_body_item' style='font-size:9px;'>
+                                  (As calculated by the institution using information reported on the FAFSA or to your institution.)</span></div>
+                            </div>
+ 
+                            <div style='margin-left:28px;padding-top:7px;'>
+                                <div style='float:left;'>
+                                    <ul style='margin:0;padding:0;' class='ss_body_item'>
+                                      <li>Payment plan offered by the institution</li>
+                                      <li style='margin-top:5px;'>Parent or Graduate PLUS Loans</li>
+           <li style='margin-top:5px;'>American Opportunity Tax Credit *</li>
+                                    </ul>
+                                </div>
+                                <div style='float:left;margin-left:25px;'>
+                                    <ul style='margin:0' class='ss_body_item'>
+                                      <li>Military and/or National Service benefits</li>
+                                      <li style='margin-top:5px;'>Non-Federal private education loan</li>
+                                    </ul>
+                                </div>
+                                <div style='clear:both;'></div>
+                            </div>
+       <div class="ss_body_item" style="font-size:9px; margin-top:5px; width:500px; margin-left:20px;">*Parents or students may qualify to receive up to $2,500 by claiming the American Opportunity Tax
+Credit on their tax return during the following calendar year.</div>
+                        </div>
+                    </div>
+                    <div><img src='https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/ss_bottom.gif' alt='' title=''/></div>
+                </div>
+            </div>
+            <div id='dvMiddleRight' style='float:left;width:226px;margin-left:15px;'>
+                <div id='dvScorecardElemnts'>
+                    <div style='width:226px;height:5px;'>
+                      <img src='https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/scorecard_top.gif' alt='' title=''/></div>
+                    <div style='width:226px;height:550px;background-color:#f2bf49'>
+                        <div id='dvScorecard_GR'>
+                        <div style='margin-left:18px;padding-bottom:15px;'>
+                            <div style='float:left;margin-top:12px;width:112px;'>
+                                <div><span class='ss_scorecard_title'>Graduation Rate</span></div>
+                                <div style='margin-top:6px;'>
+                                  <span id='spnScorecard_GRBody' class='ss_scorecard_body' style='line-height:12px;'>
+                                    Percentage of full-time students who graduate within 6 years</span></div>
+                            </div>
+                            <div style='float:left;margin-top:25px;margin-left:0px;'>
+                              <img src='https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/icon_hat.png' alt='hat' title='hat'/></div>
+                            <div style='clear:both;'></div>
+                        </div>
+                        <div id='dvScoreCard_GRChart' style='margin-left:12px;'>
+                            <div class='bubble' style='background-image:url(https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/bg_number.png);
+                              background-repeat:no-repeat;width:32px;height:27px;margin-left:130px;margin-bottom:2px;'>
+                              <div style='width:17px;margin-left:5px;margin-right:auto;padding-top:6px;'>
+                                <span class='ss_scorecard_body bubble_number' style='color:#ffffff;font-size:9px;font-weight:bold;'>71.4%</span></div></div>
+                            <div><img src='https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/scorecard_bargraph.png'
+                              alt='GR Bar' title='GR Bar'/></div>
+                        </div>
+                    </div>
+                    <div style='margin-top:29px;'>
+                      <img src='https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/scorecard_divider.gif' alt='Divider' title='Divider'/></div>
+                        <div id='dvScorecardLoanDefaultRate'>
+                            <div style='margin-left:16px;padding-bottom:15px;'>
+                                <div style='float:left;margin-top:15px;'>
+                                  <img src='https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/icon_percentage.png' alt='%' title='%'/></div>
+                                <div style='float:left;margin-top:10px;width:123px;margin-left:12px;'>
+                                    <div><span class='ss_scorecard_title'>Repayment Rate</span></div>
+                                    <div style='margin-top:6px;'>
+                                      <span id='spnScorecard_LoanDefaultRateBody' class='ss_scorecard_body'
+                                        style='font-weight:normal;line-height:12px;'>
+                                        Percentage of borrowers entering into repayment within 3 years of leaving school</span></div>
+                                </div>
+                                <div style='clear:both;'></div>
+                            </div>
+                            <div id='dvScoreCard_LoanDefaultRateChart' style='width:70px;position:relative;margin:0 auto;'>
+                            <div class='center_bar'>
+                                <div class='bar_topline_text' style='margin-top:-10px;text-align:center;margin-bottom:0px;'>
+                                    <span style='font-size:9px;font-weight:bold;'>74.3%</span></div>
+                                <div style="position:relative; height:1px;left:110%;line-height:1;top:15px;" class="vbar_pointer">
+                                <div class='bubble'
+                                  style='background-image:url(https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/rpmt_bubble_national.png);
+                                  background-repeat:no-repeat;width:60px;height:65px;margin-top:8px;margin-left:0px ;margin-bottom:0px;'>
+                                  <div style="vertical-align:middle;margin: auto;padding:12px;">
+                                    <span style='font-size:9px;color:#ffffff;font-weight:bold;'>44.7%</br>National</br>Average</br></span></div></div></div>
+                                <div class='bar_body' style='background-color:#ffffff;height:80px;position:relative;width:70px;'></div>
+                                <div class='bar_average' style='position:relative;height:2px;background-color:#FF0000;bottom:45px;'></div>
+                                <div class='bar_baseline_text' style='margin-top:1px;'><span class='ss_scorecard_body'
+                                  style='font-size:9px;font-weight:bold;width:70px;'>This institution</span></div>
+                            </div><div style='clear:both;'></div></div></div>
+                        <div style='margin-top:19px;'>
+                          <img src='https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/scorecard_divider.gif' alt='Divider' title='Divider'/></div>
+                        <div id='dvScorecardMedianBorrowing'>
+                            <div style='margin-left:20px;padding-bottom:10px;'>
+                                <div style='float:left;margin-top:15px;width:135px;'>
+                                    <div><span class='ss_scorecard_title'>Median Borrowing</span></div>
+                                    <div style='margin-top:6px;'>
+                                      <span id='spnScorecard_MedianBorrowingBody' class='ss_scorecard_body' style='line-height:13px;'>
+                                        Students who borrow at Iowa State typically take out $23,868 in Federal loans for their undergraduate study.
+                                        The Federal loan payment over 10 years for this amount is approximately $246.79 per month.
+                                        Your borrowing may be different.</span></div>
+                                </div>
+                                <div style='float:left;margin-top:25px;margin-left:10px;'>
+                                  <img src='https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/icon_dollar.png' alt='$' title='$'/></div>
+                                <div style='clear:both;'></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style='width:226px;height:5px;'>
+                      <img src='https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/scorecard_bottom.gif' alt='' title=''/></div>
+                </div>
+                <div style='margin-top:13px;'>
+                    <div><img src='https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/rightside_top.gif' alt='' title=''/></div>
+                    <div style='background-image:url(https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/rightside_repeator.gif);
+                      background-repeat:repeat-y;min-height:120px;width:226px;'>
+                        <div style='width:194px;margin-left:14px;'>
+                            <div style='padding-top:10px;'>
+                              <span style='text-decoration:underline;font-size:12px;font-weight:bold;'>
+                                Repaying your loans
+                              </span></div>
+                            <div style='margin-top:7px;'>
+                              <span class='ss_body_item' style='line-height:15px;'>
+                                To learn about loan repayment choices and work out your Federal Loan monthly payment, go to:
+                                <a class='a_link'
+                                  href='https://studentaid.ed.gov/repay-loans/understand/plans' target='_blank'>
+                                  https://studentaid.ed.gov/repay-loans/understand/plans</a></span></div>
+                        </div>
+                    </div>
+                    <div><img src='https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/rightside_bottom.gif' alt='' title=''/></div>
+                </div>
+                <div style='margin-top:13px;'>
+                    <div><img src='https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/rightside_top.gif' alt='' title=''/></div>
+                    <div style='background-image:url(https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/rightside_repeator.gif);
+                      background-repeat:repeat-y;height:150px;width:226px;'>
+                        <div style='width:208px;margin-left:14px;min-height:150px;'>
+                            <div style='padding-top:10px;'>
+                              <span style='text-decoration:underline;font-size:11px;font-weight:bold;'>
+                                For more information and next steps:</span></div>
+                            <div style='margin-top:5px;width:200px;'>
+                                <div><span id='spnInfo_SchoolName' style='font-size:11px;font-weight:bold;color:#544726;'>
+                                  Iowa State University </span></div>
+                                <div style='margin-top:2px;'>
+                                  <span id='spnInfo_FinancialOffice' style='font-size:11px;font-weight:bold;color:#544726;'>
+                                  Office of Student Financial Aid</span></div>
+                                <div style='margin-top:5px;'><span id='spnInfo_Address1' style='font-size:11px;color:#544726;'>
+                                  0210 Beardshear Hall</span></div>
+                                <div id='dvInfo_Address2' style='margin-top:3px;'>
+                                  <span id='spnInfo_Address2' style='font-size:11px;color:#544726;'>515 Morrill Road</span></div>
+                                <div style='margin-top:2px;'><span id='spnInfo_CityStateZip' style='font-size:11px;color:#544726;'>
+                                  Ames, IA 50011-2103</span></div>
+                                <div style='margin-top:2px;'><span id='spnInfo_Phone' style='font-size:11px;color:#544726;'>
+                                  Telephone: (515) 294-2223</span></div>
+                                <div style='margin-top:2px;'><span id='spnInfo_Email' style='font-size:11px;color:#544726;'>
+                                  E-mail: <a href="mailto:financialaid@iastate.edu">financialaid@iastate.edu</a></span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div><img src='https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/rightside_bottom.gif' alt='' title=''/></div>
+                </div>
+            </div>
+            <div style='clear:both;'></div>
+        </div>
+        <div id='dvFooter' style='width:800px;margin-top:08px;'>
+            <div><img src='https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/comment_top.gif' title='' alt=''/></div>
+            <div style='background-image:url(https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/comment_repeator.gif);
+              width:800px;background-repeat:repeat-y;min-height:45px;'>
+                <div id='dvCustomizedInformation' style='padding-top:3px;padding-left:10px;'>
+                  <div style='font-size:9px;color:#544726;'>
+                    The Financial Aid Shopping Sheet (shown above) is a consumer tool designed by the U.S. Department of Education to better assist students and families in determining
+                    their costs for the upcoming academic year.  More detailed information is provided on the back of this sheet pertaining to your financial aid award. <br>
+                    You can also view your financial aid, track the status of your FAFSA, report additional aid, and reduce loan amounts on AccessPlus, your portal to
+                    Iowa State University.  <a href="https://accessplus.iastate.edu" target="_blank">accessplus.iastate.edu</a>
+                  </div></div>
+            </div>
+            <div><img src='https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/comment_bottom.gif' title='' alt=''/></div>
+        </div>
+    </div>
+<!--Page 2 starts here -->
+<div class='isu_glossary'>
+     <div id='dvGlossary' style='width:800px;margin-top:20px;'>
+            <div>
+                <table cellpadding="0" cellspacing="0">
+                    <tbody>
+                        <tr>
+                            <td style='font-size:0px;'><img src="https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/ss_top_left.gif" title='' alt=''/></td>
+                            <td style='background-image:url(https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/ss_top_repeator.gif);width:800px;background-repeat:repeat-x;height:37px;'>
+                                <div style='padding-left:5px;'><span id='spnGlossary' class='ss_tap_item'>Glossary</span></div></td>
+                            <td style='font-size:0px;'><img src="https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/ss_top_right.gif" title='' alt=''/></td>
+                        </tr>
+                        <tr>
+                            <td style='background-image:url(https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/ss_repeator_left.gif);width:9px;background-repeat:repeat-y;'></td>
+                            <td>
+                                <div id='dvGlossaryContent' style='min-height:200px;width:780px;padding-bottom:7px;padding-left:5px;'>
+                                    <div style='margin-top:10px;'><span class='ss_header_item'>Cost of Attendance (COA): </span><span class="ss_body_item">The total amount (not including grants
+                                        and scholarships) that it will cost you to go to school during the 2018-19 school year. COA includes tuition and fees; housing and meals; and allowances for
+                                        books, supplies, transportation, loan fees, and dependent care. It also includes miscellaneous and personal expenses, such as an allowance for the rental or
+                                        purchase of a personal computer; costs related to a disability; and reasonable costs for eligible study-abroad programs. For students attending less than
+                                        half-time, the COA includes tuition and fees; an allowance for books, supplies, and transportation; and dependent care expenses.</span></div>
+                                    <div style='margin-top:15px;'><span class='ss_header_item'>Total Grants and Scholarships: </span><span class="ss_body_item">Student aid funds that do not have
+                                        to be repaid. Grants are often need-based, while scholarships are usually merit-based. Occasionally you might have to pay back part or all of a grant if,
+                                        for example, you withdraw from school before finishing a semester.</span></div>
+                                    <div style='margin-top:15px;'><span class='ss_header_item'>Net Costs: </span><span class="ss_body_item">An estimate of the actual costs that you or your
+                                        family will need to pay during the 2018-19 school year to cover education expenses at a particular school. Net costs are determined by taking the
+                                        institution's cost of attendance and subtracting your grants and scholarships.</span></div>
+                                    <div style='margin-top:15px;'><span class='ss_header_item'>Work-Study: </span><span class="ss_body_item">A federal student aid program that provides
+                                        part-time employment while you are enrolled in school to help pay your education expenses.</span></div>
+                                    <div style='margin-top:15px;'><span class='ss_header_item'>Loans: </span><span class="ss_body_item">Borrowed money that must be repaid with interest.
+                                        Loans from the federal government typically have a lower interest rate than loans from private lenders. Federal loans, listed from most advantageous
+                                        to least advantageous, are called Federal Perkins Loans, Direct Subsidized Loans, Direct Unsubsidized Loans, and Direct PLUS Loans. You can find more
+                                        information about federal loans at StudentAid.gov.</span></div>
+                                    <div style='margin-top:15px;'><span class='ss_header_item'>Family Contribution (also referred to as Expected Family Contribution): </span>
+                                    <span class="ss_body_item">A number used by a school to calculate how much financial aid you are eligible to receive, if any. It's based on the financial
+                                        information you provided in your Free Application for Federal Student Aid (FAFSA). It's not the amount of money your family will have to pay for college,
+                                        nor is it the amount of federal student aid you will receive. The family contribution is reported to you on your Student Aid Report, also known as
+                                        the SAR.</span></div>
+                                    <div style='margin-top:15px;'><span class='ss_header_item'>Graduation Rate: </span><span class="ss_body_item">The graduation rate after 150% of normal
+                                        program completion time has elapsed. For schools that award predominately bachelor's (four-year) degrees, this is after six years, and for students
+                                        seeking an associate's (two-year) degree, this is after three years. For students seeking a certificate, the length of time depends on the certificate
+                                        sought, for example, for a one-year certificate, after 18 months. These rates are only for full-time students enrolled for the first time.</span></div>
+                                    <div style='margin-top:15px;'><span class='ss_header_item'>Repayment Rate: </span><span class="ss_body_item">The share of students who have repaid at least
+                                        $1 of the principal balance on their federal loans within 3 years of leaving school.</span></div>
+                                    <div style='margin-top:15px;'><span class='ss_header_item'>Median Borrowing: </span><span class="ss_body_item">The median federal debt of undergraduate
+                                        borrowers who completed. This figure includes only federal loans; it excludes private student loans and parent PLUS loans.</span></div>
+                                </div>
+                            </td>
+                            <td style='background-image:url(https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/ss_repeator_right.gif);width:9px;background-repeat:repeat-y;'></td>
+                        </tr>
+                        <tr>
+                            <td style='width:9px;height:8px;font-size:0px;'><img src="https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/ss_bottom_left.gif" title='' alt=''/></td>
+                            <td style='background-image:url(https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/ss_bottom_repeator.gif);width:800px;
+                                       background-repeat:repeat-x;height:8px;font-size:0px;'>&nbsp;</td>
+                            <td style='width:9px;height:8px;font-size:0px;'><img src="https://accessplus.iastate.edu/NonAuth/FA10/Shopping_Sheet/images/ss_bottom_right.gif" title='' alt=''/></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+<!--Page 3 starts here -->
+    <div class='isu_back_page'>
+      <div class='isu_page_header'>
+        Your 2018-19 Financial Aid Award
+      </div>
+      <div class='isu_main_body'>
+        <div class='isu_groups_div'>
+          <div class='isu_group_div'>
+            <div>
+              <div style='float:left;width:450px;'>
+              <span class='isu_group_header'>Estimated Billable Direct Costs for 2018-19</span>
+              </div>
+              <div style='float:left;width:60px;text-align:left;'>
+                <span class='isu_group_header'> $36,018</span>
+              </div><div style='clear:both;'></div></div>
+              <div class='isu_group_text'>
+       <ul style='margin-top:0px;padding-top:0px;margin-left:10px;padding-left:10px;'>
+          <li>Includes full-time tuition & fees, housing & meals, books & supplies</li>
+                <li>Does NOT include costs for transportation and other educational/personal expenses</li>
+       </ul>
+        </div>
+          </div> <!--isu_group_div-->
+          <div class='isu_group_div'>
+            <div>
+              <div style='float:left;width:445px;'>
+              <span class='isu_plain_text'>Grants and Scholarships</span>
+              </div>
+              <div style='float:left;width:65px;text-align:left;'>
+                <span class='isu_plain_text'>- $10,400</span>
+              </div><div style='clear:both;'></div></div>
+          </div> <!--isu_group_div-->
+          <div><hr></div>
+          <div class='isu_group_div'>
+            <div>
+              <div style='float:left;width:450px;'>
+              <span class='isu_group_header'>Estimated amount needed to cover remaining direct costs<BR />
+                          (Before borrowing federal student loans)</span>
+              </div>
+              <div style='float:left;width:60px;text-align:left;'>
+                <span class='isu_group_header'> $25,618</span>
+              </div><div style='clear:both;'></div></div>
+          </div> <!--isu_group_div-->
+          <div class='isu_group_div'>
+            <div>
+              <div style='float:left;width:445px;'>
+              <span class='isu_plain_text'>Federal Student Loan Options</span>
+              </div>
+              <div style='float:left;width:65px;text-align:left;'>
+                <span class='isu_plain_text'>-  $7,500</span>
+              </div><div style='clear:both;'></div></div>
+          </div> <!--isu_group_div-->
+          <div><hr></div>
+          <div class='isu_group_div'>
+            <div>
+              <div style='float:left;width:450px;'>
+              <span class='isu_group_header'>Estimated amount needed to cover remaining direct costs<BR />
+                          (If borrowing federal student loans)</span>
+              </div>
+              <div style='float:left;width:60px;text-align:left;'>
+                <span class='isu_group_header'> $18,118</span>
+              </div><div style='clear:both;'></div></div>
+          </div> <!--isu_group_div-->
+          <div class='isu_group_div'>
+            <div>
+              <div style='float:left;width:510px;'>
+                <span class='isu_plain_text'>Options to cover remaining costs:</span>
+              </div>
+             </div>
+          </div> <!--isu_group_div-->
+          <div style='clear:both;'></div>
+          <div class='isu_group_text'>
+            <ul style='margin-top:0px;padding-top:0px;margin-left:10px;padding-left:10px;'>
+   <li>Iowa State Monthly Payment Plan: <a href="https://ubill.iastate.edu/students/mpp" target="_blank">ubill.iastate.edu/students/mpp</a>
+                                             </li>
+               <li>Military and/or National Service benefits</li>
+               <li>Federal Direct Parent PLUS Loan: This loan is not guaranteed because it requires a separate application, and parents must be approved for the loan by
+                   a credit check. The student's parent is the borrower and would repay the loan. Parents can apply for the loan and complete other required steps
+                   at <a href="https://studentloans.gov" target="_blank">studentloans.gov</a>. </li>
+    <li>Non-Federal private education loan: This loan is not guaranteed because it requires a separate application, and the borrower must be approved for the loan by
+        a credit check. Private loans are available for students and parents. Private loan options can be viewed at
+            <a href="https://choice.fastproducts.org/FastChoice/home/186900/1" target="_blank">choice.fastproducts.org/FastChoice/home/186900/1</a>. </li></ul>
+          </div>
+          <div><hr></div>
+          <div class='isu_group_div'>
+            <div>
+              <div style='float:left;width:510px;'>
+                <span class='isu_group_header'>Your Financial Aid Explained:</span>
+              </div>
+            </div>
+          </div> <!--isu_group_div-->
+          <div>&nbsp;</div>
+          <div class='isu_group_div'>
+            <div>
+              <div style='float:left;width:450px;'>
+              <span class='isu_group_header'>Grants and Scholarships</span>
+              </div>
+              <div style='float:left;width:60px;text-align:left;'>
+                <span class='isu_group_header'> $10,400</span>
+              </div><div style='clear:both;'></div></div>
+            <div class='isu_group_text'>
+              These funds do not have to be repaid. You have been considered for all
+              available grants and scholarships through the Office of Student Financial Aid.
+              If you have additional scholarship funds
+              that you have received from an outside donor, please report those
+              scholarships on AccessPlus. </div>
+            <table style='border-collapse:collapse;border:0px solid black;'>
+            <tbody>
+            <tr>
+             <td class='isu_group_item_header'>&nbsp;&nbsp;</td>
+             <td class='isu_group_item_amthdr'>Fall</td>
+             <td class='isu_group_item_amthdr'>Spring</td>
+             <td class='isu_group_item_amthdr'>Total</td>
+            </tr>
+            <tr>
+             <td class='isu_group_item_header'>Grants from Iowa State University</td>
+             <td class='isu_group_item_amount'> </td>
+             <td class='isu_group_item_amount'> </td>
+             <td class='isu_group_item_amount'> </td>
+            </tr>
+            <tr>
+             <td class='isu_group_item'>ISU Grant</td>
+             <td class='isu_group_item_amount'>  $1,200</td>
+             <td class='isu_group_item_amount'>  $1,200</td>
+             <td class='isu_group_item_amount'>  $2,400</td>
+            </tr>
+            <tr>
+             <td class='isu_group_item_header'>Other scholarships you can use</td>
+             <td class='isu_group_item_amount'> </td>
+             <td class='isu_group_item_amount'> </td>
+             <td class='isu_group_item_amount'> </td>
+            </tr>
+            <tr>
+             <td class='isu_group_item'>Award for Competitive Excellence</td>
+             <td class='isu_group_item_amount'>  $4,000</td>
+             <td class='isu_group_item_amount'>  $4,000</td>
+             <td class='isu_group_item_amount'>  $8,000</td>
+            </tr>
+            </tbody>
+            </table>
+          </div> <!--isu_group_div-->
+          <div>&nbsp;</div>
+          <div class='isu_group_div'>
+            <div>
+              <div style='float:left;width:450px;'>
+              <span class='isu_group_header'>Student Loan Options</span>
+              </div>
+              <div style='float:left;width:60px;text-align:left;'>
+                <span class='isu_group_header'>  $7,500</span>
+              </div><div style='clear:both;'></div></div>
+            <div class='isu_group_text'>
+              Maximum student loan eligibility has been awarded; these loans are in the student's name.  Loan amounts can be accepted, reduced, or declined on
+              AccessPlus. We encourage students to borrow only what they need to pay for
+              college which will help reduce cumulative student debt and loan payments
+              after graduation
+            </div>
+            <table style='border-collapse:collapse;border:0px solid black;'>
+            <tbody>
+            <tr>
+             <td class='isu_group_item_header'>&nbsp;&nbsp;</td>
+             <td class='isu_group_item_amthdr'>Fall</td>
+             <td class='isu_group_item_amthdr'>Spring</td>
+             <td class='isu_group_item_amthdr'>Total</td>
+            </tr>
+            <tr>
+             <td class='isu_group_item'>Federal Direct Subsidized Loan</td>
+             <td class='isu_group_item_amount'>  $2,750</td>
+             <td class='isu_group_item_amount'>  $2,750</td>
+             <td class='isu_group_item_amount'>  $5,500</td>
+            </tr>
+            <tr>
+             <td class='isu_group_item'>Federal Direct Unsubsidized Loan</td>
+             <td class='isu_group_item_amount'>  $1,000</td>
+             <td class='isu_group_item_amount'>  $1,000</td>
+             <td class='isu_group_item_amount'>  $2,000</td>
+            </tr>
+            </tbody>
+            </table>
+          </div> <!--isu_group_div-->
+       </div> <!--isu_groups_div-->
+        <div class='isu_right_col_div'>
+<!--          <table style='border-collapse:collapse;border:1px solid black;'> -->
+          <table style='border-collapse:collapse;border:1px solid black;'>
+           <tbody>
+            <tr><td style='vertical-align:top;padding-top:15px;padding-left:10px;padding-right:10px;'>
+              <div class='isu_right_col_item'>
+              <div>
+                <b>Your financial aid package </b><br><b>was determined based</b><br><b>on these assumptions:</b><br>
+                <br>Full-time enrollment
+                <br>Non-resident tuition
+                <br>Dependent student
+                <br>
+              </div>
+              <div><hr></div>
+              <div>
+                <b>AccessPlus</b> is your portal to <br>Iowa State University!
+                <br><a href="https://accessplus.iastate.edu" target="_blank">accessplus.iastate.edu</a>
+                <br><br>
+                On <b>AccessPlus</b> you may view your financial aid,
+                track the status of your FAFSA, report additional aid,
+                and reduce your loan amounts.
+                <br><br>
+                In order to keep your personal information
+                safe and secure, we will direct you
+                (and those with Third Party Access) to
+                AccessPlus to find your individual financial
+                aid information.
+              </div>
+              <div><hr></div>
+              <div>For more information on financial aid and next steps:
+                <br><a href="https://financialaid.iastate.edu" target="_blank">financialaid.iastate.edu</a></div>
+              <div><hr></div>
+              <div>Awards are contingent upon continued funding from federal, state and
+                   institutional sources. Awards are subject to change and may be rescinded
+                   or reduced if funding is insufficient or discontinued, your financial need changes,
+                   your tuition assessment changes, or you receive aid from other sources. In the event
+                   that a student receives outside/private scholarships in excess of the standard cost
+                   of attendance, institutional aid will be reduced up to the excess amount.<br><br>
+                   <b>Rates for tuition, fees, housing, and meals              for 2018-19 will be approved by the Board
+                   of Regents, State of Iowa in June, 2018. Students affected by any changes in costs
+                   will be notified via e-mail after approval.</b></div>
+              <div><hr></div>
+              <div><b>YOUR FINANCIAL NEED AS CALCULATED BY FAFSA</b></div>
+              <div>&nbsp;</div>
+              <table>
+               <tbody>
+                <tr>
+                 <td style='width:130px;text-align:left;'>Est. Cost of Attendance</td>
+                 <td style='width:50px;text-align:right;'> $38,448</td></tr>
+                <tr>
+                 <td style='width:90%;text-align:left;'>- Exp. Family   Contribution</td>
+                 <td style='width:50px;text-align:right;'> $22,397</td></tr>
+                <tr>
+                 <td style='width:130px;;text-align:left;'>Total Financial Need</td>
+                 <td style='width:50px;text-align:right;text-decoration:overline;'> $16,051</td></tr>
+               </tbody>
+              </table>
+              </div>
+            </td></tr></tbody></table>
+        </div>  <!--isu_right_col_div-->
+        <div style='clear:both;'></div> <!--resets "float" attribute-->
+      </div> <!--isu_main_body-->
+      <div class='isu_address_div'>
+        <div class='isu_address_line'>Matthew Isaac Plewa</div>
+        <div class='isu_address_line'>2627 Kent Ave. Unit 10</div>
+        <div class='isu_address_line'> </div>
+        <div class='isu_address_line'>Ames, IA 50010</div>
+        <div class='isu_address_line'>                       </div>
+      </div> <!--isu_address_div-->
+    </div> <!--isu_back_page-->
+</body>
+</html>
