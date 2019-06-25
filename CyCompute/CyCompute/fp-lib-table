@@ -4,4 +4,7 @@
   (lib (name Pi_Sodimm)(type KiCad)(uri ${KIPRJMOD}/Pi_Sodimm.pretty)(options "")(descr ""))
   (lib (name P82B715DR)(type KiCad)(uri ${KIPRJMOD}/P82B715DR.pretty)(options "")(descr ""))
   (lib (name gsg-modules)(type KiCad)(uri ${KIPRJMOD}/gsg-modules.pretty)(options "")(descr ""))
+  (lib (name sp2526a)(type KiCad)(uri ${KIPRJMOD}/sp2526a.pretty)(options "")(descr ""))
+  (lib (name SP2526A-2EN-L)(type Legacy)(uri ${KIPRJMOD}/sp2526a.pretty)(options "")(descr ""))
+  (lib (name cam)(type KiCad)(uri ${KIPRJMOD}/cam.pretty)(options "")(descr ""))
 )
