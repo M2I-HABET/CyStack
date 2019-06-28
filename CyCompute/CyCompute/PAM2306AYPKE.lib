@@ -1,0 +1,37 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#(c) SnapEDA 2016 (snapeda.com)
+#This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA) with Design Exception 1.0
+#
+# PAM2306AYPKE
+#
+DEF PAM2306AYPKE U 0 40 Y Y 1 L N
+F0 "U" -401 421 50 H V L BNN
+F1 "PAM2306AYPKE" -401 -471 50 H V L BNN
+F2 "SON45P300X300X80-13N" 0 0 50 H I L BNN
+F3 "Diodes Inc." 0 0 50 H I L BNN
+F4 "Unavailable" 0 0 50 H I L BNN
+F5 "PAM2306AYPKE" 0 0 50 H I L BNN
+F6 "PAM2306 Series 1.8V/3.3V 1 A Dual High Efficiency PWM Step Down DC-DC Conveter" 0 0 50 H I L BNN
+F7 "WFDFN-12 Diodes Inc." 0 0 50 H I L BNN
+F8 "None" 0 0 50 H I L BNN
+DRAW
+P 2 0 0 10 -400 400 400 400 N
+P 2 0 0 10 400 400 400 -400 N
+P 2 0 0 10 400 -400 -400 -400 N
+P 2 0 0 10 -400 -400 -400 400 N
+X VIN1 7 -600 300 200 R 40 40 0 0 I 
+X VIN2 1 -600 -100 200 R 40 40 0 0 I 
+X LX1 8 600 300 200 L 40 40 0 0 O 
+X LX2 2 600 100 200 L 40 40 0 0 O 
+X EN1 6 -600 200 200 R 40 40 0 0 I 
+X EN2 12 -600 -200 200 R 40 40 0 0 I 
+X FB1 4 -600 100 200 R 40 40 0 0 I 
+X FB2 10 -600 -300 200 R 40 40 0 0 I 
+X GND@1 3 600 -100 200 L 40 40 0 0 W 
+X EXP 13 600 -300 200 L 40 40 0 0 W 
+X GND@2 9 600 -200 200 L 40 40 0 0 W 
+ENDDRAW
+ENDDEF
+#
+# End Library
