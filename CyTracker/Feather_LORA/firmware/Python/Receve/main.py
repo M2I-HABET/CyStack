@@ -3,7 +3,7 @@
 import board
 import busio
 import digitalio
-
+import time
 import adafruit_rfm9x
 
 
@@ -67,9 +67,11 @@ while True:
         # sending side is sending ASCII data before you try to decode!
         try:
             rssi = rfm9x.rssi
+            #print(packet)
             packet_text = str(packet, 'ascii')
             print((packet_text)+','+str(rssi))
         except:
             print("invalid ascii")
         # Also read the RSSI (signal strength) of the last received message and
         # print it.
+    time.sleep(.1)
