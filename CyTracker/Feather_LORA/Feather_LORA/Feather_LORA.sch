@@ -15,7 +15,7 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L Feather:Feather32u4RFM95 U2
+L Feather_LORA-rescue:Feather32u4RFM95-Feather U2
 U 1 1 5C28C654
 P 5000 5050
 F 0 "U2" V 3535 5050 60  0000 C CNN
@@ -50,12 +50,12 @@ $EndComp
 $Comp
 L power:+3.3V #PWR0102
 U 1 1 5C28CC24
-P 1700 1750
-F 0 "#PWR0102" H 1700 1600 50  0001 C CNN
-F 1 "+3.3V" H 1715 1923 50  0000 C CNN
-F 2 "" H 1700 1750 50  0001 C CNN
-F 3 "" H 1700 1750 50  0001 C CNN
-	1    1700 1750
+P 1700 2500
+F 0 "#PWR0102" H 1700 2350 50  0001 C CNN
+F 1 "+3.3V" H 1715 2673 50  0000 C CNN
+F 2 "" H 1700 2500 50  0001 C CNN
+F 3 "" H 1700 2500 50  0001 C CNN
+	1    1700 2500
 	-1   0    0    1   
 $EndComp
 $Comp
@@ -117,7 +117,7 @@ $EndComp
 Wire Wire Line
 	3750 4400 4200 4400
 $Comp
-L ultimateGPS_Library:FGPMMOPA6H_GPS U1
+L Feather_LORA-rescue:FGPMMOPA6H_GPS-ultimateGPS_Library U1
 U 1 1 5C28D6BC
 P 4550 1750
 F 0 "U1" H 4600 2139 50  0000 C CNN
@@ -212,10 +212,6 @@ Wire Wire Line
 	3950 2000 3100 2000
 Wire Wire Line
 	3100 2000 3100 2750
-Wire Wire Line
-	3100 2750 6650 2750
-Wire Wire Line
-	6650 2750 6650 5050
 Wire Wire Line
 	1700 1750 1700 1450
 Wire Wire Line
@@ -403,8 +399,6 @@ Wire Wire Line
 Wire Wire Line
 	4200 5100 4200 5050
 Wire Wire Line
-	6650 5050 5800 5050
-Wire Wire Line
 	6500 4900 5800 4900
 $Comp
 L Device:Antenna_Shield AE1
@@ -463,4 +457,281 @@ Wire Wire Line
 Connection ~ 6500 2300
 Wire Wire Line
 	6500 2300 6750 2300
+$Comp
+L Connector_Generic:Conn_02x20_Odd_Even J6
+U 1 1 5D167A9A
+P 1750 4300
+F 0 "J6" H 1800 5417 50  0000 C CNN
+F 1 "Conn_02x20_Top_Bottom" H 1800 5326 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Angled_2x20_Pitch2.54mm" H 1750 4300 50  0001 C CNN
+F 3 "~" H 1750 4300 50  0001 C CNN
+	1    1750 4300
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3.3V #PWR?
+U 1 1 5D807F12
+P 1550 3400
+F 0 "#PWR?" H 1550 3250 50  0001 C CNN
+F 1 "+3.3V" V 1565 3528 50  0000 L CNN
+F 2 "" H 1550 3400 50  0001 C CNN
+F 3 "" H 1550 3400 50  0001 C CNN
+	1    1550 3400
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:+5V #PWR?
+U 1 1 5D807FEC
+P 2050 3400
+F 0 "#PWR?" H 2050 3250 50  0001 C CNN
+F 1 "+5V" V 2065 3528 50  0000 L CNN
+F 2 "" H 2050 3400 50  0001 C CNN
+F 3 "" H 2050 3400 50  0001 C CNN
+	1    2050 3400
+	0    1    1    0   
+$EndComp
+$Comp
+L power:+5V #PWR?
+U 1 1 5D80802B
+P 2050 3500
+F 0 "#PWR?" H 2050 3350 50  0001 C CNN
+F 1 "+5V" V 2065 3628 50  0000 L CNN
+F 2 "" H 2050 3500 50  0001 C CNN
+F 3 "" H 2050 3500 50  0001 C CNN
+	1    2050 3500
+	0    1    1    0   
+$EndComp
+$Comp
+L power:+3.3V #PWR?
+U 1 1 5D809C9C
+P 1550 4200
+F 0 "#PWR?" H 1550 4050 50  0001 C CNN
+F 1 "+3.3V" V 1565 4328 50  0000 L CNN
+F 2 "" H 1550 4200 50  0001 C CNN
+F 3 "" H 1550 4200 50  0001 C CNN
+	1    1550 4200
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5D80B926
+P 1550 3800
+F 0 "#PWR?" H 1550 3550 50  0001 C CNN
+F 1 "GND" V 1555 3672 50  0000 R CNN
+F 2 "" H 1550 3800 50  0001 C CNN
+F 3 "" H 1550 3800 50  0001 C CNN
+	1    1550 3800
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5D80B965
+P 1550 4600
+F 0 "#PWR?" H 1550 4350 50  0001 C CNN
+F 1 "GND" V 1555 4472 50  0000 R CNN
+F 2 "" H 1550 4600 50  0001 C CNN
+F 3 "" H 1550 4600 50  0001 C CNN
+	1    1550 4600
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5D80D5B0
+P 1550 5300
+F 0 "#PWR?" H 1550 5050 50  0001 C CNN
+F 1 "GND" V 1555 5172 50  0000 R CNN
+F 2 "" H 1550 5300 50  0001 C CNN
+F 3 "" H 1550 5300 50  0001 C CNN
+	1    1550 5300
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5D80F205
+P 2050 3600
+F 0 "#PWR?" H 2050 3350 50  0001 C CNN
+F 1 "GND" V 2055 3472 50  0000 R CNN
+F 2 "" H 2050 3600 50  0001 C CNN
+F 3 "" H 2050 3600 50  0001 C CNN
+	1    2050 3600
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5D81473F
+P 2050 4000
+F 0 "#PWR?" H 2050 3750 50  0001 C CNN
+F 1 "GND" V 2055 3872 50  0000 R CNN
+F 2 "" H 2050 4000 50  0001 C CNN
+F 3 "" H 2050 4000 50  0001 C CNN
+	1    2050 4000
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5D817FDF
+P 2050 4300
+F 0 "#PWR?" H 2050 4050 50  0001 C CNN
+F 1 "GND" V 2055 4172 50  0000 R CNN
+F 2 "" H 2050 4300 50  0001 C CNN
+F 3 "" H 2050 4300 50  0001 C CNN
+	1    2050 4300
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5D819C2A
+P 2050 4800
+F 0 "#PWR?" H 2050 4550 50  0001 C CNN
+F 1 "GND" V 2055 4672 50  0000 R CNN
+F 2 "" H 2050 4800 50  0001 C CNN
+F 3 "" H 2050 4800 50  0001 C CNN
+	1    2050 4800
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5D81B875
+P 2050 5000
+F 0 "#PWR?" H 2050 4750 50  0001 C CNN
+F 1 "GND" V 2055 4872 50  0000 R CNN
+F 2 "" H 2050 5000 50  0001 C CNN
+F 3 "" H 2050 5000 50  0001 C CNN
+	1    2050 5000
+	0    -1   -1   0   
+$EndComp
+Text GLabel 1550 3500 0    50   Input ~ 0
+GPIO02
+Text GLabel 1550 3600 0    50   Input ~ 0
+GPIO03
+Text GLabel 1550 3700 0    50   Input ~ 0
+GPIO04
+Text GLabel 1550 3900 0    50   Input ~ 0
+GPIO17
+Text GLabel 1550 4000 0    50   Input ~ 0
+GPIO27
+Text GLabel 1550 4100 0    50   Input ~ 0
+GPIO22
+Text GLabel 1550 4300 0    50   Input ~ 0
+GPIO10
+Text GLabel 1550 4400 0    50   Input ~ 0
+GPIO09
+Text GLabel 1550 4500 0    50   Input ~ 0
+GPIO11
+Text GLabel 1550 4800 0    50   Input ~ 0
+GPIO05
+Text GLabel 1550 4900 0    50   Input ~ 0
+GPIO06
+Text GLabel 1550 5000 0    50   Input ~ 0
+GPIO13
+Text GLabel 1550 5100 0    50   Input ~ 0
+GPIO19
+Text GLabel 1550 5200 0    50   Input ~ 0
+GPIO26
+Text GLabel 1550 4700 0    50   Input ~ 0
+ID_SD
+Text GLabel 2050 3700 2    50   Input ~ 0
+GPIO14
+Text GLabel 2050 3800 2    50   Input ~ 0
+GPIO15
+Text GLabel 2050 3900 2    50   Input ~ 0
+GPIO18
+Text GLabel 2050 4100 2    50   Input ~ 0
+GPIO23
+Text GLabel 2050 4200 2    50   Input ~ 0
+GPIO24
+Text GLabel 2050 4400 2    50   Input ~ 0
+GPIO25
+Text GLabel 2050 4500 2    50   Input ~ 0
+GPIO08
+Text GLabel 2050 4600 2    50   Input ~ 0
+GPIO08
+Text GLabel 2050 4900 2    50   Input ~ 0
+GPIO12
+Text GLabel 2050 5100 2    50   Input ~ 0
+GPIO16
+Text GLabel 2050 5200 2    50   Input ~ 0
+GPIO20
+Text GLabel 2050 5300 2    50   Input ~ 0
+21
+Wire Wire Line
+	3950 2500 3150 2500
+Wire Wire Line
+	3150 2500 3150 6250
+Wire Wire Line
+	3150 6250 4200 6250
+$Comp
+L Device:LED D?
+U 1 1 5D84C2A6
+P 7100 2750
+F 0 "D?" H 7092 2495 50  0000 C CNN
+F 1 "LED" H 7092 2586 50  0000 C CNN
+F 2 "" H 7100 2750 50  0001 C CNN
+F 3 "~" H 7100 2750 50  0001 C CNN
+	1    7100 2750
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	3100 2750 6950 2750
+$Comp
+L Device:R R?
+U 1 1 5D85005C
+P 7400 2750
+F 0 "R?" V 7193 2750 50  0000 C CNN
+F 1 "R330" V 7284 2750 50  0000 C CNN
+F 2 "" V 7330 2750 50  0001 C CNN
+F 3 "~" H 7400 2750 50  0001 C CNN
+	1    7400 2750
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5D850149
+P 7550 2750
+F 0 "#PWR?" H 7550 2500 50  0001 C CNN
+F 1 "GND" V 7555 2622 50  0000 R CNN
+F 2 "" H 7550 2750 50  0001 C CNN
+F 3 "" H 7550 2750 50  0001 C CNN
+	1    7550 2750
+	0    -1   -1   0   
+$EndComp
+Text Notes 6850 2900 0    50   ~ 0
+Blinking status light for fix
+NoConn ~ 5800 5050
+Text Notes 5850 5050 0    50   ~ 0
+Reserved for radio
+$Comp
+L power:+3V3 #PWR?
+U 1 1 5D856460
+P 1700 1750
+F 0 "#PWR?" H 1700 1600 50  0001 C CNN
+F 1 "+3V3" H 1715 1923 50  0000 C CNN
+F 2 "" H 1700 1750 50  0001 C CNN
+F 3 "" H 1700 1750 50  0001 C CNN
+	1    1700 1750
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:+3V3 #PWR?
+U 1 1 5D8564BE
+P 1500 2400
+F 0 "#PWR?" H 1500 2250 50  0001 C CNN
+F 1 "+3V3" V 1515 2528 50  0000 L CNN
+F 2 "" H 1500 2400 50  0001 C CNN
+F 3 "" H 1500 2400 50  0001 C CNN
+	1    1500 2400
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	1500 2400 1700 2400
+Wire Wire Line
+	1700 2400 1700 2500
+Text Notes 1300 2250 0    50   ~ 0
+Add backup power option. 
+Text Notes 7650 3650 0    50   ~ 0
+Remove these headers. move out to rj45/pi header\nUse jumpers to select opperation ie rj or pi
+Text Notes 3150 6350 0    50   ~ 0
+Tx is needed to set mode. 
+Text GLabel 2050 4700 2    50   Input ~ 0
+ID_SC
 $EndSCHEMATC

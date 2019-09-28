@@ -9,9 +9,9 @@ import digitalio
 import adafruit_gps
 import adafruit_rfm9x
  # Device ID
-FEATHER_ID = "1"
+FEATHER_ID = b'1'
 
-
+print("start up")
 # Define pins connected to the chip, use these if wiring up the breakout according to the guide:
 # pylint: disable=c-extension-no-member
 CS = digitalio.DigitalInOut(board.D10)
@@ -44,13 +44,13 @@ TX = board.TX
 # Create a serial connection for the GPS connection using default speed and
 # a slightly higher timeout (GPS modules typically update once a second).
 uart = busio.UART(TX, RX, baudrate=9600, timeout=30)
-
+uartPayload = busio.UART(board.A1, RX, baudrate=9600, timeout=30)
 # for a computer, use the pyserial library for uart access
 #import serial
 #uart = serial.Serial("/dev/ttyUSB0", baudrate=9600, timeout=3000)
 
 # Create a GPS module instance.
-gps = adafruit_gps.GPS(uart, debug=False)
+#gps = adafruit_gps.GPS(uart, debug=False)
 
 # Initialize the GPS module by changing what data it sends and at what rate.
 # These are NMEA extensions for PMTK_314_SET_NMEA_OUTPUT and
@@ -59,7 +59,7 @@ gps = adafruit_gps.GPS(uart, debug=False)
 #   https://cdn-shop.adafruit.com/datasheets/PMTK_A11.pdf
 
 # Turn on the basic GGA and RMC info (what you typically want)
-gps.send_command(b'PMTK314,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0')
+#gps.send_command(b'PMTK314,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0')
 # Turn on just minimum info (RMC only, location):
 #gps.send_command(b'PMTK314,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0')
 # Turn off everything:
@@ -68,7 +68,7 @@ gps.send_command(b'PMTK314,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0')
 #gps.send_command(b'PMTK314,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0')
 
 # Set update rate to once a second (1hz) which is what you typically want.
-gps.send_command(b'PMTK220,1000')
+#gps.send_command(b'PMTK220,1000')
 # Or decrease to once every two seconds by doubling the millisecond value.
 # Be sure to also increase your UART timeout above!
 #gps.send_command(b'PMTK220,2000')
@@ -80,12 +80,12 @@ gps.send_command(b'PMTK220,1000')
 last_print = time.monotonic()
 
 def sendMessage(message):
-    try:
+    #try:
         LED.value = True
-        rfm9x.send(message)
+        rfm9x.send(FEATHER_ID+b','+message)
         LED.value = False
-    except:
-        print("message Failed TO send")
+    #except:
+    #    print("Message failed to send")
 
 
 while True:
@@ -93,16 +93,22 @@ while True:
     # as fast as data comes from the GPS unit (usually every second).
     # This returns a bool that's true if it parsed new data (you can ignore it
     # though if you don't care and instead look at the has_fix property).
-    gps.update()
+    #gps.update()
     # Every second print out current location details if there's a fix.
     current = time.monotonic()
-    if current - last_print >= 1.0:
+    #if current - last_print >= 1.0:
+    gps_string = uart.readline()
+    if "GPGGA" in gps_string:
+        print(gps_string)
+        sendMessage(gps_string)
+    time.sleep(.1)
+    while False:
         last_print = current
         if not gps.has_fix:
             # Try again if we don't have a fix yet.
             print('Waiting for fix...')
             try:
-                sendMessage(FEATHER_ID+",NONE")
+                sendMessage("NONE")
             except:
                 print("not sending")
                 pass
@@ -112,30 +118,3 @@ while True:
         sendString = sendString + 'Lon,{0:.6f},'.format(gps.longitude)
         sendString = sendString + 'Alt,{} '.format(gps.altitude_m)
         sendMessage(sendString)
-        # We have a fix! (gps.has_fix is true)
-        # Print out details about the fix like location, date, etc.
-        print('=' * 40)  # Print a separator line.
-        print('Fix timestamp: {}/{}/{} {:02}:{:02}:{:02}'.format(
-            gps.timestamp_utc.tm_mon,   # Grab parts of the time from the
-            gps.timestamp_utc.tm_mday,  # struct_time object that holds
-            gps.timestamp_utc.tm_year,  # the fix time.  Note you might
-            gps.timestamp_utc.tm_hour,  # not get all data like year, day,
-            gps.timestamp_utc.tm_min,   # month!
-            gps.timestamp_utc.tm_sec))
-        print('Latitude: {0:.6f} degrees'.format(gps.latitude))
-        print('Longitude: {0:.6f} degrees'.format(gps.longitude))
-        print('Fix quality: {}'.format(gps.fix_quality))
-        # Some attributes beyond latitude, longitude and timestamp are optional
-        # and might not be present.  Check if they're None before trying to use!
-        if gps.satellites is not None:
-            print('# satellites: {}'.format(gps.satellites))
-        if gps.altitude_m is not None:
-            print('Altitude: {} meters'.format(gps.altitude_m))
-        if gps.speed_knots is not None:
-            print('Speed: {} knots'.format(gps.speed_knots))
-        if gps.track_angle_deg is not None:
-            print('Track angle: {} degrees'.format(gps.track_angle_deg))
-        if gps.horizontal_dilution is not None:
-            print('Horizontal dilution: {}'.format(gps.horizontal_dilution))
-        if gps.height_geoid is not None:
-            print('Height geo ID: {} meters'.format(gps.height_geoid))
