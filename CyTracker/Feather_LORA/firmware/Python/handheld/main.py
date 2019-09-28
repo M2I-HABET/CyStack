@@ -1,5 +1,6 @@
-# Simple demo of sending and recieving data with the RFM95 LoRa radio.
-# Author: Tony DiCola
+# Simple GPS module demonstration.
+# Will wait for a fix and print a message every second with the current location
+# and other details.
 import board
 import busio
 import digitalio
@@ -8,61 +9,79 @@ import adafruit_rfm9x
 import adafruit_ssd1306
 import math
 import adafruit_gps
+ # Device ID
+FEATHER_ID = b'1'
 
 
 def getpos(array):
-    lat = array[3][:2]+str(float(array[3][2:])/60)[1:]
-    lon = array[5][:3]+str(float(array[5][3:])/60)[1:]
-    alt = array[10]
-    return lat, lon, alt
+    print(array)
+    try:
+        lat = array[3][:2]+str(float(array[3][2:])/60)[1:]
+        lon = array[5][:3]+str(float(array[5][3:])/60)[1:]
+        alt = array[10]
+        if(array[4] == "S"):
+            lat = "-"+lat
+        if(array[6] == "W"):
+            lon = "-"+lon
+        return str(lat), str(lon), str(alt)
+    except:
+        return str(None),str(None),str(None)
 
 def getBearing(latA,lonA,altA,latB,lonB,altB):
+    R = 6372.795477598*1000
     phi1 = float(latA)*math.pi/180
     phi2 = float(latB)*math.pi/180
-    dphi = float(latB-latA)*math.pi/180
-    dlamb = float(lonB-lonA)*math.pi/180
+    dphi = (float(latB)-float(latA))*math.pi/180
+    dlamb = (float(lonB)-float(lonA))*math.pi/180
 
     a = math.sin(dphi/2)*math.sin(dphi/2)+math.cos(phi1)*math.cos(phi2)*math.sin(dlamb/2)*math.sin(dlamb/2)
 
     c = 2*math.atan(math.sqrt(a)/math.sqrt(1-a))
     distance = R*c
 
-    x = math.cos(latB*math.pi/180)*math.sin(math.pi/180*(lonA-lonB))
-    y = math.cos(latA*math.pi/180)*math.sin(math.pi/180*latB)-math.sin(math.pi/180*latA)*math.cos(math.pi/180*latB)*math.cos(math.pi/180*(lonA-lonB))
+    x = math.cos(float(latB)*math.pi/180)*math.sin(math.pi/180*(float(lonA)-float(lonB)))
+    y = math.cos(float(latA)*math.pi/180)*math.sin(math.pi/180*float(latB))-math.sin(math.pi/180*float(latA))*math.cos(math.pi/180*float(latB))*math.cos(math.pi/180*(float(lonA)-float(lonB)))
 
-    az =  -180/math.pi*math.atan(x/y)
+    try:
+        az =  -180/math.pi*math.atan(x/y)
+    except:
+        return 0,0,0
     dla = float(latB)-float(latA)
     dlo = float(lonB)-float(lonA)
+    az = abs(az)%90
+    az1 = az
+    if(dla<0 and dlo>0):
+        az = 180-az
+    if(dla<0 and dlo<0 and az<270):
+        az = 180+az
+    if(dla>0 and dlo<0 and (az<180 or az>270)):
+        az = 360-az
+    if(dla>0 and dlo>0 and (az<90 or az>180)):
+        az = az
+    print(latA)
+    print(lonA)
+    print("#"*10)
+    print(az1)
     print(az)
     #print("az"+str(az))
-    print(dla)
-    print(dlo)
-
-
-    el = 180/math.pi*math.atan(int(altB-altA)/distance)
-    #print(alt)
-    #print(home_alt)
-    print("el")
-    print(el)
-    print("az")
-    print(az)
-    print("distance:")
-    print(distance)
+    print("Lat:"+str(dla))
+    print("Lon:"+str(dlo))
+    print("#"*10)
+    el = 180/math.pi*math.atan(int(float(altB)-float(altA))/distance)
     if(el<0):
         el = 0
-    return
+    return distance, az, el
 
-# Define radio parameters.
-RADIO_FREQ_MHZ = 433.0  # Frequency of the radio in Mhz. Must match your
-                        # module! Can be a value like 915.0, 433.0, etc.
 
+
+
+
+print("start up")
 # Define pins connected to the chip, use these if wiring up the breakout according to the guide:
+# pylint: disable=c-extension-no-member
 CS = digitalio.DigitalInOut(board.D10)
+# pylint: disable=c-extension-no-member
 RESET = digitalio.DigitalInOut(board.D11)
-# Or uncomment and instead use these if using a Feather M0 RFM9x board and the appropriate
-# CircuitPython build:
-# CS = digitalio.DigitalInOut(board.RFM9X_CS)
-# RESET = digitalio.DigitalInOut(board.RFM9X_RST)
 
 # Define the onboard LED
 LED = digitalio.DigitalInOut(board.D13)
@@ -70,76 +89,113 @@ LED.direction = digitalio.Direction.OUTPUT
 
 # Initialize SPI bus.
 spi = busio.SPI(board.SCK, MOSI=board.MOSI, MISO=board.MISO)
-i2c = busio.I2C(board.SCL, board.SDA)
+
+
+# Define radio frequency, MUST match gateway frequency.
+RADIO_FREQ_MHZ = 433.0
+
 # Initialze RFM radio
 rfm9x = adafruit_rfm9x.RFM9x(spi, CS, RESET, RADIO_FREQ_MHZ)
-# Initialize oled display
-oled = adafruit_ssd1306.SSD1306_I2C(128, 32, i2c)
-# Note that the radio is configured in LoRa mode so you can't control sync
-# word, encryption, frequency deviation, or other settings!
 
-# You can however adjust the transmit power (in dB).  The default is 13 dB but
-# high power radios like the RFM95 can go up to 23 dB:
+# Set transmit power to max
 rfm9x.tx_power = 23
 
-# Send a packet.  Note you can only send a packet up to 252 bytes in length.
-# This is a limitation of the radio packet size, so if you need to send larger
-# amounts of data you will need to break it into smaller send calls.  Each send
-# call will wait for the previous one to finish before continuing.
-
-# Wait to receive packets.  Note that this library can't receive data at a fast
-# rate, in fact it can only receive and process one 252 byte packet at a time.
-# This means you should only use this for low bandwidth scenarios, like sending
-# and receiving a single message at a time.
-
-# Set up gps
-
+# Define RX and TX pins for the board's serial port connected to the GPS.
+# These are the defaults you should use for the GPS FeatherWing.
+# For other boards set RX = GPS module TX, and TX = GPS module RX pins.
 RX = board.RX
 TX = board.TX
+
+# Create a serial connection for the GPS connection using default speed and
+# a slightly higher timeout (GPS modules typically update once a second).
 uart = busio.UART(TX, RX, baudrate=9600, timeout=30)
+#uartPayload = busio.UART(board.A1, RX, baudrate=9600, timeout=30)
+# for a computer, use the pyserial library for uart access
+#import serial
+#uart = serial.Serial("/dev/ttyUSB0", baudrate=9600, timeout=3000)
+
+# Create a GPS module instance.
 #gps = adafruit_gps.GPS(uart, debug=False)
-#gps.send_command(b'PMTK314,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0')
+
+# Initialize the GPS module by changing what data it sends and at what rate.
+# These are NMEA extensions for PMTK_314_SET_NMEA_OUTPUT and
+# PMTK_220_SET_NMEA_UPDATERATE but you can send anything from here to adjust
+# the GPS module behavior:
+#   https://cdn-shop.adafruit.com/datasheets/PMTK_A11.pdf
+
+# Turn on the basic GGA and RMC info (what you typically want)
+#gps.send_command(b'PMTK314,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0')
+# Turn on just minimum info (RMC only, location):
+#gps.send_command(b'PMTK314,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0')
+# Turn off everything:
+#gps.send_command(b'PMTK314,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0')
+# Tuen on everything (not all of it is parsed!)
+#gps.send_command(b'PMTK314,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0')
+
+# Set update rate to once a second (1hz) which is what you typically want.
 #gps.send_command(b'PMTK220,1000')
+# Or decrease to once every two seconds by doubling the millisecond value.
+# Be sure to also increase your UART timeout above!
+#gps.send_command(b'PMTK220,2000')
+# You can also speed up the rate, but don't go too fast or else you can lose
+# data during parsing.  This would be twice a second (2hz, 500ms delay):
+#gps.send_command(b'PMTK220,500')
+
+# Main loop runs forever printing the location, etc. every second.
 last_print = time.monotonic()
 
-print('Waiting for packets...')
-
+def sendMessage(message):
+    #try:
+        LED.value = True
+        rfm9x.send(FEATHER_ID+b','+message)
+        LED.value = False
+    #except:
+    #    print("Message failed to send")
+# Initialize oled display
+i2c = busio.I2C(board.SCL, board.SDA)
+oled = adafruit_ssd1306.SSD1306_I2C(128, 32, i2c)
 oled.fill(0)
 oled.text('Hello', 0, 0, 1)
 #oled.text('World', 0, 10, 1)
 oled.show()
+latA="0"
+latB="0"
+lonA="0"
+lonB="0"
+altA="0"
+altB="0"
+rng = 0
+bearing = 0
+el = 0
+current = time.monotonic()
+old = current
 while True:
-    packet = rfm9x.receive(timeout=1)
-    # Optionally change the receive timeout from its default of 0.5 seconds:
-    #packet = rfm9x.receive(timeout=5.0)
-    # If no packet was received during the timeout then None is returned.
+    new = False
+    # Make sure to call gps.update() every loop iteration and at least twice
+    # as fast as data comes from the GPS unit (usually every second).
+    # This returns a bool that's true if it parsed new data (you can ignore it
+    # though if you don't care and instead look at the has_fix property).
     #gps.update()
+    # Every second print out current location details if there's a fix.
     current = time.monotonic()
-    if current - last_print >= 1.0:
-        last_print = current
-        #if not gps.has_fix:
-            # Try again if we don't have a fix yet.
-        #    print('Waiting for fix...')
-        #oled.fill(0)
-        #oled.text(str(gps.latitude), 0, 0, 1)
-        #oled.text(str(gps.longitude), 0, 10, 1)
-        #oled.text(str(gps.altitude_m), 0, 20, 1)
-        #oled.show()
+    packet = rfm9x.receive(timeout=.1)
+    #if current - last_print >= 1.0:
     gps_string = uart.readline()
-    print(gps_string)
-    try:
+    if "GPGGA" in gps_string:
+        new = True
+        try:
 
-        packet_text = "1,"+str(gps_string, 'ascii')
-        packetArray = packet_text.split(",")
-        lat, lon, alt = getpos(packetArray)
-        oled.fill(0)
-        oled.text(lat, 0, 0, 1)
-        oled.text(lon, 0, 10, 1)
-        oled.text(alt, 0, 20, 1)
-        oled.show()
-    except:
-        continue
-    continue
+            packet_text = "1,"+str(gps_string, 'ascii')
+            packetArray = packet_text.split(",")
+            latA, lonA, altA = getpos(packetArray)
+            #oled.fill(0)
+            #oled.text(latA, 0, 0, 1)
+            #oled.text(lonA, 0, 10, 1)
+            #oled.text(altA, 0, 20, 1)
+            #oled.show()
+        except Exception as e:
+            print(e)
+            continue
     if packet is None:
         # Packet has not been received
         LED.value = False
@@ -158,18 +214,26 @@ while True:
             packet_text = str(packet, 'ascii')
             packetArray = packet_text.split(",")
             if "GPGGA" in packet_text:
-                lat, lon, alt = getpos(packetArray)
-                oled.fill(0)
-                oled.text(lat, 0, 0, 1)
-                oled.text(lon, 0, 10, 1)
-                oled.text(alt, 0, 20, 1)
-                oled.show()
+                old = current
+                new = True
+                latB, lonB, altB = getpos(packetArray)
+                #oled.fill(0)
+                #oled.text(latB, 0, 0, 1)
+                #oled.text(lonB, 0, 10, 1)
+                #oled.text(altB, 0, 20, 1)
+                #oled.show()
         except Exception as e:
-            oled.fill(0)
-            oled.text("Node: NA", 0, 0, 1)
-            oled.text("Bearing: NA", 0, 10, 1)
-            oled.text("Range: NA", 0, 20, 1)
-            oled.show()
+            continue
         # Also read the RSSI (signal strength) of the last received message and
         # print it.
+    if new:
+        try:
+            rng, bearing, el = getBearing(latA,lonA,altA,latB,lonB,altB)
+        except:
+            pass
+    oled.fill(0)
+    oled.text("R: "+str(rng)+"m T:"+str(int(current-old)) , 0, 0, 1)
+    oled.text("B: "+str(bearing), 0, 10, 1)
+    oled.text("E: "+str(el), 0, 20, 1)
+    oled.show()
     time.sleep(.1)
