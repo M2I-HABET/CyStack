@@ -1,3 +1,0 @@
-(sym_lib_table
-  (lib (name Feather_LORA-rescue)(type Legacy)(uri ${KIPRJMOD}/Feather_LORA-rescue.lib)(options "")(descr ""))
-)
