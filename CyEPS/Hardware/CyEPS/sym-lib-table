@@ -1,0 +1,6 @@
+(sym_lib_table
+  (lib (name Device)(type Legacy)(uri ${KIPRJMOD}/Device.lib)(options "")(descr ""))
+  (lib (name 2021-01-04_22-05-40)(type Legacy)(uri ${KIPRJMOD}/ADC128D818CIMTX_NOPB/2021-01-04_22-05-40.lib)(options "")(descr ""))
+  (lib (name 2SC4116-GR,LF)(type Legacy)(uri ${KIPRJMOD}/2SC4116-GR,LF/2SC4116-GR,LF.lib)(options "")(descr ""))
+  (lib (name 2021-01-10_23-18-28)(type Legacy)(uri ${KIPRJMOD}/DMG2305UX/2021-01-10_23-18-28.lib)(options "")(descr ""))
+)
