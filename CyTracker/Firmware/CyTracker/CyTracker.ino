@@ -12,33 +12,24 @@
 #include <RHMesh.h>
 #include <Adafruit_SleepyDog.h>
 #include <stdio.h>
-#include <String.h>
+#include <string.h>
 #include "wiring_private.h" // pinPeripheral() function
 #include <Adafruit_GPS.h>
+#include <CyTrackerParser.h>
+#include <CyTrackerSERCOM_Handler.h>
 // ALL DEFINES BELLOW
 
-#define RFM95_RST     11   // "A"
-#define RFM95_CS      10   // "B"
-#define RFM95_INT     6    // "D"
 // Change to 434.0 or other frequency, must match RX's freq!
-#define RF95_FREQ 434.0
-//RF power
-#define RFPOWER 1
-// client addr
-#define CLIENT_ADDRESS 1
-// Other Nodes:
-#define SERVER1_ADDRESS 2
-#define SERVER2_ADDRESS 3
-#define SERVER3_ADDRESS 4
+//#define RF95_FREQ 434.0 //commented out for easier access for users
 
-#define GPSECHO false
+
 // Singleton instance of the radio driver
+
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
 RHMesh manager(rf95,CLIENT_ADDRESS);
 Uart Serial2 (&sercom4, A3, A2, SERCOM_RX_PAD_1, UART_TX_PAD_0);
 Adafruit_GPS GPS(&Serial2);
 
-#define RH_MESH_MAX_MESSAGE_LEN 150
 uint8_t readString[RH_MESH_MAX_MESSAGE_LEN]="";
 uint8_t readStringClean[RH_MESH_MAX_MESSAGE_LEN]="";
 uint8_t a;
@@ -69,17 +60,6 @@ void SERCOM4_3_Handler()
 {
 	Serial2.IrqHandler();
 }
-
-
-
-void append(uint8_t* s, uint8_t c, uint8_t max_len) {
-	int len = strlen((char*)s);
-	if(len<max_len){// protects against buffer overflow
-		s[len] = c;//add char (well uint8_t)
-		s[len+1] = '\0';// need null terminator at end since overwritten in previous line
-	}
-}
-
 
 void setup()
 {
@@ -127,14 +107,10 @@ void setup()
 }
 
 int16_t packetnum = 0;  // packet counter, we increment per xmission
-//uint8_t data[] = "Hello World!";
 // Dont put this on the stack:
 uint8_t buf[RH_MESH_MAX_MESSAGE_LEN];
 //int iterate = 0;
 void loop(){
-//  Serial.print("Looped ");
-//  Serial.print( iterate);
-//  Serial.println(" times");
 	if(a=='\n'){
 		/*
 		 * this will look for the end of a string and then print it.
@@ -175,8 +151,5 @@ void loop(){
 		memset(readString,0,sizeof readString);// time for a new string
 		a='\0';// have to set a to something other then \n to prevent it from reentering this conditional statement
 	}
-
-//  delay(10);
-//  iterate++;
-
+  delay(10);
 }
