@@ -4,7 +4,6 @@
 // Bassed off of http://www.airspayce.com/mikem/arduino/RadioHead/rf22_mesh_client_8pde-example.html
 // and also https://learn.adafruit.com/radio-featherwing/using-the-rfm-9x-radio
 
-
 // watchdog timer has issues with serial when it restarts and can cause it to hang!!
 
 #include <SPI.h>
@@ -15,61 +14,31 @@
 #include <string.h>
 #include "wiring_private.h" // pinPeripheral() function
 #include <Adafruit_GPS.h>
-#include <CyTrackerParser.h>
+// definitions for Serial2, appendChar, and readString as well as global defs and SERCOM handler functions
 #include <CyTrackerSERCOM_Handler.h>
-// ALL DEFINES BELLOW
 
 // Change to 434.0 or other frequency, must match RX's freq!
-//#define RF95_FREQ 434.0 //commented out for easier access for users
+///#define RF95_FREQ 434.0 //commented out for easier access for users
 
 
 // Singleton instance of the radio driver
 
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
 RHMesh manager(rf95,CLIENT_ADDRESS);
-Uart Serial2 (&sercom4, A3, A2, SERCOM_RX_PAD_1, UART_TX_PAD_0);
 Adafruit_GPS GPS(&Serial2);
 
-uint8_t readString[RH_MESH_MAX_MESSAGE_LEN]="";
-uint8_t readStringClean[RH_MESH_MAX_MESSAGE_LEN]="";
-uint8_t a;
+//uint8_t readStringClean[RH_MESH_MAX_MESSAGE_LEN]="";
 
-void SERCOM4_0_Handler()                // Interrupt handler functions
-{
-	Serial2.IrqHandler();
-	
-}
-void SERCOM4_1_Handler()
-{
-	Serial2.IrqHandler();
-	
-}
-void SERCOM4_2_Handler()
-{
-	Serial2.IrqHandler();
-	a = Serial2.read();
-	append(readString,a,RH_MESH_MAX_MESSAGE_LEN);
-	/*
-	 * ok so this make it so that we don't have to block on the main loop.
-	 * when a char comes in it fires this interrupt. When it fires we save the char
-	 * and add it to the read string. when you exit this handler you continue
-	 * your code where you stopped prior to the interrupt
-	 */
-}
-void SERCOM4_3_Handler()
-{
-	Serial2.IrqHandler();
-}
-
-void setup()
-{
+void setup(){
 	pinMode(RFM95_RST, OUTPUT);
 	digitalWrite(RFM95_RST, HIGH);
 	
+	//Start the serial port and make sure it's running
 	Serial.begin(9600);
 	while (!Serial) {
 		delay(1);
 	}
+	
 	GPS.begin(9600);
 	pinPeripheral(A2, PIO_SERCOM_ALT);  // Assign SERCOM functionality to A2
 	pinPeripheral(A3, PIO_SERCOM_ALT);  // Assign SERCOM functionality to A3
@@ -109,18 +78,15 @@ void setup()
 int16_t packetnum = 0;  // packet counter, we increment per xmission
 // Dont put this on the stack:
 uint8_t buf[RH_MESH_MAX_MESSAGE_LEN];
-//int iterate = 0;
+
 void loop(){
-	if(a=='\n'){
+	if(appendChar == '\n'){
 		/*
 		 * this will look for the end of a string and then print it.
 		 * This does not block the loop till you have a full string.
 		 */
-		a='\0';// have to set a to something other then \n to prevent it from reentering this conditional statement
+		appendChar='\0';// have to set a to something other then \n to prevent it from reentering this conditional statement
 		Serial.print((char*)readString);// dont need a print ln because it already has \n
-		
-		
-		
 		Serial.println("Sending to manager_mesh_server3");
 		
 		// Send a message to a rf22_mesh_server
@@ -149,7 +115,7 @@ void loop(){
 			Serial.println("sendtoWait failed. Are the intermediate mesh servers running?");
 		
 		memset(readString,0,sizeof readString);// time for a new string
-		a='\0';// have to set a to something other then \n to prevent it from reentering this conditional statement
+		appendChar='\0';// have to set a to something other then \n to prevent it from reentering this conditional statement
 	}
   delay(10);
 }
