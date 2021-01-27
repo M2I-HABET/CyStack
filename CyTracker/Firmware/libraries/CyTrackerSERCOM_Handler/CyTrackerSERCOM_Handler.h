@@ -15,7 +15,6 @@
 #include <SERCOM.h>
 #include <variant.h>
 
-//
 #define RFM95_RST     11   // "A"
 #define RFM95_CS      10   // "B"
 #define RFM95_INT     6    // "D"

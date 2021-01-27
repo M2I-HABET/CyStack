@@ -44,18 +44,14 @@ void append(uint8_t* s, uint8_t c, uint8_t max_len) {
 
 /**
  * SERCOM handler that adds characters to the printout string.  It will read the character and then assign the value to
- * appendChar.  This is then appended to readString.
+ * appendChar.  This is then appended to readString.this makes it so that we don't have to block on the main loop.
+ * When a char comes in it fires this interrupt. When it fires we save the char and add it to the read string. When you
+ * exit this handler you continue your code where you stopped prior to the interrupt
  */
 void SERCOM4_2_Handler(){
 	Serial2.IrqHandler();
 	appendChar = Serial2.read();
 	append(readString, appendChar, RH_MESH_MAX_MESSAGE_LEN);
-	/*
-	 * ok so this makes it so that we don't have to block on the main loop.
-	 * when a char comes in it fires this interrupt. When it fires we save the char
-	 * and add it to the read string. when you exit this handler you continue
-	 * your code where you stopped prior to the interrupt
-	 */
 }
 
 // Interrupt handler functions
