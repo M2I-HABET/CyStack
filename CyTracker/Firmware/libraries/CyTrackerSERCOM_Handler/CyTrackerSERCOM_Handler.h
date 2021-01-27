@@ -9,7 +9,6 @@
 #ifndef FIRMWARE_CYTRACKERSERCOM_HANDLER_H
 #define FIRMWARE_CYTRACKERSERCOM_HANDLER_H
 
-
 #include <stdint.h>
 #include <string.h>
 #include <Uart.h>
@@ -33,22 +32,19 @@
 
 #define GPSECHO false
 
-//override of RH_MESH_MAX_MESSAGE_LEN to 150 for insurance of
+//override of RH_MESH_MAX_MESSAGE_LEN to 150
 #define RH_MESH_MAX_MESSAGE_LEN 150
 
-//declaring external variables for the
+//declaring external variables for the Feather to use
 extern Uart Serial2;
 extern uint8_t appendChar;
 extern uint8_t readString[RH_MESH_MAX_MESSAGE_LEN];
 
+//declaring the SERCOM Handler and append functions.  Detailed descriptions are in the .cpp file
 void SERCOM4_0_Handler();
 void SERCOM4_1_Handler();
 void SERCOM4_2_Handler();
 void SERCOM4_3_Handler();
 void append(uint8_t* , uint8_t , uint8_t );
-
-
-
-
 
 #endif //FIRMWARE_CYTRACKERSERCOM_HANDLER_H
