@@ -1,6 +1,6 @@
 // Created by Matthew Plewa
 // Creation date: 12/6/2020
-// Modified: 12/7/2020
+// Modified: 1/27/2021
 // Bassed off of http://www.airspayce.com/mikem/arduino/RadioHead/rf22_mesh_client_8pde-example.html
 // and also https://learn.adafruit.com/radio-featherwing/using-the-rfm-9x-radio
 
@@ -22,12 +22,9 @@
 
 
 // Singleton instance of the radio driver
-
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
 RHMesh manager(rf95,CLIENT_ADDRESS);
 Adafruit_GPS GPS(&Serial2);
-
-//uint8_t readStringClean[RH_MESH_MAX_MESSAGE_LEN]="";
 
 void setup(){
 	pinMode(RFM95_RST, OUTPUT);
@@ -42,7 +39,9 @@ void setup(){
 	GPS.begin(9600);
 	pinPeripheral(A2, PIO_SERCOM_ALT);  // Assign SERCOM functionality to A2
 	pinPeripheral(A3, PIO_SERCOM_ALT);  // Assign SERCOM functionality to A3
+	
 	delay(100);
+	
 	GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_GGAONLY);
 	GPS.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
 	Serial.println("Feather LoRa TX Test!");
@@ -75,9 +74,12 @@ void setup(){
 	
 }
 
+//TODO Do we need this?
 int16_t packetnum = 0;  // packet counter, we increment per xmission
 // Dont put this on the stack:
 uint8_t buf[RH_MESH_MAX_MESSAGE_LEN];
+//uint8_t * buf = (uint8_t*) malloc(sizeof(uint8_t) * RH_MESH_MAX_MESSAGE_LEN);
+
 
 void loop(){
 	if(appendChar == '\n'){
@@ -85,7 +87,8 @@ void loop(){
 		 * this will look for the end of a string and then print it.
 		 * This does not block the loop till you have a full string.
 		 */
-		appendChar='\0';// have to set a to something other then \n to prevent it from reentering this conditional statement
+		appendChar = '\0';// have to set a to something other then \n to prevent it from reentering this conditional statement
+
 		Serial.print((char*)readString);// dont need a print ln because it already has \n
 		Serial.println("Sending to manager_mesh_server3");
 		
@@ -111,8 +114,9 @@ void loop(){
 				Serial.println("No reply, is rf22_mesh_server1, rf22_mesh_server2 and rf22_mesh_server3 running?");
 			}
 		}
-		else
+		else{
 			Serial.println("sendtoWait failed. Are the intermediate mesh servers running?");
+		}
 		
 		memset(readString,0,sizeof readString);// time for a new string
 		appendChar='\0';// have to set a to something other then \n to prevent it from reentering this conditional statement
