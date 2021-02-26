@@ -1,0 +1,4 @@
+(fp_lib_table
+  (lib (name Connector_Molex)(type KiCad)(uri ${KIPRJMOD}/Connector_Molex.pretty)(options "")(descr ""))
+  (lib (name footprints)(type KiCad)(uri ${KIPRJMOD}/ADC128D818CIMTX_NOPB/footprints.pretty)(options "")(descr ""))
+)
