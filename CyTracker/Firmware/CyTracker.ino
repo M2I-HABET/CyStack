@@ -26,6 +26,8 @@ RH_RF95 rf95(RFM95_CS, RFM95_INT);
 RHMesh manager(rf95,CLIENT_ADDRESS);
 Adafruit_GPS GPS(&Serial2);
 
+char* trackID = "p1,";
+
 void setup(){
 	pinMode(RFM95_RST, OUTPUT);
 	digitalWrite(RFM95_RST, HIGH);
@@ -88,14 +90,16 @@ void loop(){
 		 * This does not block the loop till you have a full string.
 		 */
 		appendChar = '\0';// have to set a to something other then \n to prevent it from reentering this conditional statement
-		
-		Serial.print((char*)readString);// dont need a print ln because it already has \n
+		unsigned char* readString2 = (unsigned char *) malloc(sizeof(char) * RH_MESH_MAX_MESSAGE_LEN);
+		strcpy((char * )readString2, trackID);
+		strcat((char * )readString2, (char *) readString);
+		Serial.print((char*)readString2);// dont need a print ln because it already has \n
 		Serial.println("Sending to manager_mesh_server3");
 		
 		// Send a message to a rf22_mesh_server
 		// A route to the destination will be automatically discovered.
 		
-		if (manager.sendtoWait(readString, sizeof(readString), SERVER3_ADDRESS) == RH_ROUTER_ERROR_NONE){
+		if (manager.sendtoWait(readString2, sizeof(readString2), SERVER3_ADDRESS) == RH_ROUTER_ERROR_NONE){
 			// It has been reliably delivered to the next node.
 			// Now wait for a reply from the ultimate server
 			Serial.println("past send");
@@ -117,8 +121,8 @@ void loop(){
 		else{
 			Serial.println("sendtoWait failed. Are the intermediate mesh servers running?");
 		}
-		
-		memset(readString,0,sizeof readString);// time for a new string
+		free(readString2);
+		memset(readString,0,sizeof (readString));// time for a new string
 		appendChar='\0';// have to set a to something other then \n to prevent it from reentering this conditional statement
 	}
 	delay(10);
