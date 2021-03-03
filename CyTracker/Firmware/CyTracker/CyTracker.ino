@@ -1,6 +1,6 @@
 // Created by Matthew Plewa
 // Creation date: 12/6/2020
-// Modified: 1/27/2021
+// Modified: 3/2/2021
 // Bassed off of http://www.airspayce.com/mikem/arduino/RadioHead/rf22_mesh_client_8pde-example.html
 // and also https://learn.adafruit.com/radio-featherwing/using-the-rfm-9x-radio
 
@@ -20,6 +20,9 @@
 // Change to 434.0 or other frequency, must match RX's freq!
 ///#define RF95_FREQ 434.0 //commented out for easier access for users
 
+//Debug setting for making sure serial ports don't make the machine hang for printing
+bool debug = false; //<-- MAKE SURE THIS IS SET TO FALSE IF RUNNING ON FLIGHT HARDWARE DURING FLIGHT TIME
+//^IF THIS IS NOT SET TO FALSE FOR A FLIGHT THEN THE HARDWARE WILL HANG DUE TO THE SERIAL PORT BEING INIT
 
 // Singleton instance of the radio driver
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
@@ -31,10 +34,13 @@ void setup(){
 	digitalWrite(RFM95_RST, HIGH);
 	
 	//Start the serial port and make sure it's running
-	Serial.begin(9600);
-	while (!Serial) {
-		delay(1);
+	if(debug){
+		Serial.begin(9600);
+		while (!Serial) {
+			delay(1);
+		}
 	}
+	
 	
 	GPS.begin(9600);
 	pinPeripheral(A2, PIO_SERCOM_ALT);  // Assign SERCOM functionality to A2
@@ -44,7 +50,7 @@ void setup(){
 	
 	GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_GGAONLY);
 	GPS.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
-	Serial.println("Feather LoRa TX Test!");
+	if(debug) Serial.println("Feather LoRa TX Test!");
 	
 	// manual reset
 	digitalWrite(RFM95_RST, LOW);
@@ -53,18 +59,18 @@ void setup(){
 	delay(10);
 	
 	while (!rf95.init()) {
-		Serial.println("LoRa radio init failed");
+		if(debug) Serial.println("LoRa radio init failed");
 		while (1);
 	}
-	Serial.println("LoRa radio init OK!");
+	if(debug) Serial.println("LoRa radio init OK!");
 	
 	// Defaults after init are 434.0MHz, modulation GFSK_Rb250Fd250, +13dbM
 	if (!rf95.setFrequency(RF95_FREQ)) {
-		Serial.println("setFrequency failed");
+		if(debug) Serial.println("setFrequency failed");
 		while (1);
 	}
-	Serial.print("Set Freq to: ");
-	Serial.println(RF95_FREQ);
+	if(debug) Serial.print("Set Freq to: ");
+	if(debug) Serial.println(RF95_FREQ);
 	// Defaults after init are 434.0MHz, 13dBm, Bw = 125 kHz, Cr = 4/5, Sf = 128chips/symbol, CRC on
 	
 	// The default transmitter power is 13dBm, using PA_BOOST.
@@ -88,9 +94,9 @@ void loop(){
 		 * This does not block the loop till you have a full string.
 		 */
 		appendChar = '\0';// have to set a to something other then \n to prevent it from reentering this conditional statement
-
-		Serial.print((char*)readString);// dont need a print ln because it already has \n
-		Serial.println("Sending to manager_mesh_server3");
+		
+		if(debug) Serial.print((char*)readString);// dont need a print ln because it already has \n
+		if(debug) Serial.println("Sending to manager_mesh_server3");
 		
 		// Send a message to a rf22_mesh_server
 		// A route to the destination will be automatically discovered.
@@ -98,26 +104,27 @@ void loop(){
 		if (manager.sendtoWait(readString, sizeof(readString), SERVER3_ADDRESS) == RH_ROUTER_ERROR_NONE){
 			// It has been reliably delivered to the next node.
 			// Now wait for a reply from the ultimate server
-			Serial.println("past send");
+			if(debug) Serial.println("past send");
 			uint8_t len = sizeof(buf);
 			uint8_t from;
 			int8_t received_rssi = rf95.lastRssi();
 			if (manager.recvfromAckTimeout(buf, &len, 3000, &from)){
-				Serial.print("got reply from : 0x");
-				Serial.print(from, HEX);
-				Serial.print(": ");
-				Serial.println((char*)buf);
-				Serial.print("Rssi:");
-				Serial.println(received_rssi, DEC);
+				if(debug){
+					Serial.print("got reply from : 0x");
+					Serial.print(from, HEX);
+					Serial.print(": ");
+					Serial.println((char*)buf);
+					Serial.print("Rssi:");
+					Serial.println(received_rssi, DEC);
+				}
 			}
 			else{
-				Serial.println("No reply, is rf22_mesh_server1, rf22_mesh_server2 and rf22_mesh_server3 running?");
+				if(debug) Serial.println("No reply, is rf22_mesh_server1, rf22_mesh_server2 and rf22_mesh_server3 running?");
 			}
 		}
 		else{
-			Serial.println("sendtoWait failed. Are the intermediate mesh servers running?");
+			if(debug) Serial.println("sendtoWait failed. Are the intermediate mesh servers running?");
 		}
-		
 		memset(readString,0,sizeof readString);// time for a new string
 		appendChar='\0';// have to set a to something other then \n to prevent it from reentering this conditional statement
 	}
