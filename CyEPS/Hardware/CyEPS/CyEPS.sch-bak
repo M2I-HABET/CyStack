@@ -2257,8 +2257,6 @@ F 3 "~" H 9900 1000 50  0001 C CNN
 	1    9900 1000
 	1    0    0    -1  
 $EndComp
-Text GLabel 9700 1100 0    50   UnSpc ~ 0
-Gnd
 Text GLabel 9700 900  0    50   Input ~ 0
 Primary5V
 Text GLabel 9700 1000 0    50   Input ~ 0
@@ -2274,8 +2272,6 @@ F 3 "~" H 9900 2250 50  0001 C CNN
 	1    9900 2250
 	1    0    0    -1  
 $EndComp
-Text GLabel 9700 2350 0    50   UnSpc ~ 0
-Gnd
 Text GLabel 9700 2150 0    50   Input ~ 0
 Payload5V
 Text GLabel 9700 2250 0    50   Input ~ 0
@@ -2302,4 +2298,32 @@ F 3 "" H 4400 8600 50  0001 C CNN
 	1    4400 8600
 	1    0    0    -1  
 $EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 604568DE
+P 8800 1100
+F 0 "#PWR?" H 8800 850 50  0001 C CNN
+F 1 "GND" H 8805 927 50  0000 C CNN
+F 2 "" H 8800 1100 50  0001 C CNN
+F 3 "" H 8800 1100 50  0001 C CNN
+	1    8800 1100
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 60457CF7
+P 8800 2400
+F 0 "#PWR?" H 8800 2150 50  0001 C CNN
+F 1 "GND" H 8805 2227 50  0000 C CNN
+F 2 "" H 8800 2400 50  0001 C CNN
+F 3 "" H 8800 2400 50  0001 C CNN
+	1    8800 2400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8800 1100 9700 1100
+Wire Wire Line
+	8800 2400 9700 2400
+Wire Wire Line
+	9700 2400 9700 2350
 $EndSCHEMATC
