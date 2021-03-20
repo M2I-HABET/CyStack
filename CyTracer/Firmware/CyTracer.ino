@@ -9,7 +9,7 @@
 #include <SPI.h>
 #include <RH_RF95.h>
 #include <RHMesh.h>
-#include <Adafruit_SleepyDog.h>
+//#include <Adafruit_SleepyDog.h>
 #include <math.h>
 #include <Adafruit_GPS.h>
 #include <Wire.h>
@@ -95,20 +95,37 @@ void getBearing(float latA, float lonA,float altA, float latB,float lonB,float a
     float dlo = lonB-lonA;
     az = int(abs(az)) % 90;
     float az1 = az;
-    if(dla<0 && dlo>0)
+    /*
+    if(dla<0 && dlo>0){
         az = 180-az;
-    if(dla<0 && dlo<0 && az<270)
+    }
+    if(dla<0 && dlo<0 && az<270){
         az = 180+az;
-    if(dla>0 && dlo<0 && (az<180 || az>270))
+    }
+    if(dla>0 && dlo<0 && (az<180 || az>270)){
+
         az = 360-az;
+    }
     //if(dla>0 && dlo>0 && (az<90 || az>180))
     //    az = az;
+	*/
 
     float el = 180.0/pi*atan((altB-altA)/distance);
     if(el<0)
         el = 0;
     //return distance, az, el;
-
+    if(dla<0 && dlo<0){
+    	az=az;
+    }
+    if(dla<0 && dlo>0){
+        	az=360-az;
+        }
+    if(dla>0 && dlo<0){
+        	az=180-az;
+        }
+    if(dla>0 && dlo>0){
+        	az=180+az;
+        }
     *Range = distance;
 	*Bearing = az;
 	*Elevation = el;
@@ -215,7 +232,7 @@ void setup()
   // The default transmitter power is 13dBm, using PA_BOOST.
   // If you are using RFM95/96/97/98 modules which uses the PA_BOOST transmitter pin, then
   // you can set transmitter powers from 5 to 23 dBm:
-  //rf95.setTxPower(RFPOWER, false);
+  rf95.setTxPower(23, false);
 
   display.setTextSize(2);
     display.setTextColor(SSD1306_WHITE);
@@ -297,19 +314,24 @@ void loop()
 
     gga2deg(Raw_Longitude,&Longitude);
     alt = atof(Raw_Alt);
-    Serial.println("heres the data");
-    Serial.println(Latitude,4);
-    Serial.println(GPS.latitudeDegrees,4);
-    Serial.println(Longitude,4);
-    Serial.println(GPS.longitudeDegrees,4);
-    Serial.println(alt,4);
-    Serial.println(GPS.altitude,4);
 
+    //Serial.println("heres the data");
+    Serial.print("GPSData,");
+    Serial.print(Latitude,8);
+    Serial.print(",");
+    //Serial.println(GPS.latitudeDegrees,4);
+    Serial.print(Longitude,8);
+    Serial.print(",");
+    //Serial.println(GPS.longitudeDegrees,4);
+    Serial.println(alt,8);
+    //Serial.println(GPS.altitude,4);
+    Serial.print("Rssi:");
+    Serial.println(rf95.lastRssi());
 
     timer = millis();
   }
   if(millis()-timer2>2000){
-	  getBearing(Latitude,Longitude,alt, GPS.latitudeDegrees,(-1.0*GPS.longitudeDegrees),GPS.altitude, &Range, &Bearing, &Elevation);
+	  getBearing(Latitude,-1.0*Longitude,alt, GPS.latitudeDegrees,(GPS.longitudeDegrees),GPS.altitude, &Range, &Bearing, &Elevation);
 	  display.clearDisplay();
 	  display.setTextSize(1.2);
 	  display.setTextColor(SSD1306_WHITE);
