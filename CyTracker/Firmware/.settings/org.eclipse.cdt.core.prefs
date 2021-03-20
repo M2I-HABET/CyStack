@@ -61,7 +61,7 @@ environment/project/io.sloeber.core.toolChain.release.2134136033/A.BUILD.OPENOCD
 environment/project/io.sloeber.core.toolChain.release.2134136033/A.BUILD.OPENOCDSCRIPT/value=openocd_scripts/arduino_zero.cfg
 environment/project/io.sloeber.core.toolChain.release.2134136033/A.BUILD.PATH/delimiter=;
 environment/project/io.sloeber.core.toolChain.release.2134136033/A.BUILD.PATH/operation=replace
-environment/project/io.sloeber.core.toolChain.release.2134136033/A.BUILD.PATH/value=F\:\\eclipse-workspace\\CyTracker\\Release
+environment/project/io.sloeber.core.toolChain.release.2134136033/A.BUILD.PATH/value=F\:\\eclipse-workspace\\CyStack\\CyTracker\\Firmware\\Release
 environment/project/io.sloeber.core.toolChain.release.2134136033/A.BUILD.PID/delimiter=;
 environment/project/io.sloeber.core.toolChain.release.2134136033/A.BUILD.PID/operation=replace
 environment/project/io.sloeber.core.toolChain.release.2134136033/A.BUILD.PID/value=0x8022

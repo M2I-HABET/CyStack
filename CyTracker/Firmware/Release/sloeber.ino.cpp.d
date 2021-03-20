@@ -181,6 +181,7 @@ sloeber.ino.cpp.o: ..\sloeber.ino.cpp \
  F:\eclipse-workspace\CyTracker\libraries\Adafruit_GPS\src/NMEA_data.h \
  F:\eclipse\arduinoPlugin\packages\adafruit\hardware\samd\1.6.4\libraries\Wire/Wire.h \
  F:\eclipse\arduinoPlugin\packages\adafruit\hardware\samd\1.6.4\cores\arduino/RingBuffer.h \
+ F:\eclipse-workspace\CyStack\CyTracker\Firmware\libraries\CyTrackerSERCOM_Handler/CyTrackerSERCOM_Handler.h \
  ..\CyTracker.ino
 
 F:\eclipse\arduinoPlugin\packages\adafruit\hardware\samd\1.6.4\cores\arduino/Arduino.h:
@@ -546,5 +547,7 @@ F:\eclipse-workspace\CyTracker\libraries\Adafruit_GPS\src/NMEA_data.h:
 F:\eclipse\arduinoPlugin\packages\adafruit\hardware\samd\1.6.4\libraries\Wire/Wire.h:
 
 F:\eclipse\arduinoPlugin\packages\adafruit\hardware\samd\1.6.4\cores\arduino/RingBuffer.h:
+
+F:\eclipse-workspace\CyStack\CyTracker\Firmware\libraries\CyTrackerSERCOM_Handler/CyTrackerSERCOM_Handler.h:
 
 ..\CyTracker.ino:

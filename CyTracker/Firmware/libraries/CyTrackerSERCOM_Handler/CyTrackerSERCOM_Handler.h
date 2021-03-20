@@ -21,7 +21,7 @@
 // Change to 434.0 or other frequency, must match RX's freq!
 #define RF95_FREQ 434.0
 //RF power
-#define RFPOWER 1
+#define RFPOWER 23
 // client addr
 #define CLIENT_ADDRESS 1
 // Other Nodes:

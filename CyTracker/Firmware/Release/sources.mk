@@ -74,6 +74,7 @@ libraries\Adafruit_GPS\src \
 libraries\Adafruit_SleepyDog \
 libraries\Adafruit_SleepyDog\utility \
 libraries\Adafruit_ZeroDMA \
+libraries\CyTrackerSERCOM_Handler \
 libraries\RadioHead \
 libraries\SPI \
 libraries\Wire \

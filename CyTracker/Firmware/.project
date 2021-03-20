@@ -49,12 +49,12 @@
 		<link>
 			<name>libraries/Adafruit_GPS</name>
 			<type>2</type>
-			<locationURI>PROJECT_LOC/libraries/Adafruit_GPS</locationURI>
+			<locationURI>WORKSPACE_LOC/CyTracker/libraries/Adafruit_GPS</locationURI>
 		</link>
 		<link>
 			<name>libraries/Adafruit_SleepyDog</name>
 			<type>2</type>
-			<locationURI>PROJECT_LOC/libraries/Adafruit_SleepyDog</locationURI>
+			<locationURI>WORKSPACE_LOC/CyTracker/libraries/Adafruit_SleepyDog</locationURI>
 		</link>
 		<link>
 			<name>libraries/Adafruit_ZeroDMA</name>
@@ -62,9 +62,14 @@
 			<locationURI>ECLIPSE_HOME/arduinoPlugin/packages/adafruit/hardware/samd/1.6.4/libraries/Adafruit_ZeroDMA</locationURI>
 		</link>
 		<link>
+			<name>libraries/CyTrackerSERCOM_Handler</name>
+			<type>2</type>
+			<locationURI>PROJECT_LOC/libraries/CyTrackerSERCOM_Handler</locationURI>
+		</link>
+		<link>
 			<name>libraries/RadioHead</name>
 			<type>2</type>
-			<locationURI>PROJECT_LOC/libraries/RadioHead</locationURI>
+			<locationURI>WORKSPACE_LOC/CyTracker/libraries/RadioHead</locationURI>
 		</link>
 		<link>
 			<name>libraries/SPI</name>

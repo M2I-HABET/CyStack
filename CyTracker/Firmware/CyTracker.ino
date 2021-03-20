@@ -77,6 +77,10 @@ void setup(){
 	// If you are using RFM95/96/97/98 modules which uses the PA_BOOST transmitter pin, then
 	// you can set transmitter powers from 5 to 23 dBm:
 	rf95.setTxPower(RFPOWER, false);
+	//enable watchdog
+	int countdownMS = Watchdog.enable(4000);
+	uint8_t startupMessage[30] = "starting up/reset";
+	manager.sendtoWait(startupMessage, sizeof(startupMessage), SERVER3_ADDRESS);
 	
 }
 
@@ -94,7 +98,7 @@ void loop(){
 		 * This does not block the loop till you have a full string.
 		 */
 		appendChar = '\0';// have to set a to something other then \n to prevent it from reentering this conditional statement
-		
+		if(debug) Serial.print("sending :");
 		if(debug) Serial.print((char*)readString);// dont need a print ln because it already has \n
 		if(debug) Serial.println("Sending to manager_mesh_server3");
 		
@@ -108,7 +112,7 @@ void loop(){
 			uint8_t len = sizeof(buf);
 			uint8_t from;
 			int8_t received_rssi = rf95.lastRssi();
-			if (manager.recvfromAckTimeout(buf, &len, 3000, &from)){
+			if (manager.recvfromAckTimeout(buf, &len, 1000, &from)){
 				if(debug){
 					Serial.print("got reply from : 0x");
 					Serial.print(from, HEX);
@@ -128,5 +132,7 @@ void loop(){
 		memset(readString,0,sizeof readString);// time for a new string
 		appendChar='\0';// have to set a to something other then \n to prevent it from reentering this conditional statement
 	}
-	delay(10);
+	delay(100);
+	Watchdog.reset();
+
 }
