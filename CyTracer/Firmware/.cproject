@@ -30,11 +30,11 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CyTracer/libraries/Adafruit_BusIO}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CyTracer/libraries/Adafruit_GFX_Library}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CyTracer/libraries/Adafruit_SSD1306}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CyTracer/libraries/Adafruit_ZeroDMA/utility}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CyTracer/libraries/RadioHead-master}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CyTracer/libraries/Adafruit_GPS_Library/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CyTracer/libraries/Adafruit_SleepyDog_Library/utility}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CyTracer/libraries/Adafruit_SleepyDog_Library}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CyTracer/libraries/Adafruit_GPS/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CyTracer/libraries/Adafruit_SleepyDog/utility}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CyTracer/libraries/Adafruit_ZeroDMA/utility}&quot;"/>
 								</option>
 								<inputType id="io.sloeber.compiler.cpp.sketch.input.2114872097" name="CPP source files" superClass="io.sloeber.compiler.cpp.sketch.input"/>
 							</tool>
@@ -51,11 +51,11 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CyTracer/libraries/Adafruit_BusIO}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CyTracer/libraries/Adafruit_GFX_Library}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CyTracer/libraries/Adafruit_SSD1306}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CyTracer/libraries/Adafruit_ZeroDMA/utility}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CyTracer/libraries/RadioHead-master}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CyTracer/libraries/Adafruit_GPS_Library/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CyTracer/libraries/Adafruit_SleepyDog_Library/utility}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CyTracer/libraries/Adafruit_SleepyDog_Library}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CyTracer/libraries/Adafruit_GPS/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CyTracer/libraries/Adafruit_SleepyDog/utility}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CyTracer/libraries/Adafruit_ZeroDMA/utility}&quot;"/>
 								</option>
 								<inputType id="io.sloeber.compiler.c.sketch.input.359450869" name="C Source Files" superClass="io.sloeber.compiler.c.sketch.input"/>
 							</tool>
@@ -72,11 +72,11 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CyTracer/libraries/Adafruit_BusIO}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CyTracer/libraries/Adafruit_GFX_Library}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CyTracer/libraries/Adafruit_SSD1306}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CyTracer/libraries/Adafruit_ZeroDMA/utility}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CyTracer/libraries/RadioHead-master}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CyTracer/libraries/Adafruit_GPS_Library/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CyTracer/libraries/Adafruit_SleepyDog_Library/utility}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CyTracer/libraries/Adafruit_SleepyDog_Library}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CyTracer/libraries/Adafruit_GPS/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CyTracer/libraries/Adafruit_SleepyDog/utility}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CyTracer/libraries/Adafruit_ZeroDMA/utility}&quot;"/>
 								</option>
 								<inputType id="io.sloeber.compiler.S.sketch.input.1938897909" name="Assembly source files" superClass="io.sloeber.compiler.S.sketch.input"/>
 							</tool>

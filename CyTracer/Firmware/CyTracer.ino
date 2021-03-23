@@ -73,7 +73,7 @@ void append(char* s, char c, uint8_t max_len) {
 
 
 
-void getBearing(float latA, float lonA,float altA, float latB,float lonB,float altB,float *Range,float *Bearing,float *Elevation){
+void getBearing(float latA, float lonA,float altA, float latB,float lonB,float altB,float *Range,float *Bearing,float *Elevation,float *Altitude){
     float R = 6372.795477598*1000.0;
 
     float phi1 = latA*pi/180.0;
@@ -111,6 +111,7 @@ void getBearing(float latA, float lonA,float altA, float latB,float lonB,float a
 	*/
 
     float el = 180.0/pi*atan((altB-altA)/distance);
+    float alt = altB-altA;
     if(el<0)
         el = 0;
     //return distance, az, el;
@@ -129,6 +130,7 @@ void getBearing(float latA, float lonA,float altA, float latB,float lonB,float a
     *Range = distance;
 	*Bearing = az;
 	*Elevation = el;
+	*Altitude = alt;
 }
 
 
@@ -257,6 +259,7 @@ int finished = 0;
 float Range = 0;
 float Bearing = 0;
 float Elevation = 0;
+float Altitude = 0;
 float Latitude = 0;
 float Longitude = 0;
 float alt = 0;
@@ -331,7 +334,7 @@ void loop()
     timer = millis();
   }
   if(millis()-timer2>2000){
-	  getBearing(Latitude,-1.0*Longitude,alt, GPS.latitudeDegrees,(GPS.longitudeDegrees),GPS.altitude, &Range, &Bearing, &Elevation);
+	  getBearing(Latitude,-1.0*Longitude,alt, GPS.latitudeDegrees,(GPS.longitudeDegrees),GPS.altitude, &Range, &Bearing, &Elevation, &Altitude);
 	  display.clearDisplay();
 	  display.setTextSize(1.2);
 	  display.setTextColor(SSD1306_WHITE);
@@ -346,6 +349,9 @@ void loop()
 	  display.println(int(Bearing));
 	  display.print("El:");
 	  display.print(int(Elevation));
+	  display.print("El:");
+	  display.print(int(Altitude));
+	  display.print("m ");
 	  display.setCursor(0,0);
 	  display.display(); // actually display all of the above
   	  timer2 = millis();

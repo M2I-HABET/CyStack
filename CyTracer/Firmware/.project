@@ -39,22 +39,22 @@
 		<link>
 			<name>core/core</name>
 			<type>2</type>
-			<locationURI>ECLIPSE_HOME/arduinoPlugin/packages/adafruit/hardware/samd/1.6.6/cores/arduino</locationURI>
+			<locationURI>ECLIPSE_HOME/arduinoPlugin/packages/adafruit/hardware/samd/1.6.4/cores/arduino</locationURI>
 		</link>
 		<link>
 			<name>core/variant</name>
 			<type>2</type>
-			<locationURI>ECLIPSE_HOME/arduinoPlugin/packages/adafruit/hardware/samd/1.6.6/variants/feather_m4</locationURI>
+			<locationURI>ECLIPSE_HOME/arduinoPlugin/packages/adafruit/hardware/samd/1.6.4/variants/feather_m4</locationURI>
 		</link>
 		<link>
 			<name>libraries/Adafruit_BusIO</name>
 			<type>2</type>
-			<location>C:/Users/matth/Documents/Arduino/libraries/Adafruit_BusIO</location>
+			<location>C:/Users/Matthew/Documents/Arduino/libraries/Adafruit_BusIO</location>
 		</link>
 		<link>
 			<name>libraries/Adafruit_GFX_Library</name>
 			<type>2</type>
-			<location>C:/Users/matth/Documents/Arduino/libraries/Adafruit_GFX_Library</location>
+			<location>C:/Users/Matthew/Documents/Arduino/libraries/Adafruit_GFX_Library</location>
 		</link>
 		<link>
 			<name>libraries/Adafruit_GPS</name>
@@ -69,7 +69,7 @@
 		<link>
 			<name>libraries/Adafruit_SSD1306</name>
 			<type>2</type>
-			<location>C:/Users/matth/Documents/Arduino/libraries/Adafruit_SSD1306</location>
+			<location>C:/Users/Matthew/Documents/Arduino/libraries/Adafruit_SSD1306</location>
 		</link>
 		<link>
 			<name>libraries/Adafruit_SleepyDog</name>
@@ -84,7 +84,7 @@
 		<link>
 			<name>libraries/Adafruit_ZeroDMA</name>
 			<type>2</type>
-			<locationURI>ECLIPSE_HOME/arduinoPlugin/packages/adafruit/hardware/samd/1.6.6/libraries/Adafruit_ZeroDMA</locationURI>
+			<locationURI>ECLIPSE_HOME/arduinoPlugin/packages/adafruit/hardware/samd/1.6.4/libraries/Adafruit_ZeroDMA</locationURI>
 		</link>
 		<link>
 			<name>libraries/RadioHead</name>
@@ -99,12 +99,12 @@
 		<link>
 			<name>libraries/SPI</name>
 			<type>2</type>
-			<locationURI>ECLIPSE_HOME/arduinoPlugin/packages/adafruit/hardware/samd/1.6.6/libraries/SPI</locationURI>
+			<locationURI>ECLIPSE_HOME/arduinoPlugin/packages/adafruit/hardware/samd/1.6.4/libraries/SPI</locationURI>
 		</link>
 		<link>
 			<name>libraries/Wire</name>
 			<type>2</type>
-			<locationURI>ECLIPSE_HOME/arduinoPlugin/packages/adafruit/hardware/samd/1.6.6/libraries/Wire</locationURI>
+			<locationURI>ECLIPSE_HOME/arduinoPlugin/packages/adafruit/hardware/samd/1.6.4/libraries/Wire</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>
