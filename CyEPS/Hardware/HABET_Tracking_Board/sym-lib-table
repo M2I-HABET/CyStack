@@ -1,0 +1,4 @@
+(sym_lib_table
+  (lib (name Device)(type Legacy)(uri ${KIPRJMOD}/Device.lib)(options "")(descr ""))
+  (lib (name 2021-01-04_22-05-40)(type Legacy)(uri ${KIPRJMOD}/ADC128D818CIMTX_NOPB/2021-01-04_22-05-40.lib)(options "")(descr ""))
+)

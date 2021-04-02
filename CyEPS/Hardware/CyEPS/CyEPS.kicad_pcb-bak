@@ -2591,7 +2591,7 @@
     (fp_text reference U4 (at 0 0 90) (layer F.SilkS)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value ADC128D818CIMTX_NOPB (at -0.796 -0.516 180) (layer F.SilkS)
+    (fp_text value ADC128D818CIMTX_NOPB (at -0.796 12.484 180) (layer F.SilkS)
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_line (start -2.2479 -2.1226) (end -2.2479 -2.4274) (layer F.Fab) (width 0.1524))

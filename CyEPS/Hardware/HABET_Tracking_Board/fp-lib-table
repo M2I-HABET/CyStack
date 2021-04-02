@@ -1,0 +1,4 @@
+(fp_lib_table
+  (lib (name Module)(type KiCad)(uri ${KIPRJMOD}/Module.pretty)(options "")(descr ""))
+  (lib (name Devices)(type KiCad)(uri "C:/Users/aj45t/Documents/kicad/HABET_Tracking_Board/Custom Footprints,pretty")(options "")(descr ""))
+)
